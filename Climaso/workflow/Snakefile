@@ -9,5 +9,4 @@ wildcard_constraints:
 ACTIVITIES=config['activities']
 ROOT_PATH = config['root']
 CMIP_VER = config['cmip_version']
-
 VARS = config['variables']
