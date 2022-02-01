@@ -15,5 +15,7 @@ variables:
   ERFsurfsw: ['rsus','rsds']
   ERFsurfswcs: ['rsuscs', 'rsdscs']
   ERFtswcs: ['rsutcs', 'rsdt']
+  atmabsSW: ['ERFtsw','ERFsurfsw']
+  atmabs: ['ERFt','ERFsurf']
 
 

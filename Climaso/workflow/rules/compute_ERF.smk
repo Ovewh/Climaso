@@ -1,7 +1,4 @@
-
-import os
-import glob
-VARS = config['variables']
+from pyclim_noresm.aerosol_forcing import calc_total_ERF_TOA, merge_exp_ctrl,calc_SW_ERF, calc_atm_abs
 
 
 def glob_control_path(w, var='', subdir='Amon'):
@@ -14,6 +11,28 @@ def glob_control_path(w, var='', subdir='Amon'):
                         f'piClim-control/**/{subdir}/{var}/**/latest/*.nc')
         return paths
 
+rule calc_ERF_surf:
+    input:
+        exp_downwelling_SW = lambda w: glob.glob(f'{ROOT_PATH}/{CMIP_VER}/**/**/{w.model}/' +
+                                f'{w.experiment}/**/Amon/{VARS[w.vName][1]}/**/latest/*.nc'),
+        exp_upwelling_SW = lambda w: glob.glob(f'{ROOT_PATH}/{CMIP_VER}/**/**/{w.model}/' +
+                                f'{w.experiment}/**/Amon/{VARS[w.vName][0]}/**/latest/*.nc'),
+        exp_upwelling_LW = lambda w: glob.glob(f'{ROOT_PATH}/{CMIP_VER}/**/**/{w.model}/' +
+                                f'{w.experiment}/**/Amon/{VARS[w.vName][2]}/**/latest/*.nc'),
+        ctrl_downwelling_SW = lambda w:glob_control_path(w, var=VARS[w.vName][1], subdir='Amon'),
+        ctrl_upwelling_SW = lambda w:glob_control_path(w, var=VARS[w.vName][0],subdir='Amon'),
+        ctrl_upwelling_LW = lambda w:glob_control_path(w, var=VARS[w.vName][2], subdir='Amon')
+
+    output:
+        outpath ='results/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
+    
+    log:
+        "logs/calc_ERF_toa/{vName}_{model}_{experiment}_{freq}.log"
+
+    wildcard_constraints:
+        vName = 'ERFt|ERFtcs'
+    
+    
 
 rule calculate_ERF_TOA:
     input:
@@ -28,55 +47,56 @@ rule calculate_ERF_TOA:
         ctrl_upwelling_LW = lambda w:glob_control_path(w, var=VARS[w.vName][2], subdir='Amon')
     
     output:
-        outpath = 'results/{vName}_{experiment}_{model}_{freq}.nc'
+        outpath = 'results/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
     
+    log:
+        "logs/calc_ERF_toa/{vName}_{model}_{experiment}_{freq}.log"
+
+    wildcard_constraints:
+        vName = 'ERFt|ERFtcs'
+    
+    script:
+        "scripts/compute_ERF_TOA.py"
+
+
+
+rule calculate_SW_ERF:
+    input:
+        exp_downwelling_SW = lambda w: glob.glob(f'{ROOT_PATH}/{CMIP_VER}/**/**/{w.model}/' +
+                                f'{w.experiment}/**/Amon/{VARS[w.vName][1]}/**/latest/*.nc'),
+        exp_upwelling_SW = lambda w: glob.glob(f'{ROOT_PATH}/{CMIP_VER}/**/**/{w.model}/' +
+                                f'{w.experiment}/**/Amon/{VARS[w.vName][0]}/**/latest/*.nc'),
+        ctrl_downwelling_SW = lambda w:glob_control_path(w, var=VARS[w.vName][1], subdir='Amon'),
+        ctrl_upwelling_SW = lambda w:glob_control_path(w, var=VARS[w.vName][0],subdir='Amon')
+    
+    output:
+        outpath = 'results/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
+    
+    wildcard_constraints:
+        vname='ERFtsw|ERFtswcs|ERFsurfsw|ERFsurfswcs'
+    log:
+        "logs/calc_ERF_SW/{vName}_{model}_{experiment}_{freq}.log"  
+    script:
+        "scripts/compute_ERF_TOA.py"
+
+
+rule calc_absorption:
+    input:
+        delta_rad_surf = lambda w: f'results/{VARS[w.vname][1]}/{VARS[w.vname][1]}_{w.experiment}_{w.model}_{w.freq}.nc',
+        delta_rad_toa = lambda w: f'results/{VARS[w.vname][0]}/{VARS[w.vname][0]}_{w.experiment}_{w.model}_{w.freq}.nc'
+    output:
+        outpath='results/atm_abs/{vName}_{experiment}_{model}_{freq}.nc'
+    wildcard_constraints:
+        vName='atmabsSW|atmabs'
+    log:
+        "logs/calc_absorption/{vName}_{model}_{experiment}_{freq}.log"
     run:
-        from pyclim_noresm.aerosol_forcing import calc_total_ERF_TOA, merge_exp_ctrl
-        from pyclim_noresm.general_util_funcs import yearly_avg
         import xarray as xr
-        vName_dw_SW = VARS[wildcards.vName][1]
-        vName_up_SW = VARS[wildcards.vName][0]
-        vName_up_LW = VARS[wildcards.vName][2]
-        if len(input.exp_downwelling_SW)>1:
-            exp_dw_SW = xr.open_mfdataset(input.exp_downwelling_SW, chunks={'time':120}, 
-                                        data_vars=[vName_dw_SW])
-            exp_up_SW = xr.open_mfdataset(input.exp_upwelling_SW, chunks={'time':120},
-                                        data_vars=[vName_up_SW])
-            exp_up_LW = xr.open_mfdataset(input.exp_upwelling_LW, chunks={'time':120},
-                                        data_vars=[vName_up_LW])
-            ctrl_dw_SW = xr.open_mfdataset(input.ctrl_downwelling_SW, chunks={'time':120},
-                                        data_vars=[vName_dw_SW])
-            ctrl_up_SW = xr.open_mfdataset(input.ctrl_upwelling_SW,chunks={'time':120},
-                                        data_vars=[vName_up_SW])
-            ctrl_up_LW = xr.open_mfdataset(input.ctrl_upwelling_LW,chunks={'time':120},
-                                        data_vars=[vName_up_LW])
-        else:
-            exp_dw_SW = xr.open_dataset(input.exp_downwelling_SW, chunks={'time':120})
-            exp_up_SW = xr.open_dataset(input.exp_upwelling_SW, chunks={'time':120})
-            exp_up_LW = xr.open_dataset(input.exp_upwelling_LW, chunks={'time':120})
-            ctrl_dw_SW = xr.open_dataset(input.ctrl_downwelling_SW, chunks={'time':120})
-            ctrl_up_SW = xr.open_dataset(input.ctrl_upwelling_SW,chunks={'time':120})
-            ctrl_up_LW = xr.open_dataset(input.ctrl_upwelling_LW,chunks={'time':120})
+        vName_rad_surf = VARS[wildcards.vName][1]
+        vName_rad_toa = VARS[wildcards.vName][0]
+        delta_rad_toa = xr.open_dataset(input.delta_rad_toa)
+        delta_rad_surf = xr.open_dataset(input.delta_rad_surf)
+        atm_abs = calc_atm_abs(delta_rad_surf[vName_rad_surf],delta_rad_toa[vName_rad_toa])
 
-        dw_SW = merge_exp_ctrl(exp_dw_SW, ctrl_dw_SW)
-        up_LW = merge_exp_ctrl(exp_up_LW, ctrl_up_LW)
-        up_SW = merge_exp_ctrl(exp_up_SW, ctrl_up_SW)
-
-        ERF = calc_total_ERF_TOA(dw_SW[vName_dw_SW], up_SW[vName_up_SW],
-                        up_LW[vName_up_LW],
-                        dw_SW[f'control_{vName_dw_SW}'].rename(vName_dw_SW)
-                        , up_SW[f'control_{vName_up_SW}'].rename(vName_up_SW),
-                        up_LW[f'control_{vName_up_LW}'].rename(vName_up_LW))
-
-        if wildcards.freq == 'Ayear':
-            ERF = yearly_avg(ERF)
-
-        ERF = ERF.dataset(name=wildcards.vName)
-        ERF.to_netcdf(output.outpath)
-
-
-
-        
-
-
-
+        atm_abs = atm_abs.dataset(name=wildcards.vName)
+        atm_abs.to_netcdf(output.outpath)
