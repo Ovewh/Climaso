@@ -8,8 +8,6 @@ ROOT_PATH = config['root']
 CMIP_VER = config['cmip_version']
 VARS=config['variables']
 
-# Definition of the variables used for when calculating the
-# different forcings.
 include: 'rules/compute_ERF.smk'
 
 wildcard_constraints:

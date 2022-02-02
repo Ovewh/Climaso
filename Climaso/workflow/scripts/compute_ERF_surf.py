@@ -7,12 +7,15 @@ VARS = snakemake.config['variables']
 vName_dw_SW = VARS[snakemake.wildcards.vName][1]
 vName_up_SW = VARS[snakemake.wildcards.vName][0]
 vName_up_LW = VARS[snakemake.wildcards.vName][2]
+vName_dw_LW = VARS[snakemake.wildcards.vName][3]
 exp_dw_SW = load_CMIP_data(snakemake.input.exp_downwelling_SW, data_vars=[vName_dw_SW])
 exp_up_SW = load_CMIP_data(snakemake.input.exp_upwelling_SW, data_vars=[vName_up_SW])
 exp_up_LW = load_CMIP_data(snakemake.input.exp_upwelling_LW, data_vars=[vName_up_LW])
+exp_dw_LW = load_CMIP_data(snakemake.input.exp_dwonwelling_LW, data_vars=[vName_dw_LW])
 ctrl_dw_SW = load_CMIP_data(snakemake.input.ctrl_downwelling_SW,data_vars=[vName_dw_SW])
 ctrl_up_SW = load_CMIP_data(snakemake.input.ctrl_upwelling_SW, data_vars=[vName_up_SW])
 ctrl_up_LW = load_CMIP_data(snakemake.input.ctrl_upwelling_LW,data_vars=[vName_up_LW])
+ctrl_dw_LW = load_CMIP_data(snakemake.input.ctrl_downwelling_LW,data_vars=[vName_dw_LW])
 
 dw_SW = merge_exp_ctrl(exp_dw_SW, ctrl_dw_SW)
 up_LW = merge_exp_ctrl(exp_up_LW, ctrl_up_LW)

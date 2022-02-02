@@ -1,4 +1,4 @@
-from pyclim_noresm.aerosol_forcing import calc_total_ERF_TOA, merge_exp_ctrl,calc_SW_ERF, calc_atm_abs
+from pyclim_noresm.aerosol_forcing import  calc_atm_abs
 
 
 def glob_control_path(w, var='', subdir='Amon'):
@@ -19,9 +19,12 @@ rule calc_ERF_surf:
                                 f'{w.experiment}/**/Amon/{VARS[w.vName][0]}/**/latest/*.nc'),
         exp_upwelling_LW = lambda w: glob.glob(f'{ROOT_PATH}/{CMIP_VER}/**/**/{w.model}/' +
                                 f'{w.experiment}/**/Amon/{VARS[w.vName][2]}/**/latest/*.nc'),
+        exp_downwelling_LW = lambda w: glob.glob(f'{ROOT_PATH}/{CMIP_VER}/**/**/{w.model}/' +
+                                f'{w.experiment}/**/Amon/{VARS[w.vName][3]}/**/latest/*.nc'),
         ctrl_downwelling_SW = lambda w:glob_control_path(w, var=VARS[w.vName][1], subdir='Amon'),
         ctrl_upwelling_SW = lambda w:glob_control_path(w, var=VARS[w.vName][0],subdir='Amon'),
         ctrl_upwelling_LW = lambda w:glob_control_path(w, var=VARS[w.vName][2], subdir='Amon')
+        ctrl_downwelling_LW = lambda w:glob_control_path(w, var=VARS[w.vName][3], subdir='Amon')
 
     output:
         outpath ='results/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
@@ -30,7 +33,7 @@ rule calc_ERF_surf:
         "logs/calc_ERF_toa/{vName}_{model}_{experiment}_{freq}.log"
 
     wildcard_constraints:
-        vName = 'ERFt|ERFtcs'
+        vName = 'ERFsurf|ERFsurfcs'
     
     
 
