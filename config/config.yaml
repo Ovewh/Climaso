@@ -8,7 +8,8 @@ activities: ['AerchemMIP','RFMIP']
 # Define the experiments to consider
 experiments: ['piClim-2xdust','piClim-control']
 
-# The variables need to calculate the different forcing. 
+default_variant: 'r1i1p1f1'
+
 variables: 
   ERFt: ['rsut', 'rsdt','rlut']
   ERFtcs: ['rsutcs','rsdt','rlutcs']
@@ -16,5 +17,9 @@ variables:
   ERFsurfsw: ['rsus','rsds']
   ERFsurfswcs: ['rsuscs', 'rsdscs']
   ERFtswcs: ['rsutcs', 'rsdt']
+  ERFsurf: ['rsus', 'rsds', 'rlus', 'rlds']
+  ERFsurfcs: ['rsuscs','rsdscs', 'rsutcs','rlus']
+  atmabsSW: ['ERFtsw','ERFsurfsw']
+  atmabs: ['ERFt','ERFsurf']
 
 

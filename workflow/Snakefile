@@ -1,0 +1,23 @@
+import os
+import glob
+
+configfile: 'config/config.yaml'
+
+ACTIVITIES=config['activities']
+ROOT_PATH = config['root']
+CMIP_VER = config['cmip_version']
+VARS=config['variables']
+
+include: 'rules/compute_ERF.smk'
+
+wildcard_constraints:
+    activities='|'.join(config['activities']),
+    experiments='|'.join(config['experiments'])
+
+
+rule all:
+    input:
+        expand('results/atm_abs/atmabs_piClim-2xdust_{model}_Ayear.nc', 
+                model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
+                        'MIROC6', 'MPI-ESM-1-2-HAM', 'UKESM1-0-LL', 'GFDL-ESM4',
+                        'CNRM-ESM2-1'])
