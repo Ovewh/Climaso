@@ -27,5 +27,5 @@ ERF = calc_total_ERF_TOA(dw_SW[vName_dw_SW], up_SW[vName_up_SW],
 if snakemake.wildcards.freq == 'Ayear':
     ERF = yearly_avg(ERF)
 
-ERF = ERF.dataset(name=snakemake.wildcards.vName)
+ERF = ERF.to_dataset(name=snakemake.wildcards.vName)
 ERF.to_netcdf(snakemake.output.outpath)
