@@ -1,20 +1,47 @@
-from pyclim_noresm.aerosol_forcing import  calc_atm_abs
+from pyclim_noresm.aerosol_forcing import calc_atm_abs
 
 
-def glob_control_path(w, var='', subdir='Amon'):
+def glob_control_path(w, var, subdir='Amon'):
     root_path = f'{ROOT_PATH}/{CMIP_VER}/'
-    wildcards = glob_wildcards(root+'RFMIP/{institution}/'+{w.model} +
-                        '/piClim-control/{variant}/'+f'{subdir}/{var}/'+'{grid_label}/latest/{fname}.nc')
-    
-    if config['default_variant'] in wildcards.variant:
-        variant = config['default_variant']
-    else:
-        variant = wildcards.variant[0] 
+    version = config['version'].get(w.model, 'latest')
+    wildcards = glob_wildcards(root_path+'RFMIP/{institution}/'+f'{w.model}' +
+                        '/piClim-control/{variant}/'+f'{subdir}/{var}/'+'{grid_label}/'+version+'/{fname}',
+                        followlinks=True)
+    fnames = []
+
     if wildcards.fname:
-        return expand('{root_path}/')
+    
+        if config['default_variant'] in wildcards.variant:
+            variant = config['default_variant']
+            for f in wildcards.fname:
+                if variant in f.split('_'):
+                    fnames.append(f)
+        else:
+            variant = wildcards.variant[0]
+            for f in wildcards.fname:
+                if variant in f.split('_'):
+                    fnames.append(f)
+        paths = expand('{root_path}RFMIP/{institution}/{model}/piClim-control/{variant}/{subdir}/{var}/{grid_label}/'+version+'/{fname}'
+                    , root_path=[root_path], institution=wildcards.institution[0], model=w.model, variant=variant, subdir=subdir,var =var,
+                    grid_label=wildcards.grid_label[0], fname=fnames)
+        return paths
     else:
-        paths = glob.glob(f'{ROOT_PATH}/{CMIP_VER}/AerChemMIP/**/{w.model}/' +
-                        f'piClim-control/**/{subdir}/{var}/**/latest/*.nc')
+        wildcards = glob_wildcards(root_path+'AerChemMIP/{institution}/'+f'{w.model}' +
+                        '/piClim-control/{variant}/'+f'{subdir}/{var}/'+'{grid_label}/'+version+'/{fname}',
+                        followlinks=True)
+        if config['default_variant'] in wildcards.variant:
+            variant = config['default_variant']
+            for f in wildcards.fname:
+                if variant in f.split('_'):
+                    fnames.append(f)
+        else:
+            variant = wildcards.variant[0]
+            for f in wildcards.fname:
+                if variant in f.split('_'):
+                    fnames.append(f) 
+        paths = expand('{root_path}AerChemMIP/{institution}/{model}/piClim-control/{variant}/{subdir}/{var}/{grid_label}/'+version+'/{fname}'
+                    , root_path=[root_path], institution=wildcards.institution[0], model=w.model, variant=variant, subdir=subdir, var=var,
+                    grid_label=wildcards.grid_label[0], fname=fnames)
         return paths
 
 rule calc_ERF_surf:
@@ -111,5 +138,5 @@ rule calc_absorption:
         delta_rad_surf = xr.open_dataset(input.delta_rad_surf)
         atm_abs = calc_atm_abs(delta_rad_surf[vName_rad_surf],delta_rad_toa[vName_rad_toa])
 
-        atm_abs = atm_abs.dataset(name=wildcards.vName)
+        atm_abs = atm_abs.to_dataset(name=wildcards.vName)
         atm_abs.to_netcdf(output.outpath)
