@@ -10,6 +10,10 @@ experiments: ['piClim-2xdust','piClim-control']
 
 default_variant: 'r1i1p1f1'
 
+# If prefered version is not latest or latest does not exist?
+version:
+  MPI-ESM-1-2-HAM: 'v20190628'
+
 variables: 
   ERFt: ['rsut', 'rsdt','rlut']
   ERFtcs: ['rsutcs','rsdt','rlutcs']
