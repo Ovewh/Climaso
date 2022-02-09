@@ -58,7 +58,6 @@ def get_paths(w, variable,experiment,table_id, grid_label, activity=None):
     paths = expand(
         f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}/{version}/{fname}_{{file_endings}}'
         ,file_endings=file_endings)
-    print(paths)
     return paths
 
 
