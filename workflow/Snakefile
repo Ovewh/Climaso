@@ -1,12 +1,40 @@
 import os
 import glob
+import yaml
+from scripts.create_lookup_tables import (generate_experiment_lookup_table,
+                                    generate_institu_lookup_table,
+                                    generate_file_ending_lookup_table)
 
 configfile: 'config/config.yaml'
 
-ACTIVITIES=config['activities']
 ROOT_PATH = config['root']
 CMIP_VER = config['cmip_version']
 VARS=config['variables']
+
+try:
+    with open('config/lookup_experiments.yaml', 'r') as f:
+        LOOK_EXP=yaml.safe_load(f)
+except FileNotFoundError:
+    LOOK_EXP = generate_experiment_lookup_table(ROOT_PATH, CMIP_VER)
+    with open('config/lookup_experiments.yaml', 'w') as f:
+        LOOK_EXP=yaml.dump(LOOK_EXP,f,default_flow_style=False)
+
+try:
+    with open('config/lookup_institution.yaml', 'r') as f:
+        LOOK_INSTITU=yaml.safe_load(f)
+except FileNotFoundError:
+    LOOK_INSTITU = generate_institu_lookup_table(ROOT_PATH, CMIP_VER)
+    with open('config/institution.yaml', 'w') as f:
+        LOOK_INSTITU=yaml.dump(LOOK_INSTITU,f,default_flow_style=False)
+try:
+    with open('config/lookup_file_endings.yaml', 'r') as f:
+        LOOK_FNAMES=yaml.safe_load(f)
+except FileNotFoundError:
+    LOOK_FNAMES = generate_file_ending_lookup_table(ROOT_PATH, CMIP_VER)
+    with open('config/lookup_file_endings.yaml', 'w') as f:
+        LOOK_FNAMES=yaml.dump(LOOK_FNAMES,f,default_flow_style=False)
+
+
 
 include: 'rules/compute_ERF.smk'
 
@@ -19,5 +47,5 @@ rule all:
     input:
         expand('results/atm_abs/atmabs_piClim-2xdust_{model}_Ayear.nc', 
                 model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
-                        'MIROC6',
+                        'MIROC6','UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
                         'CNRM-ESM2-1'])
