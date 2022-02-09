@@ -73,3 +73,7 @@ rule all:
                 model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
                         'MIROC6','UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
                         'CNRM-ESM2-1'])
+
+rule norESM:
+    input:
+        'results/atm_abs/atmabs_piClim-2xdust_NorESM2-LM_Ayear.nc'

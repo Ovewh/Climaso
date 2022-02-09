@@ -1,4 +1,4 @@
-name: /cluster/projects/nn2345k/ovewh/dust_climate/dustysnake
+name: dustysnake
 channels:
   - bioconda
   - conda-forge
