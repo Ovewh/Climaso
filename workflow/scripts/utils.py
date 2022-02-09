@@ -9,3 +9,4 @@ def load_CMIP_data(path, **dataset_kwargs):
     else:
         dataset_kwargs.pop('data_vars')
         return xr.open_dataset(path[0], chunks={'time':120}, **dataset_kwargs)
+

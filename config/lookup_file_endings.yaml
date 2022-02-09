@@ -1,4 +1,18 @@
 AerChemMIP:
+  NorESM2-LM:
+    piClim-2xdust:
+      Amon:
+        - 000101-001012.nc
+        - 001101-002012.nc
+        - 002101-003012.nc
+      AERmon:
+        - 000101-001012.nc
+        - 001101-002012.nc
+        - 002101-003012.nc 
+      AERday:
+        - 000101-001012.nc
+        - 001101-002012.nc
+        - 002101-003012.nc 
   BCC-ESM1:
     hist-piAer:
       AERmon:
@@ -33531,6 +33545,20 @@ PMIP:
       - v20190928
       - latest
 RFMIP:
+  NorESM2-LM:
+    piClim-control:
+      Amon:
+       - 000101-001012.nc
+       - 001101-002012.nc
+       - 002101-003012.nc
+     AERmon:
+       - 000101-001012.nc
+       - 001101-002012.nc
+       - 002101-003012.nc 
+     AERday:
+       - 000101-001012.nc
+       - 001101-002012.nc
+       - 002101-003012.nc 
   ACCESS-CM2:
     piClim-aer:
       Amon:

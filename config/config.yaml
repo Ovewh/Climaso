@@ -4,11 +4,14 @@ root: '/cluster/shared/ESGF'
 # Set CMIP version
 cmip_version: 'CMIP6'
 # Define under which CMIP6 ativities to search under
-activities: ['AerchemMIP','RFMIP']
+
 # Define the experiments to consider
 experiments: ['piClim-2xdust','piClim-control']
 
-default_variant: 'r1i1p1f1'
+variant_default: 'r1i1p1f1'
+
+model_specific_variant:
+  UKESM1-0-LL : 'r1i1p1f4'
 
 # If prefered version is not latest or latest does not exist?
 version:

@@ -20,7 +20,7 @@ except FileNotFoundError:
         LOOK_EXP=yaml.dump(LOOK_EXP,f,default_flow_style=False)
 
 try:
-    with open('config/lookup_institution.yaml', 'r') as f:
+    with open('config/institution.yaml', 'r') as f:
         LOOK_INSTITU=yaml.safe_load(f)
 except FileNotFoundError:
     LOOK_INSTITU = generate_institu_lookup_table(ROOT_PATH, CMIP_VER)
@@ -35,17 +35,42 @@ except FileNotFoundError:
         LOOK_FNAMES=yaml.dump(LOOK_FNAMES,f,default_flow_style=False)
 
 
+def get_paths(w, variable,experiment,table_id, grid_label, activity=None):
+    """
+    Get CMIP6 model paths in database based on the lookup tables
+    """
+
+    root_path = f'{ROOT_PATH}/{CMIP_VER}'
+    if activity:
+        activity= activity
+    else:
+        activity = LOOK_EXP[experiment]
+    model = w.model
+    variant = config['model_specific_variant'].get(w.model, config['variant_default'])
+    institution = LOOK_INSTITU[model]
+    try:
+        file_endings = LOOK_FNAMES[activity][model][experiment][table_id]
+    except:
+        raise KeyError("""File ending is not defined for this combination of activity, model, experiment and tabel_id,
+                        please update config/lookup_file_endings.yaml accordingly""")
+    version = config['version'].get(w.model, 'latest')
+    fname = f'{variable}_{table_id}_{model}_{experiment}_{variant}_{grid_label}'
+    paths = expand(
+        f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}/{version}/{fname}_{{file_endings}}'
+        ,file_endings=file_endings)
+    print(paths)
+    return paths
+
 
 include: 'rules/compute_ERF.smk'
 
 wildcard_constraints:
-    activities='|'.join(config['activities']),
     experiments='|'.join(config['experiments'])
 
 
 rule all:
     input:
-        expand('results/atm_abs/atmabs_piClim-2xdust_{model}_Ayear.nc', 
+        expand('results/atm_abs/atmabs_piClim-2xdust_{model}_r1i1p1f1_Ayear.nc', 
                 model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
                         'MIROC6','UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
                         'CNRM-ESM2-1'])
