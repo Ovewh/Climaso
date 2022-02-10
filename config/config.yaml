@@ -9,6 +9,7 @@ variant_default: 'r1i1p1f1'
 
 model_specific_variant:
   UKESM1-0-LL : 'r1i1p1f4'
+  GISS-E2-1-G : 'r1i1p3f1'
 
 # If prefered version is not latest or latest does not exist?
 version:

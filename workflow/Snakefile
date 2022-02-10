@@ -35,7 +35,7 @@ except FileNotFoundError:
         LOOK_FNAMES=yaml.dump(LOOK_FNAMES,f,default_flow_style=False)
 
 
-def get_paths(w, variable,experiment,table_id, grid_label, activity=None):
+def get_paths(w, variable,experiment,table_id, grid_label=None, activity=None):
     """
     Get CMIP6 model paths in database based on the lookup tables
     """
@@ -49,10 +49,12 @@ def get_paths(w, variable,experiment,table_id, grid_label, activity=None):
     variant = config['model_specific_variant'].get(w.model, config['variant_default'])
     institution = LOOK_INSTITU[model]
     try:
-        file_endings = LOOK_FNAMES[activity][model][experiment][table_id]
+        file_endings = LOOK_FNAMES[activity][model][experiment][variant][table_id]['fn']
     except:
-        raise KeyError("""File ending is not defined for this combination of activity, model, experiment and tabel_id,
-                        please update config/lookup_file_endings.yaml accordingly""")
+        raise KeyError(f"File ending is not defined for this combination of {activity}, {model}, {experiment}, {variant} and {table_id} " +
+                        "please update config/lookup_file_endings.yaml accordingly")
+    if grid_label is None:
+        grid_label = LOOK_FNAMES[activity][model][experiment][variant][table_id]['gl'][0]
     version = config['version'].get(w.model, 'latest')
     fname = f'{variable}_{table_id}_{model}_{experiment}_{variant}_{grid_label}'
     paths = expand(
