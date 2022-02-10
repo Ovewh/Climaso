@@ -63,9 +63,6 @@ def get_paths(w, variable,experiment,table_id, grid_label, activity=None):
 
 include: 'rules/compute_ERF.smk'
 
-wildcard_constraints:
-    experiments='|'.join(config['experiments'])
-
 
 rule all:
     input:

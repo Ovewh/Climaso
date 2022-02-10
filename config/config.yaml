@@ -5,9 +5,6 @@ root: '/cluster/shared/ESGF'
 cmip_version: 'CMIP6'
 # Define under which CMIP6 ativities to search under
 
-# Define the experiments to consider
-experiments: ['piClim-2xdust','piClim-control']
-
 variant_default: 'r1i1p1f1'
 
 model_specific_variant:
