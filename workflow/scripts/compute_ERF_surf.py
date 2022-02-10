@@ -1,5 +1,5 @@
 from pyclim_noresm.aerosol_forcing import calc_total_ERF_surf, merge_exp_ctrl
-from utils import load_CMIP_data
+from utils import load_CMIP_data, copy_meta_data_CMIP
 from pyclim_noresm.general_util_funcs import yearly_avg
 import time
 
@@ -33,7 +33,6 @@ ERF = calc_total_ERF_surf(dw_SW[vName_dw_SW], up_SW[vName_up_SW],
 if snakemake.wildcards.freq == 'Ayear':
     ERF = yearly_avg(ERF)
 
-ERF = ERF.to_dataset(name=snakemake.wildcards.vName)
 ERF = ERF.to_dataset(name=snakemake.wildcards.vName)
 attrs = copy_meta_data_CMIP(exp_dw_SW.attrs)
 ERF = ERF.assign_attrs(**attrs)
