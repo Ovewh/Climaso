@@ -1,9 +1,9 @@
 
 def get_control_path(w, variable,table_id, grid_label=None):
     try:
-        paths = get_paths(w, variable,'piClim-control',table_id, grid_label,activity='RFMIP')
+        paths = get_paths(w, variable,'piClim-control',table_id, grid_label,activity='RFMIP', control=True)
     except KeyError:
-        paths = get_paths(w, variable,'piClim-control',table_id, grid_label,activity='AerChemMIP')
+        paths = get_paths(w, variable,'piClim-control',table_id, grid_label,activity='AerChemMIP', control=True)
     return paths
 
 
