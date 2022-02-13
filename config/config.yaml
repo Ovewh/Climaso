@@ -22,6 +22,7 @@ version:
 variables: 
   ERFt: ['rsut', 'rsdt','rlut']
   ERFtcs: ['rsutcs','rsdt','rlutcs']
+  ERFtaf: ['rsutaf','rsdt','rlutaf']
   ERFtsw: ['rsut','rsdt']
   ERFsurfsw: ['rsus','rsds']
   ERFsurfswcs: ['rsuscs', 'rsdscs']

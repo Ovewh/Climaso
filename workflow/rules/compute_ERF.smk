@@ -30,7 +30,28 @@ rule calc_ERF_surf:
     script:
         "../scripts/compute_ERF_surf.py"
 
+
+
+rule calculate_ERF_TOA_af:
+    input:
+        exp_downwelling_SW = lambda w: get_paths(w,VARS[w.vName][1],w.experiment,'Amon'),
+        exp_upwelling_SW =lambda w: get_paths(w,VARS[w.vName][0],w.experiment,'AERmon'),
+        exp_upwelling_LW = lambda w: get_paths(w,VARS[w.vName][2],w.experiment,'AERmon'),
+        ctrl_downwelling_SW = lambda w:get_control_path(w, VARS[w.vName][1], 'Amon'),
+        ctrl_upwelling_SW = lambda w:get_control_path(w, VARS[w.vName][0],'AERmon'),
+        ctrl_upwelling_LW = lambda w:get_control_path(w, VARS[w.vName][2], 'AERmon')
     
+    output:
+        outpath = 'results/{vName}_{experiment}/{vName}_{experiment}_{model}_{freq}.nc'
+    
+    log:
+        "logs/calc_ERF_toa/{vName}_{model}_{experiment}_{freq}.log"
+
+    wildcard_constraints:
+        vName = 'ERFtaf'
+    
+    script:
+        "../scripts/compute_ERF_TOA.py"
     
 
 rule calculate_ERF_TOA:
