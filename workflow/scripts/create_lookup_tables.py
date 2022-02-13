@@ -47,21 +47,25 @@ def generate_file_ending_lookup_table(root_dir, cmip_ver='CMIP6'):
                             if experiment.is_dir():
                                 experiment_name = experiment.parts[-1]
                                 lookup_dir[activity][model_name][experiment_name] = {}
-                                varient = next(experiment.iterdir())
-                                for table_id in varient.iterdir():
-                                    if table_id.is_dir():
-                                        variable = next(table_id.iterdir())
+                                for varient in experiment.iterdir():
+                                    varient_name = varient.parts[-1]
+                                    lookup_dir[activity][model_name][experiment_name][varient_name] = {}
+                                    for table_id in varient.iterdir():
+                                        if table_id.is_dir():
+                                            variable = next(table_id.iterdir())
 
-                                        fnames = []
-                                        for gl in variable.iterdir():
-                                            gl_iter = gl.iterdir()
-                                            version = next(gl_iter)
-                                            if version.is_symlink():
+                                            fnames = []
+                                            list_gl = []
+                                            for gl in variable.iterdir():
+                                                gl_iter = gl.iterdir()
                                                 version = next(gl_iter)
-                                            if version.is_dir():    
+                                                if version.is_symlink():
+                                                    version = next(gl_iter)
+                                                if version.is_dir():    
 
-                                                for fname in version.iterdir():
-                                                    fnames.append(fname.parts[-1].split('_')[-1])
-                                        lookup_dir[activity][model_name][experiment_name][table_id.parts[-1]] = fnames
+                                                    for fname in version.iterdir():
+                                                        fnames.append(fname.parts[-1].split('_')[-1])
+                                                list_gl.append(gl.parts[-1]) 
+                                            lookup_dir[activity][model_name][experiment_name][varient_name][table_id.parts[-1]] = {'fn':fnames,'gl':list_gl}
                 
     return lookup_dir

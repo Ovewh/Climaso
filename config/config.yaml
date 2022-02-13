@@ -5,21 +5,24 @@ root: '/cluster/shared/ESGF'
 cmip_version: 'CMIP6'
 # Define under which CMIP6 ativities to search under
 
-# Define the experiments to consider
-experiments: ['piClim-2xdust','piClim-control']
-
 variant_default: 'r1i1p1f1'
 
 model_specific_variant:
   UKESM1-0-LL : 'r1i1p1f4'
+  GISS-E2-1-G : 'r1i1p3f1'
+  CNRM-ESM2-1 : 'r1i1p1f2'
 
 # If prefered version is not latest or latest does not exist?
 version:
-  MPI-ESM-1-2-HAM: 'v20190628'
+  version_control:
+    MPI-ESM-1-2-HAM: 'v20190628'
+  version_exp:
+    MPI-ESM-1-2-HAM: 'latest'
 
 variables: 
   ERFt: ['rsut', 'rsdt','rlut']
   ERFtcs: ['rsutcs','rsdt','rlutcs']
+  ERFtaf: ['rsutaf','rsdt','rlutaf']
   ERFtsw: ['rsut','rsdt']
   ERFsurfsw: ['rsus','rsds']
   ERFsurfswcs: ['rsuscs', 'rsdscs']
