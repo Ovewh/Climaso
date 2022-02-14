@@ -10,6 +10,7 @@ configfile: 'config/config.yaml'
 ROOT_PATH = config['root']
 CMIP_VER = config['cmip_version']
 VARS=config['variables']
+EXPERIMENTS=config['experiments']
 
 try:
     with open('config/lookup_experiments.yaml', 'r') as f:
@@ -27,10 +28,10 @@ except FileNotFoundError:
     with open('config/institution.yaml', 'w') as f:
         LOOK_INSTITU=yaml.dump(LOOK_INSTITU,f,default_flow_style=False)
 try:
-    with open('config/lookup_file_endings.yaml', 'r') as f:
+    with open(config['lookup_file_endings'], 'r') as f:
         LOOK_FNAMES=yaml.safe_load(f)
 except FileNotFoundError:
-    LOOK_FNAMES = generate_file_ending_lookup_table(ROOT_PATH, CMIP_VER)
+    LOOK_FNAMES=generate_file_ending_lookup_table(ROOT_PATH,EXPERIMENTS,CMIP_VER)
     with open('config/lookup_file_endings.yaml', 'w') as f:
         LOOK_FNAMES=yaml.dump(LOOK_FNAMES,f,default_flow_style=False)
 
@@ -87,4 +88,4 @@ rule all:
 
 rule norESM:
     input:
-        'results/atm_abs/atmabs_piClim-2xdust_NorESM2-LM_Ayear.nc'
+        'results/atm_abs/atmabs_piClim-2xdust_NorESM2-LM_Ayear.nc',

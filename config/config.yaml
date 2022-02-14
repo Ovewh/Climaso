@@ -12,6 +12,12 @@ model_specific_variant:
   GISS-E2-1-G : 'r1i1p3f1'
   CNRM-ESM2-1 : 'r1i1p1f2'
 
+
+
+experiments:
+  - 'piClim-control'
+  - 'piClim-2xdust'
+
 # If prefered version is not latest or latest does not exist?
 version:
   version_control:
@@ -32,4 +38,4 @@ variables:
   atmabsSW: ['ERFtsw','ERFsurfsw']
   atmabs: ['ERFt','ERFsurf']
 
-
+lookup_file_endings: 'config/lookup_file_endings.yaml'
