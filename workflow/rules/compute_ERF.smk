@@ -19,7 +19,7 @@ rule calc_ERF_surf:
         ctrl_downwelling_LW = lambda w:get_control_path(w, VARS[w.vName][3])
 
     output:
-        outpath ='results/{experiment}/{vname}/{vName}_{experiment}_{model}_{freq}.nc'
+        outpath ='results/{experiment}/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
     
     wildcard_constraints:
         vName = 'ERFsurf|ERFsurfcs'
@@ -41,7 +41,7 @@ rule calculate_ERF_TOA:
         ctrl_upwelling_LW = lambda w:get_control_path(w, VARS[w.vName][2])
     
     output:
-        outpath = 'results/{experiment}/{vname}/{vName}_{experiment}_{model}_{freq}.nc'
+        outpath = 'results/{experiment}/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
     
     log:
         "logs/calc_ERF_toa/{vName}_{model}_{experiment}_{freq}.log"
@@ -62,7 +62,7 @@ rule calculate_SW_ERF:
         ctrl_upwelling_SW = lambda w:get_control_path(w, VARS[w.vName][0])
     
     output:
-        outpath = 'results/{experiment}/{vname}/{vName}_{experiment}_{model}_{freq}.nc'
+        outpath = 'results/{experiment}/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
     
     wildcard_constraints:
         vName='ERFtsw|ERFtswcs|ERFsurfsw|ERFsurfswcs'
@@ -76,7 +76,7 @@ rule calculate_ERF_TOA_LW:
         exp_upwelling_LW = lambda w: get_paths(w,VARS[w.vName][0],w.experiment),
         ctrl_upwelling_LW = lambda w: get_paths(w,VARS[w.vName][0],w.experiment)
     output:
-        outpath = 'results/{experiment}/{vname}/{vName}_{experiment}_{model}_{freq}.nc'
+        outpath = 'results/{experiment}/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
     log:
         "logs/calc_ERF_LW/{vName}_{model}_{experiment}_{freq}.log"  
     script:
