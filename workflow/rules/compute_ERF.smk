@@ -1,9 +1,9 @@
 
-def get_control_path(w, variable,table_id, grid_label=None):
+def get_control_path(w, variable, grid_label=None):
     try:
-        paths = get_paths(w, variable,'piClim-control',table_id, grid_label,activity='RFMIP', control=True)
+        paths = get_paths(w, variable,'piClim-control', grid_label,activity='RFMIP', control=True)
     except KeyError:
-        paths = get_paths(w, variable,'piClim-control',table_id, grid_label,activity='AerChemMIP', control=True)
+        paths = get_paths(w, variable,'piClim-control', grid_label,activity='AerChemMIP', control=True)
     return paths
 
 
@@ -79,14 +79,17 @@ rule calculate_ERF_TOA_LW:
         outpath = 'results/{experiment}/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
     log:
         "logs/calc_ERF_LW/{vName}_{model}_{experiment}_{freq}.log"  
+    wildcard_constraints:
+        vName='ERFtlw|ERFtlwaf|ERFtlwcs|ERFtlwcsaf'
+
     script:
-        "../scripts/compute_ERF_LW.py"
+        "../scripts/compute_ERF_LW_TOA.py"
 
 
 rule calc_cloud_radiative_effect:
     input:
-        ERFaf =  lambda w: f'results/{w.experiment}/{VARS[w.vName][1]}/{VARS[w.vName][1]}_{w.experiment}_{w.model}_{w.freq}.nc',
-        ERFafcs = lambda w: f'results/{w.experiment}/{VARS[w.vName][0]}/{VARS[w.vName][0]}_{w.experiment}_{w.model}_{w.freq}.nc'
+        ERFaf =  lambda w: f'results/{w.experiment}/{VARS[w.vName][0]}/{VARS[w.vName][0]}_{w.experiment}_{w.model}_{w.freq}.nc',
+        ERFafcs = lambda w: f'results/{w.experiment}/{VARS[w.vName][1]}/{VARS[w.vName][1]}_{w.experiment}_{w.model}_{w.freq}.nc'
     output:
         outpath='results/{experiment}/cloud_rad/{vName}_{experiment}_{model}_{freq}.nc'
     wildcard_constraints:
@@ -95,12 +98,12 @@ rule calc_cloud_radiative_effect:
     log:
         "logs/cloud_rad/{vName}_{model}_{experiment}_{freq}.log"
     script:
-        "../compute_cloud_effect.py"
+        "../scripts/compute_cloud_effect.py"
 
 rule calc_direct_radiative_effect:
     input:
-        ERFt =  lambda w: f'results/{w.experiment}/{VARS[w.vName][1]}/{VARS[w.vName][1]}_{w.experiment}_{w.model}_{w.freq}.nc',
-        ERFtaf = lambda w: f'results/{w.experiment}/{VARS[w.vName][0]}/{VARS[w.vName][0]}_{w.experiment}_{w.model}_{w.freq}.nc'
+        ERFt =  lambda w: f'results/{w.experiment}/{VARS[w.vName][0]}/{VARS[w.vName][0]}_{w.experiment}_{w.model}_{w.freq}.nc',
+        ERFtaf = lambda w: f'results/{w.experiment}/{VARS[w.vName][1]}/{VARS[w.vName][1]}_{w.experiment}_{w.model}_{w.freq}.nc'
     output:
         outpath='results/{experiment}/rad/{vName}_{experiment}_{model}_{freq}.nc'
 
@@ -109,7 +112,7 @@ rule calc_direct_radiative_effect:
     wildcard_constraints:
         vName='SWDirectEff|SWDirectEff_cs|LWDirectEff|LWDirectEff_cs'
     script:
-        "../compute_direct_radiative_effect.py"
+        "../scripts/compute_direct_radiative_effect.py"
 
 rule calc_absorption:
     input:

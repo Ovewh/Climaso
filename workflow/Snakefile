@@ -50,6 +50,7 @@ def get_paths(w, variable,experiment, grid_label=None, activity=None, control=Fa
         activity = LOOK_EXP[experiment]
     model = w.model
     variant = config['model_specific_variant'].get(w.model, config['variant_default'])
+    table_id = TABLE_IDS.get(variable,DEFAULT_TABLE_ID)
     institution = LOOK_INSTITU[model]
     try:
         file_endings = LOOK_FNAMES[activity][model][experiment][variant][table_id]['fn']
@@ -62,7 +63,7 @@ def get_paths(w, variable,experiment, grid_label=None, activity=None, control=Fa
         version = config['version']['version_control'].get(w.model, 'latest')
     else:
         version = config['version']['version_exp'].get(w.model, 'latest')
-    table_id = TABLE_IDS.get(variable,DEFAULT_TABLE_ID)
+    
     fname = f'{variable}_{table_id}_{model}_{experiment}_{variant}_{grid_label}'
     paths = expand(
         f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}/{version}/{fname}_{{file_endings}}'

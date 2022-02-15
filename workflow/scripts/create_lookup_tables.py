@@ -60,7 +60,6 @@ def generate_file_ending_lookup_table(root_dir,experiments ,cmip_ver='CMIP6'):
                                                 for gl in variable.iterdir():
                                                     gl_iter = gl.iterdir()
                                                     version = next(gl_iter)
-                                                    print(version)
                                                     if version.is_symlink():
                                                         try:
                                                             version = next(gl_iter)
