@@ -9,17 +9,17 @@ def get_control_path(w, variable,table_id, grid_label=None):
 
 rule calc_ERF_surf:
     input:
-        exp_downwelling_SW = lambda w: get_paths(w,VARS[w.vName][1],w.experiment,'Amon'),
-        exp_upwelling_SW = lambda w: get_paths(w,VARS[w.vName][0],w.experiment,'Amon'),
-        exp_upwelling_LW = lambda w: get_paths(w,VARS[w.vName][2],w.experiment,'Amon'),
-        exp_downwelling_LW = lambda w: get_paths(w,VARS[w.vName][3],w.experiment,'Amon'),
-        ctrl_downwelling_SW = lambda w:get_control_path(w, VARS[w.vName][1], 'Amon'),
-        ctrl_upwelling_SW = lambda w:get_control_path(w, VARS[w.vName][0],'Amon'),
-        ctrl_upwelling_LW = lambda w:get_control_path(w, VARS[w.vName][2], 'Amon'),
-        ctrl_downwelling_LW = lambda w:get_control_path(w, VARS[w.vName][3],'Amon')
+        exp_downwelling_SW = lambda w: get_paths(w,VARS[w.vName][1],w.experiment),
+        exp_upwelling_SW = lambda w: get_paths(w,VARS[w.vName][0],w.experiment),
+        exp_upwelling_LW = lambda w: get_paths(w,VARS[w.vName][2],w.experiment),
+        exp_downwelling_LW = lambda w: get_paths(w,VARS[w.vName][3],w.experiment),
+        ctrl_downwelling_SW = lambda w:get_control_path(w, VARS[w.vName][1]),
+        ctrl_upwelling_SW = lambda w:get_control_path(w, VARS[w.vName][0]),
+        ctrl_upwelling_LW = lambda w:get_control_path(w, VARS[w.vName][2]),
+        ctrl_downwelling_LW = lambda w:get_control_path(w, VARS[w.vName][3])
 
     output:
-        outpath ='results/{vName}_{experiment}/{vName}_{experiment}_{model}_{freq}.nc'
+        outpath ='results/{experiment}/{vname}/{vName}_{experiment}_{model}_{freq}.nc'
     
     wildcard_constraints:
         vName = 'ERFsurf|ERFsurfcs'
@@ -31,46 +31,23 @@ rule calc_ERF_surf:
         "../scripts/compute_ERF_surf.py"
 
 
-
-rule calculate_ERF_TOA_af:
-    input:
-        exp_downwelling_SW = lambda w: get_paths(w,VARS[w.vName][1],w.experiment,'Amon'),
-        exp_upwelling_SW =lambda w: get_paths(w,VARS[w.vName][0],w.experiment,'AERmon'),
-        exp_upwelling_LW = lambda w: get_paths(w,VARS[w.vName][2],w.experiment,'AERmon'),
-        ctrl_downwelling_SW = lambda w:get_control_path(w, VARS[w.vName][1], 'Amon'),
-        ctrl_upwelling_SW = lambda w:get_control_path(w, VARS[w.vName][0],'AERmon'),
-        ctrl_upwelling_LW = lambda w:get_control_path(w, VARS[w.vName][2], 'AERmon')
-    
-    output:
-        outpath = 'results/{vName}_{experiment}/{vName}_{experiment}_{model}_{freq}.nc'
-    
-    log:
-        "logs/calc_ERF_toa/{vName}_{model}_{experiment}_{freq}.log"
-
-    wildcard_constraints:
-        vName = 'ERFtaf'
-    
-    script:
-        "../scripts/compute_ERF_TOA.py"
-    
-
 rule calculate_ERF_TOA:
     input:
-        exp_downwelling_SW = lambda w: get_paths(w,VARS[w.vName][1],w.experiment,'Amon'),
-        exp_upwelling_SW =lambda w: get_paths(w,VARS[w.vName][0],w.experiment,'Amon'),
-        exp_upwelling_LW = lambda w: get_paths(w,VARS[w.vName][2],w.experiment,'Amon'),
-        ctrl_downwelling_SW = lambda w:get_control_path(w, VARS[w.vName][1], 'Amon'),
-        ctrl_upwelling_SW = lambda w:get_control_path(w, VARS[w.vName][0],'Amon'),
-        ctrl_upwelling_LW = lambda w:get_control_path(w, VARS[w.vName][2], 'Amon')
+        exp_downwelling_SW = lambda w: get_paths(w,VARS[w.vName][1],w.experiment),
+        exp_upwelling_SW =lambda w: get_paths(w,VARS[w.vName][0],w.experiment),
+        exp_upwelling_LW = lambda w: get_paths(w,VARS[w.vName][2],w.experiment),
+        ctrl_downwelling_SW = lambda w:get_control_path(w, VARS[w.vName][1]),
+        ctrl_upwelling_SW = lambda w:get_control_path(w, VARS[w.vName][0]),
+        ctrl_upwelling_LW = lambda w:get_control_path(w, VARS[w.vName][2])
     
     output:
-        outpath = 'results/{vName}_{experiment}/{vName}_{experiment}_{model}_{freq}.nc'
+        outpath = 'results/{experiment}/{vname}/{vName}_{experiment}_{model}_{freq}.nc'
     
     log:
         "logs/calc_ERF_toa/{vName}_{model}_{experiment}_{freq}.log"
 
     wildcard_constraints:
-        vName = 'ERFt|ERFtcs'
+        vName = 'ERFt|ERFtcs|ERFtaf|ERFtcsaf'
     
     script:
         "../scripts/compute_ERF_TOA.py"
@@ -79,13 +56,13 @@ rule calculate_ERF_TOA:
 
 rule calculate_SW_ERF:
     input:
-        exp_downwelling_SW = lambda w: get_paths(w,VARS[w.vName][1],w.experiment,'Amon'),
-        exp_upwelling_SW = lambda w: get_paths(w,VARS[w.vName][0],w.experiment,'Amon'), 
-        ctrl_downwelling_SW = lambda w:get_control_path(w, VARS[w.vName][1], 'Amon'),
-        ctrl_upwelling_SW = lambda w:get_control_path(w, VARS[w.vName][0],'Amon')
+        exp_downwelling_SW = lambda w: get_paths(w,VARS[w.vName][1],w.experiment),
+        exp_upwelling_SW = lambda w: get_paths(w,VARS[w.vName][0],w.experiment), 
+        ctrl_downwelling_SW = lambda w:get_control_path(w, VARS[w.vName][1]),
+        ctrl_upwelling_SW = lambda w:get_control_path(w, VARS[w.vName][0])
     
     output:
-        outpath = 'results/{vName}_{experiment}/{vName}_{experiment}_{model}_{freq}.nc'
+        outpath = 'results/{experiment}/{vname}/{vName}_{experiment}_{model}_{freq}.nc'
     
     wildcard_constraints:
         vName='ERFtsw|ERFtswcs|ERFsurfsw|ERFsurfswcs'
@@ -94,11 +71,14 @@ rule calculate_SW_ERF:
     script:
         "../scripts/compute_ERF_SW.py"
 
+rule calculate_ERF_TOA_LW:
+    input:
+        exp_upwelling_LW = 
 
 rule calc_absorption:
     input:
-        delta_rad_surf = lambda w: f'results/{VARS[w.vName][1]}_{w.experiment}/{VARS[w.vName][1]}_{w.experiment}_{w.model}_{w.freq}.nc',
-        delta_rad_toa = lambda w: f'results/{VARS[w.vName][0]}_{w.experiment}/{VARS[w.vName][0]}_{w.experiment}_{w.model}_{w.freq}.nc'
+        delta_rad_surf = lambda w: f'results/{w.experiment}/{VARS[w.vName][1]}/{VARS[w.vName][1]}_{w.experiment}_{w.model}_{w.freq}.nc',
+        delta_rad_toa = lambda w: f'results/{w.experiment}/{VARS[w.vName][0]}/{VARS[w.vName][0]}_{w.experiment}_{w.model}_{w.freq}.nc'
     output:
         outpath='results/atm_abs/{vName}_{experiment}_{model}_{freq}.nc'
     wildcard_constraints:

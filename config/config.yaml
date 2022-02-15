@@ -3,8 +3,8 @@
 root: '/cluster/shared/ESGF'
 # Set CMIP version
 cmip_version: 'CMIP6'
-# Define under which CMIP6 ativities to search under
 
+# Default model variant used nothing else is specified
 variant_default: 'r1i1p1f1'
 
 model_specific_variant:
@@ -24,6 +24,17 @@ version:
     MPI-ESM-1-2-HAM: 'v20190628'
   version_exp:
     MPI-ESM-1-2-HAM: 'latest'
+
+# Default table_id
+table_id_default: 'Amon' 
+
+# Variables that not in default table_id: (default is Amon)
+table_ids:
+  rlutaf: 'AERmon'
+  rsutcsaf: 'AERmon'
+  rsutaf: 'AERmon'
+  rlutcsaf: 'AERmon'
+
 
 variables: 
   ERFt: ['rsut', 'rsdt','rlut']
@@ -51,5 +62,7 @@ variables:
   LWCloudEff : ['ERFtlwaf','ERFtlwcsaf']
   atmabsSW: ['ERFtsw','ERFsurfsw']
   atmabs: ['ERFt','ERFsurf']
+
+
 
 lookup_file_endings: 'config/lookup_file_endings.yaml'

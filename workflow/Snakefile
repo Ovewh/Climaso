@@ -11,6 +11,8 @@ ROOT_PATH = config['root']
 CMIP_VER = config['cmip_version']
 VARS=config['variables']
 EXPERIMENTS=config['experiments']
+TABLE_IDS=config['table_ids']
+DEFAULT_TABLE_ID=config['table_id_default']
 
 try:
     with open('config/lookup_experiments.yaml', 'r') as f:
@@ -36,7 +38,7 @@ except FileNotFoundError:
         LOOK_FNAMES=yaml.dump(LOOK_FNAMES,f,default_flow_style=False)
 
 
-def get_paths(w, variable,experiment,table_id, grid_label=None, activity=None, control=False):
+def get_paths(w, variable,experiment, grid_label=None, activity=None, control=False):
     """
     Get CMIP6 model paths in database based on the lookup tables
     """
@@ -60,6 +62,7 @@ def get_paths(w, variable,experiment,table_id, grid_label=None, activity=None, c
         version = config['version']['version_control'].get(w.model, 'latest')
     else:
         version = config['version']['version_exp'].get(w.model, 'latest')
+    table_id = TABLE_IDS.get(variable,DEFAULT_TABLE_ID)
     fname = f'{variable}_{table_id}_{model}_{experiment}_{variant}_{grid_label}'
     paths = expand(
         f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}/{version}/{fname}_{{file_endings}}'
