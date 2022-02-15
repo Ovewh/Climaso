@@ -83,13 +83,40 @@ rule calculate_ERF_TOA_LW:
         "../scripts/compute_ERF_LW.py"
 
 
+rule calc_cloud_radiative_effect:
+    input:
+        ERFaf =  lambda w: f'results/{w.experiment}/{VARS[w.vName][1]}/{VARS[w.vName][1]}_{w.experiment}_{w.model}_{w.freq}.nc',
+        ERFafcs = lambda w: f'results/{w.experiment}/{VARS[w.vName][0]}/{VARS[w.vName][0]}_{w.experiment}_{w.model}_{w.freq}.nc'
+    output:
+        outpath='results/{experiment}/cloud_rad/{vName}_{experiment}_{model}_{freq}.nc'
+    wildcard_constraints:
+        vName='CloudEff|SWCloudEff|LWCloudEff'
+
+    log:
+        "logs/cloud_rad/{vName}_{model}_{experiment}_{freq}.log"
+    script:
+        "../compute_cloud_effect.py"
+
+rule calc_direct_radiative_effect:
+    input:
+        ERFt =  lambda w: f'results/{w.experiment}/{VARS[w.vName][1]}/{VARS[w.vName][1]}_{w.experiment}_{w.model}_{w.freq}.nc',
+        ERFtaf = lambda w: f'results/{w.experiment}/{VARS[w.vName][0]}/{VARS[w.vName][0]}_{w.experiment}_{w.model}_{w.freq}.nc'
+    output:
+        outpath='results/{experiment}/rad/{vName}_{experiment}_{model}_{freq}.nc'
+
+    log:
+        "logs/rad/{vName}_{model}_{experiment}_{freq}.log"
+    wildcard_constraints:
+        vName='SWDirectEff|SWDirectEff_cs|LWDirectEff|LWDirectEff_cs'
+    script:
+        "../compute_direct_radiative_effect.py"
 
 rule calc_absorption:
     input:
         delta_rad_surf = lambda w: f'results/{w.experiment}/{VARS[w.vName][1]}/{VARS[w.vName][1]}_{w.experiment}_{w.model}_{w.freq}.nc',
         delta_rad_toa = lambda w: f'results/{w.experiment}/{VARS[w.vName][0]}/{VARS[w.vName][0]}_{w.experiment}_{w.model}_{w.freq}.nc'
     output:
-        outpath='results/atm_abs/{vName}_{experiment}_{model}_{freq}.nc'
+        outpath='results/{experiment}/atm_abs/{vName}_{experiment}_{model}_{freq}.nc'
     wildcard_constraints:
         vName='atmabsSW|atmabs'
     log:
