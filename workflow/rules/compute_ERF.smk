@@ -73,7 +73,16 @@ rule calculate_SW_ERF:
 
 rule calculate_ERF_TOA_LW:
     input:
-        exp_upwelling_LW = 
+        exp_upwelling_LW = lambda w: get_paths(w,VARS[w.vName][0],w.experiment),
+        ctrl_upwelling_LW = lambda w: get_paths(w,VARS[w.vName][0],w.experiment)
+    output:
+        outpath = 'results/{experiment}/{vname}/{vName}_{experiment}_{model}_{freq}.nc'
+    log:
+        "logs/calc_ERF_LW/{vName}_{model}_{experiment}_{freq}.log"  
+    script:
+        "../scripts/compute_ERF_LW.py"
+
+
 
 rule calc_absorption:
     input:
