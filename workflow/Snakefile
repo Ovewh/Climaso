@@ -48,14 +48,16 @@ def get_paths(w, variable,experiment, grid_label=None, activity=None, control=Fa
     """
     Get CMIP6 model paths in database based on the lookup tables
     """
-
     root_path = f'{ROOT_PATH}/{CMIP_VER}'
     if activity:
         activity= activity
     else:
         activity = LOOK_EXP[experiment]
     model = w.model
-    variant = config['model_specific_variant'].get(w.model, config['variant_default'])
+    if control:
+        variant=config['model_specific_variant']['control'].get(model, config['variant_default'])
+    else:
+        variant = config['model_specific_variant']['experiment'].get(model, config['variant_default'])
     table_id = TABLE_IDS.get(variable,DEFAULT_TABLE_ID)
     institution = LOOK_INSTITU[model]
     try:
@@ -69,7 +71,6 @@ def get_paths(w, variable,experiment, grid_label=None, activity=None, control=Fa
         version = config['version']['version_control'].get(w.model, 'latest')
     else:
         version = config['version']['version_exp'].get(w.model, 'latest')
-    
     fname = f'{variable}_{table_id}_{model}_{experiment}_{variant}_{grid_label}'
     paths = expand(
         f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}/{version}/{fname}_{{file_endings}}'

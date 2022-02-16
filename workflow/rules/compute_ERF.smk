@@ -74,7 +74,7 @@ rule calculate_SW_ERF:
 rule calculate_ERF_TOA_LW:
     input:
         exp_upwelling_LW = lambda w: get_paths(w,VARS[w.vName][0],w.experiment),
-        ctrl_upwelling_LW = lambda w: get_paths(w,VARS[w.vName][0],w.experiment)
+        ctrl_upwelling_LW = lambda w: get_control_path(w,VARS[w.vName][0])
     output:
         outpath = 'results/{experiment}/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
     log:
