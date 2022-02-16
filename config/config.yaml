@@ -8,9 +8,15 @@ cmip_version: 'CMIP6'
 variant_default: 'r1i1p1f1'
 
 model_specific_variant:
-  UKESM1-0-LL : 'r1i1p1f4'
-  GISS-E2-1-G : 'r1i1p3f1'
-  CNRM-ESM2-1 : 'r1i1p1f2'
+  control:
+    UKESM1-0-LL : 'r1i1p1f4'
+    GISS-E2-1-G : 'r1i1p3f1'
+    CNRM-ESM2-1 : 'r1i1p1f2'
+    MIROC6 : 'r11i1p1f1'
+  experiment:
+    UKESM1-0-LL : 'r1i1p1f4'
+    GISS-E2-1-G : 'r1i1p3f1'
+    CNRM-ESM2-1 : 'r1i1p1f2'
 
 
 
