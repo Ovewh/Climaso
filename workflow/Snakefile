@@ -1,3 +1,9 @@
+## Snakemake Climaso (The CLimate IMpact of AeroSOls: forcing and feedbacks)
+##
+## Ove Haugvaldstad
+##
+## MIT license.
+##
 import os
 import glob
 import yaml
@@ -68,28 +74,45 @@ def get_paths(w, variable,experiment, grid_label=None, activity=None, control=Fa
     paths = expand(
         f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}/{version}/{fname}_{{file_endings}}'
         ,file_endings=file_endings)
+    # Sometimes the verisons are just messed up... try one more time with latest
+    if not os.path.exists(paths[0]):
+        paths=expand(
+        f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}/latest/{fname}_{{file_endings}}'
+        ,file_endings=file_endings)
     return paths
 
 
 include: 'rules/compute_ERF.smk'
 
 
-rule all:
+## piClim2xdustERFbetzy     : Calculates ERF(LW/SW/Total) and the atmospheric absorbtion 
+##                            between piClim-control and piClim-2xdust (works on betzy)
+rule piClim2xdustERFbetzy:
     input:
-        expand('results/atm_abs/atmabs_piClim-2xdust_{model}_Ayear.nc', 
+        expand('results/piClim-2xdust/atm_abs/atmabs_piClim-2xdust_{model}_Ayear.nc', 
                 model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
                         'MIROC6','UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
                         'CNRM-ESM2-1']),
 
-        expand('results/ERFtcs_piClim-2xdust/ERFtcs_piClim-2xdust_{model}_Ayear.nc', 
+        expand('results/piClim-2xdust/{vName}/{vName}_piClim-2xdust_{model}_Ayear.nc', 
                 model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
                         'MIROC6','UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
+                        'CNRM-ESM2-1'], vName = ['ERFtsw','ERFtlw','ERFtcs'])
+## piClim2xdustRadbetzy     : Calculates the direct and cloud radiative effects between piClim-control
+##                            and piClim-2xdust (works on betzy)
+rule piClim2xdustRadbetzy:
+    input:
+        expand('results/piClim-2xdust/cloud_rad/{vName}_piClim-2xdust_{model}_Ayear.nc',
+            vName=['CloudEff','SWCloudEff','LWCloudEff'], 
+            model=['EC-Earth3-AerChem',  
+                        'UKESM1-0-LL', 'MPI-ESM-1-2-HAM',
                         'CNRM-ESM2-1']),
-        expand('results/ERFtcs_piClim-2xdust/ERFtcs_piClim-2xdust_{model}_Ayear.nc', 
-                model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
-                        'MIROC6','UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
+        expand('results/piClim-2xdust/rad/{vName}_piClim-2xdust_{model}_Ayear.nc',
+            vName=['SWDirectEff','SWDirectEff_cs','LWDirectEff','LWDirectEff_cs'], 
+            model=['EC-Earth3-AerChem', 
+                        'UKESM1-0-LL', 'MPI-ESM-1-2-HAM',
                         'CNRM-ESM2-1'])
 
 rule norESM:
     input:
-        'results/atm_abs/atmabs_piClim-2xdust_NorESM2-LM_Ayear.nc',
+        'results/piClim-2x/atm_abs/atmabs_piClim-2xdust_NorESM2-LM_Ayear.nc'

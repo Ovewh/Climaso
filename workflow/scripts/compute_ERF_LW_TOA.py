@@ -8,7 +8,7 @@ VARS = snakemake.config['variables']
 vName_up_LW = VARS[snakemake.wildcards.vName][0]
 
 exp_up_LW = load_CMIP_data(snakemake.input.exp_upwelling_LW, data_vars=[vName_up_LW])
-ctrl_up_LW = load_CMIP_data(snakemake.input.ctrl_upwelling_SW, data_vars=[vName_up_LW])
+ctrl_up_LW = load_CMIP_data(snakemake.input.ctrl_upwelling_LW, data_vars=[vName_up_LW])
 up_LW = merge_exp_ctrl(exp_up_LW, ctrl_up_LW)
 
 

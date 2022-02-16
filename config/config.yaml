@@ -56,7 +56,7 @@ variables:
   SWDirectEff: ['ERFtsw','ERFtswaf']
   SWDirectEff_cs: ['ERFtswcs','ERFtswcsaf']
   LWDirectEff: ['ERFtlw','ERFtlwaf']
-  LWDirectEff_cs: ['ERFtlwcs':ERFtlwcsaf]
+  LWDirectEff_cs: ['ERFtlwcs','ERFtlwcsaf']
   CloudEff: ['ERFtaf','ERFtcsaf']
   SWCloudEff : ['ERFtswaf','ERFtswcsaf']
   LWCloudEff : ['ERFtlwaf','ERFtlwcsaf']

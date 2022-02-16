@@ -65,7 +65,7 @@ rule calculate_SW_ERF:
         outpath = 'results/{experiment}/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
     
     wildcard_constraints:
-        vName='ERFtsw|ERFtswcs|ERFsurfsw|ERFsurfswcs'
+        vName='ERFtsw|ERFtswcs|ERFsurfsw|ERFsurfswcs|ERFtswcsaf|ERFtswaf'
     log:
         "logs/calc_ERF_SW/{vName}_{model}_{experiment}_{freq}.log"  
     script:
