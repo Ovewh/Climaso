@@ -116,4 +116,10 @@ rule piClim2xdustRadbetzy:
 
 rule norESM:
     input:
-        'results/piClim-2x/atm_abs/atmabs_piClim-2xdust_NorESM2-LM_Ayear.nc'
+        'results/piClim-2xdust/atm_abs/atmabs_piClim-2xdust_NorESM2-LM_Ayear.nc',
+        expand('results/piClim-2xdust/rad/{vName}_piClim-2x_NorESM2-LM_Ayear.nc',
+                vName=['SWDirectEff','SWDirectEff_cs','LWDirectEff','LWDirectEff_cs']),
+        expand('results/piClim-2xdust/cloud_rad/{vName}_piClim-2xdust_NorESM2-LM_Ayear,nc',
+               vName=['CloudEff','SWCloudEff','LWCloudEff']),
+        expand('results/piClim-2xdust/{vName}/{vName}_piClim-2xdust_NorESM2-LM_Ayear.nc', 
+                vName = ['ERFtsw','ERFtlw','ERFtcs'])        
