@@ -28,7 +28,7 @@ jobs:
       uses: snakemake/snakemake-github-action@v1.24.0
       with:
         directory: .
-        snakefile: Climaso/workflow/Snakefile
+        snakefile: workflow/Snakefile
         args: "--lint"
 
   Testing:
