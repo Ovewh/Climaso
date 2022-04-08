@@ -43,14 +43,14 @@ def generate_file_ending_lookup_table(root_dir,experiments ,cmip_ver='CMIP6'):
                     if model.is_dir():
                         model_name = model.parts[-1] 
                         lookup_dir[activity][model_name] = {}
-                        for experiment in model.iterdir() and experiment.parts[-1].startswith('.')==False:
+                        for experiment in model.iterdir():
                             if experiment.is_dir() and experiment.parts[-1] in experiments:
                                 experiment_name = experiment.parts[-1]
                                 lookup_dir[activity][model_name][experiment_name] = {}
-                                for variant in experiment.iterdir() and variant.parts[-1].startswith('.')==False:
+                                for variant in experiment.iterdir():
                                     variant_name = variant.parts[-1]
                                     lookup_dir[activity][model_name][experiment_name][variant_name] = {}
-                                    if variant.is_dir():
+                                    if variant.is_dir() and variant.parts[-1].startswith('.')==False:
                                         for table_id in variant.iterdir():
                                             if table_id.is_dir():
                                                 variable = next(table_id.iterdir())
