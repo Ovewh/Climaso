@@ -1,8 +1,18 @@
 
 # Root path to the CMIP archive
-root: '/cluster/shared/ESGF'
+root: '/home/oveh/mnt/Betzy_CMIP'
 # Set CMIP version
 cmip_version: 'CMIP6'
+
+# Set output format, can provide store output in aerocom naming convention
+# By setting output format to aerocom
+output_format: 'default'
+
+# relative path to root directory of output 
+# default = 'results'
+
+out_dir : null
+no_intermediate_files: False
 
 # Default model variant used nothing else is specified
 variant_default: 'r1i1p1f1'
@@ -21,8 +31,10 @@ model_specific_variant:
 
 
 experiments:
-  - 'piClim-control'
-  - 'piClim-2xdust'
+  control:
+    - 'piClim-control'
+  experiments:
+    - 'piClim-2xdust'
 
 # If prefered version is not latest or latest does not exist?
 version:
@@ -40,6 +52,8 @@ table_ids:
   rsutcsaf: 'AERmon'
   rsutaf: 'AERmon'
   rlutcsaf: 'AERmon'
+  emidust: 'AERmon'
+  od550dust: 'AERmon'
 
 
 variables: 
@@ -69,6 +83,8 @@ variables:
   atmabsSW: ['ERFtsw','ERFsurfsw']
   atmabs: ['ERFt','ERFsurf']
 
-
+# If this is set to another value than null it will not use
+# lookup tables to get the correct grid label.
+default_grid_label: null
 
 lookup_file_endings: 'config/lookup_file_endings.yaml'
