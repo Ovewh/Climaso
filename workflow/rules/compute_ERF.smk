@@ -1,11 +1,4 @@
 
-def get_control_path(w, variable, grid_label=None):
-    try:
-        paths = get_paths(w, variable,'piClim-control', grid_label,activity='RFMIP', control=True)
-    except KeyError:
-        paths = get_paths(w, variable,'piClim-control', grid_label,activity='AerChemMIP', control=True)
-    return paths
-
 
 rule calc_ERF_surf:
     input:
