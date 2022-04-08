@@ -16,9 +16,12 @@ configfile: 'config/config.yaml'
 ROOT_PATH = config['root']
 CMIP_VER = config['cmip_version']
 VARS=config['variables']
-EXPERIMENTS=config['experiments']
+EXPERIMENTS=config['experiments']['experiments']
 TABLE_IDS=config['table_ids']
 DEFAULT_TABLE_ID=config['table_id_default']
+
+CONTROL_EXPS=config['experiments']['control']
+ALL_ALLOWED = EXPERIMENTS + CONTROL_EXPS
 
 try:
     with open('config/lookup_experiments.yaml', 'r') as f:
@@ -39,14 +42,20 @@ try:
     with open(config['lookup_file_endings'], 'r') as f:
         LOOK_FNAMES=yaml.safe_load(f)
 except FileNotFoundError:
-    LOOK_FNAMES=generate_file_ending_lookup_table(ROOT_PATH,EXPERIMENTS,CMIP_VER)
+    LOOK_FNAMES=generate_file_ending_lookup_table(ROOT_PATH,ALL_ALLOWED,CMIP_VER)
     with open('config/lookup_file_endings.yaml', 'w') as f:
         LOOK_FNAMES=yaml.dump(LOOK_FNAMES,f,default_flow_style=False)
 
 
 def get_paths(w, variable,experiment, grid_label=None, activity=None, control=False):
     """
-    Get CMIP6 model paths in database based on the lookup tables
+    Get CMIP6 model paths in database based on the lookup tables.
+
+    Parameters:
+    -----------
+        w : snake.wildcards
+                a named tuple that contains the snakemake wildcards
+
     """
     root_path = f'{ROOT_PATH}/{CMIP_VER}'
     if activity:
@@ -65,8 +74,17 @@ def get_paths(w, variable,experiment, grid_label=None, activity=None, control=Fa
     except:
         raise KeyError(f"File ending is not defined for this combination of {activity}, {model}, {experiment}, {variant} and {table_id} " +
                         "please update config/lookup_file_endings.yaml accordingly")
-    if grid_label is None:
+    if grid_label == None:
         grid_label = LOOK_FNAMES[activity][model][experiment][variant][table_id]['gl'][0]
+    check_path = f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}'
+    if os.path.exists(check_path)==False:
+        grid_labels = ['gr','gn', 'gl','grz', 'gr1']
+        i = 0
+        while os.path.exists(check_path)==False and i < len(grid_labels):
+            grid_label = grid_labels[i]
+            check_path = f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}'
+            i += 1 
+            #print(check_path)
     if control:
         version = config['version']['version_control'].get(w.model, 'latest')
     else:
@@ -82,8 +100,41 @@ def get_paths(w, variable,experiment, grid_label=None, activity=None, control=Fa
         ,file_endings=file_endings)
     return paths
 
+def get_control_path(w, variable, grid_label=None):
+    if grid_label == None:
+        grid_label = config['default_grid_label']
+    try:
+        paths = get_paths(w, variable,'piClim-control', grid_label,activity='RFMIP', control=True)
+    except KeyError:
+        paths = get_paths(w, variable,'piClim-control', grid_label,activity='AerChemMIP', control=True)
+    return paths
+
+output_format = {}
+
+
+
+# set root outdir path
+if config['out_dir']:
+    outdir = config['out_dir']
+else:
+    outdir = 'results/'
+
+if config['output_format']=='aerocom_column':
+    output_format['single_variable'] = outdir+'{model}/renamed/aerocom3_{model}_{experiment}_{variable}_Column_{freq}_monthly.nc'
+    valid_frequencies = 'daily|annual|9999|monthly'
+else:
+    output_format['single_variable'] = outdir+'{experiment}/{variable}/{variable}_{experiment}_{model}_{freq}.nc'
+    valid_frequencies = 'Aday|Amon|clim'
+
+if config['no_intermediate_files']:
+    output_format = {key:temp(item) for key, item in output_format.items()}
+
+wildcard_constraints:
+    freq=valid_frequencies
 
 include: 'rules/compute_ERF.smk'
+include: 'rules/calculate_single_variable_climatologies.smk'
+
 
 
 ## piClim2xdustERFbetzy     : Calculates ERF(LW/SW/Total) and the atmospheric absorbtion 
@@ -122,4 +173,20 @@ rule norESM:
         expand('results/piClim-2xdust/cloud_rad/{vName}_piClim-2xdust_NorESM2-LM_Ayear,nc',
                vName=['CloudEff','SWCloudEff','LWCloudEff']),
         expand('results/piClim-2xdust/{vName}/{vName}_piClim-2xdust_NorESM2-LM_Ayear.nc', 
-                vName = ['ERFtsw','ERFtlw','ERFtcs'])        
+                vName = ['ERFtsw','ERFtlw','ERFtcs']) 
+
+rule clim_od550dust_aerocom_CMIP6:
+    input:
+        expand(outdir+'{model}/renamed/aerocom3_{model}_{experiment}_{variable}_Column_9999_monthly.nc',
+                    variable='od550dust',experiment=['piClim-control'],
+                    model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
+                        'UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
+                        'CNRM-ESM2-1'])
+
+rule clim_od550aer_aerocom_CMIP6:
+    input:
+        expand(outdir+'{model}/renamed/aerocom3_{model}_{experiment}_{variable}_Column_9999_monthly.nc',
+                    variable='od550aer',experiment=['piClim-control'],
+                    model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
+                        'UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
+                        'CNRM-ESM2-1'])          
