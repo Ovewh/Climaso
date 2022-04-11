@@ -30,6 +30,7 @@ MANIFEST
 # Pyre type checker
 .pyre/
 .snakemake/
+.ipynb_checkpoints/
 *.png
 *.nc
 *.csv
