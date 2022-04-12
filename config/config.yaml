@@ -1,6 +1,7 @@
 
 # Root path to the CMIP archive
 root: '/home/oveh/mnt/Betzy_CMIP'
+root_noresm: '/cluster/projects/nn2345k/ovewh/mnt'
 # Set CMIP version
 cmip_version: 'CMIP6'
 
@@ -88,3 +89,4 @@ variables:
 default_grid_label: null
 
 lookup_file_endings: 'config/lookup_file_endings.yaml'
+lookup_file_endings_NorESM: 'config/lookup_file_endings_nird.yaml'
