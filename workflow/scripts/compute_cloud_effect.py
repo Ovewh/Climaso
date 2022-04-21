@@ -3,6 +3,13 @@ from pyclim_noresm.aerosol_forcing import calc_cloud_forcing
 import copy
 import time
 
+import logging, traceback
+logging.basicConfig(filename=snakemake.log[0],
+                    level=logging.INFO,
+                    format='%(asctime)s %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S',
+                    )
+
 VARS = snakemake.config['variables']
 
 ERFaf = xr.open_dataset(snakemake.input.ERFaf)

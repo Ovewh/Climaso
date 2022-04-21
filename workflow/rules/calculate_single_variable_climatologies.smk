@@ -12,7 +12,7 @@ rule calc_clim_PI_control:
         experiment="|".join(CONTROL_EXPS)
 
     notebook:
-        "notebooks/calc_clim.py.ipynb"
+        "../notebooks/calc_clim.py.ipynb"
 
 rule calc_experiment_climalogies:
     input: 
@@ -26,4 +26,4 @@ rule calc_experiment_climalogies:
 
 
     notebook:
-        "notebooks/calc_clim.py.ipynb"
+        "../notebooks/calc_clim.py.ipynb"

@@ -150,7 +150,7 @@ wildcard_constraints:
 
 include: 'rules/compute_ERF.smk'
 include: 'rules/calculate_single_variable_climatologies.smk'
-
+include: 'rules/plotAerChemMIP.smk'
 
 
 ## piClim2xdustERFbetzy     : Calculates ERF(LW/SW/Total) and the atmospheric absorbtion 

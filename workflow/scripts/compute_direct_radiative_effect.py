@@ -2,6 +2,13 @@ import xarray as xr
 from pyclim_noresm.aerosol_forcing import calc_direct_aerosol_radiative_effect
 import copy
 import time
+import logging, traceback
+logging.basicConfig(filename=snakemake.log[0],
+                    level=logging.INFO,
+                    format='%(asctime)s %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S',
+                    )
+
 VARS = snakemake.config['variables']
 
 ERFt = xr.open_dataset(snakemake.input.ERFt)
