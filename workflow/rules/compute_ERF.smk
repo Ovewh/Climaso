@@ -12,7 +12,7 @@ rule calc_ERF_surf:
         ctrl_downwelling_LW = lambda w:get_control_path(w, VARS[w.vName][3])
 
     output:
-        outpath ='results/{experiment}/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
+        outpath = outdir + '{experiment}/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
     
     wildcard_constraints:
         vName = 'ERFsurf|ERFsurfcs'
@@ -34,7 +34,7 @@ rule calculate_ERF_TOA:
         ctrl_upwelling_LW = lambda w:get_control_path(w, VARS[w.vName][2])
     
     output:
-        outpath = 'results/{experiment}/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
+        outpath = outdir + '{experiment}/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
     
     log:
         "logs/calc_ERF_toa/{vName}_{model}_{experiment}_{freq}.log"
@@ -55,7 +55,7 @@ rule calculate_SW_ERF:
         ctrl_upwelling_SW = lambda w:get_control_path(w, VARS[w.vName][0])
     
     output:
-        outpath = 'results/{experiment}/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
+        outpath = outdir + '{experiment}/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
     
     wildcard_constraints:
         vName='ERFtsw|ERFtswcs|ERFsurfsw|ERFsurfswcs|ERFtswcsaf|ERFtswaf'
@@ -69,7 +69,7 @@ rule calculate_ERF_TOA_LW:
         exp_upwelling_LW = lambda w: get_paths(w,VARS[w.vName][0],w.experiment),
         ctrl_upwelling_LW = lambda w: get_control_path(w,VARS[w.vName][0])
     output:
-        outpath = 'results/{experiment}/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
+        outpath = outdir + '{experiment}/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
     log:
         "logs/calc_ERF_LW/{vName}_{model}_{experiment}_{freq}.log"  
     wildcard_constraints:
@@ -81,24 +81,24 @@ rule calculate_ERF_TOA_LW:
 
 rule calc_cloud_radiative_effect:
     input:
-        ERFaf =  lambda w: f'results/{w.experiment}/{VARS[w.vName][0]}/{VARS[w.vName][0]}_{w.experiment}_{w.model}_{w.freq}.nc',
-        ERFafcs = lambda w: f'results/{w.experiment}/{VARS[w.vName][1]}/{VARS[w.vName][1]}_{w.experiment}_{w.model}_{w.freq}.nc'
+        ERFaf =  lambda w: outdir + f'{w.experiment}/{VARS[w.vName][0]}/{VARS[w.vName][0]}_{w.experiment}_{w.model}_{w.freq}.nc',
+        ERFafcs = lambda w: outdir + f'{w.experiment}/{VARS[w.vName][1]}/{VARS[w.vName][1]}_{w.experiment}_{w.model}_{w.freq}.nc'
     output:
-        outpath='results/{experiment}/cloud_rad/{vName}_{experiment}_{model}_{freq}.nc'
+        outpath= outdir+'{experiment}/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
     wildcard_constraints:
         vName='CloudEff|SWCloudEff|LWCloudEff'
 
     log:
-        "logs/cloud_rad/{vName}_{model}_{experiment}_{freq}.log"
+        "logs/{vName}_{model}_{experiment}_{freq}.log"
     script:
         "../scripts/compute_cloud_effect.py"
 
 rule calc_direct_radiative_effect:
     input:
-        ERFt =  lambda w: f'results/{w.experiment}/{VARS[w.vName][0]}/{VARS[w.vName][0]}_{w.experiment}_{w.model}_{w.freq}.nc',
-        ERFtaf = lambda w: f'results/{w.experiment}/{VARS[w.vName][1]}/{VARS[w.vName][1]}_{w.experiment}_{w.model}_{w.freq}.nc'
+        ERFt =  lambda w:  outdir+ f'{w.experiment}/{VARS[w.vName][0]}/{VARS[w.vName][0]}_{w.experiment}_{w.model}_{w.freq}.nc',
+        ERFtaf = lambda w: outdir +f'{w.experiment}/{VARS[w.vName][1]}/{VARS[w.vName][1]}_{w.experiment}_{w.model}_{w.freq}.nc'
     output:
-        outpath='results/{experiment}/rad/{vName}_{experiment}_{model}_{freq}.nc'
+        outpath=outdir + '{experiment}/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
 
     log:
         "logs/rad/{vName}_{model}_{experiment}_{freq}.log"
@@ -109,10 +109,10 @@ rule calc_direct_radiative_effect:
 
 rule calc_absorption:
     input:
-        delta_rad_surf = lambda w: f'results/{w.experiment}/{VARS[w.vName][1]}/{VARS[w.vName][1]}_{w.experiment}_{w.model}_{w.freq}.nc',
-        delta_rad_toa = lambda w: f'results/{w.experiment}/{VARS[w.vName][0]}/{VARS[w.vName][0]}_{w.experiment}_{w.model}_{w.freq}.nc'
+        delta_rad_surf = lambda w: outdir + f'{w.experiment}/{VARS[w.vName][1]}/{VARS[w.vName][1]}_{w.experiment}_{w.model}_{w.freq}.nc',
+        delta_rad_toa = lambda w: outdir + f'{w.experiment}/{VARS[w.vName][0]}/{VARS[w.vName][0]}_{w.experiment}_{w.model}_{w.freq}.nc'
     output:
-        outpath='results/{experiment}/atm_abs/{vName}_{experiment}_{model}_{freq}.nc'
+        outpath= outdir+'{experiment}/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
     wildcard_constraints:
         vName='atmabsSW|atmabs'
     log:
