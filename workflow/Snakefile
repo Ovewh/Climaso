@@ -15,8 +15,7 @@ import socket
 configfile: 'config/config.yaml'
 
 hostname = socket.gethostname()
-
-if hostname.split('.')[1] == 'betzy':
+if 'betzy' in hostname:
     ROOT_PATH = '/cluster/shared/ESGF'
 else:
     ROOT_PATH = config['root']
@@ -136,8 +135,9 @@ else:
     outdir = 'results/'
 
 if config['output_format']=='aerocom_column':
-    output_format['single_variable'] = outdir+'{model}/renamed/aerocom3_{model}_{experiment}_{variable}_Column_{freq}_monthly.nc'
-    valid_frequencies = 'daily|annual|9999|monthly'
+    output_format['single_variable'] = outdir+'{model}_{experiment}/renamed/aerocom3_{model}_{experiment}_{variable}_Column_{freq}_monthly.nc'
+    print(output_format)
+    valid_frequencies = 'daily|annual|2010|monthly'
 else:
     output_format['single_variable'] = outdir+'{experiment}/{variable}/{variable}_{experiment}_{model}_{freq}.nc'
     valid_frequencies = 'Aday|Amon|clim|Ayear'
@@ -145,6 +145,7 @@ else:
 if config['no_intermediate_files']:
     output_format = {key:temp(item) for key, item in output_format.items()}
 
+print("^((?!{}).)*".format("|".join(config['variables'].keys())))
 wildcard_constraints:
     freq=valid_frequencies
 
@@ -153,56 +154,28 @@ include: 'rules/calculate_single_variable_climatologies.smk'
 include: 'rules/plotAerChemMIP.smk'
 
 
-## piClim2xdustERFbetzy     : Calculates ERF(LW/SW/Total) and the atmospheric absorbtion 
-##                            between piClim-control and piClim-2xdust (works on betzy)
-rule piClim2xdustERFbetzy:
+rule all:
     input:
-        expand('results/piClim-2xdust/atm_abs/atmabs_piClim-2xdust_{model}_Ayear.nc', 
-                model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
-                        'MIROC6','UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1']),
+        expand(outdir+'figs/AerChemMIP/ERFs/{vName}_piClim-2xdust_AerChemMIP.png',
+                        vName=['ERFtsw','ERFtlw','ERFtcs','ERFt']),
+        expand(outdir+'figs/AerChemMIP/ERFs/{vName}_piClim-2xdust_globalaverage_AerChemMIP.png',
+                        vName=['ERFtsw','ERFtlw','ERFtcs','ERFt']),
+        expand(outdir+'figs/AerChemMIP/ERFs/{vName}_piClim-2xdust_AerChemMIP.png',
+                        vName=['SWDirectEff','LWDirectEff', 'SWCloudEff','LWCloudEff','LWDirectEff_cs','SWDirectEff_cs','CloudEff'])
 
-        expand('results/piClim-2xdust/{vName}/{vName}_piClim-2xdust_{model}_Ayear.nc', 
-                model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
-                        'MIROC6','UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1'], vName = ['ERFtsw','ERFtlw','ERFtcs'])
-## piClim2xdustRadbetzy     : Calculates the direct and cloud radiative effects between piClim-control
-##                            and piClim-2xdust (works on betzy)
-rule piClim2xdustRadbetzy:
-    input:
-        expand('results/piClim-2xdust/cloud_rad/{vName}_piClim-2xdust_{model}_Ayear.nc',
-            vName=['CloudEff','SWCloudEff','LWCloudEff'], 
-            model=['EC-Earth3-AerChem',  
-                        'UKESM1-0-LL', 'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1','NorESM2-LM']),
-        expand('results/piClim-2xdust/rad/{vName}_piClim-2xdust_{model}_Ayear.nc',
-            vName=['SWDirectEff','SWDirectEff_cs','LWDirectEff','LWDirectEff_cs'], 
-            model=['EC-Earth3-AerChem', 
-                        'UKESM1-0-LL', 'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1', 'NorESM2-LM'])
-
-rule norESM:
-    input:
-        'results/piClim-2xdust/atm_abs/atmabs_piClim-2xdust_NorESM2-LM_Ayear.nc',
-        expand('results/piClim-2xdust/rad/{vName}_piClim-2x_NorESM2-LM_Ayear.nc',
-                vName=['SWDirectEff','SWDirectEff_cs','LWDirectEff','LWDirectEff_cs']),
-        expand('results/piClim-2xdust/cloud_rad/{vName}_piClim-2xdust_NorESM2-LM_Ayear,nc',
-               vName=['CloudEff','SWCloudEff','LWCloudEff']),
-        expand('results/piClim-2xdust/{vName}/{vName}_piClim-2xdust_NorESM2-LM_Ayear.nc', 
-                vName = ['ERFtsw','ERFtlw','ERFtcs']) 
 
 rule clim_od550dust_aerocom_CMIP6:
     input:
-        expand(outdir+'{model}/renamed/aerocom3_{model}_{experiment}_{variable}_Column_9999_monthly.nc',
-                    variable='od550dust',experiment=['piClim-control'],
+        expand(outdir+'{model}_{experiment}/renamed/aerocom3_{model}_{experiment}_{variable}_Column_2010_monthly.nc',
+                    variable='od550dust',experiment=['piClim-control','piClim-2xdust'],
                     model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
                         'UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1'])
+                        'CNRM-ESM2-1', 'NorESM2-LM'])
 
 rule clim_od550aer_aerocom_CMIP6:
     input:
-        expand(outdir+'{model}/renamed/aerocom3_{model}_{experiment}_{variable}_Column_9999_monthly.nc',
-                    variable='od550aer',experiment=['piClim-control'],
-                    model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
-                        'UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
+        expand(outdir+'{model}_{experiment}/renamed/aerocom3_{model}_{experiment}_{variable}_Column_2010_monthly.nc',
+                    variable='od550aer',experiment=['piClim-control','piClim-2xdust'],
+                    model=['GISS-E2-1-G',  
+                         'GFDL-ESM4',
                         'CNRM-ESM2-1'])          
