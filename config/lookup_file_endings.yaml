@@ -902,6 +902,12 @@ RFMIP:
           - 195001-199012.nc
           gl:
           - gn
+      r1i1p3f2:
+        AERmon:
+          fn:
+          - 195001-198012.nc
+          gl:
+          - gn
   HadGEM3-GC31-LL:
     piClim-control:
       r1i1p1f3:
