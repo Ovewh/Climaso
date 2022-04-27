@@ -18,3 +18,97 @@ def global_map(ax):
     ax.coastlines()
     ax.set_ylabel(' ')
     ax.set_xlabel(' ')
+
+
+
+
+def create_facet_plot(nplots: int, figsize: tuple, 
+                        subplot_kw : dict ={'projection':ccrs.PlateCarree()},
+                        last_axis_plain: bool = False):
+    layout = _get_layouts(nplots)
+    fig ,axes = plt.subplot_mosaic(layout,figsize=figsize,subplot_kw=subplot_kw)
+    last = list(axes.keys())[-1]
+    
+    if last_axis_plain == True:
+        pos = axes[last].get_position()
+        axes[last] = fig.add_subplot(axes[last].get_gridspec().nrows, 
+                                        axes[last].get_gridspec().ncols, nplots)
+    return fig, axes
+    
+
+
+
+def _get_layouts(nplots: int):
+    if nplots==1:
+        layout="""
+            A
+            """
+    elif nplots==2:
+        layout="""
+            AB
+            """
+    elif nplots==3:
+        layout="""
+            AABB
+            .CC.
+        """
+    elif nplots==4:
+        layout="""
+            AB
+            CD
+        """
+    elif nplots==5:
+        layout="""
+            AABB
+            CCDD
+            .EE.
+        """
+    elif nplots==6:
+        layout="""
+            AB
+            CD
+            EF
+        """
+    elif nplots==7:
+        layout="""
+            ABC
+            DE.
+            FG.
+        """
+    elif nplots==8:
+        layout="""
+            ABC
+            DEF
+            GH.
+        """
+    elif nplots==9:
+        layout="""
+            ABC
+            DEF
+            GHI
+        """
+    elif nplots==10:
+        layout =="""
+            ABC
+            DEF
+            GHI
+            L
+        """
+    elif nplots==11:
+        layout="""
+            ABC
+            DEF
+            GHI
+            LLM
+        
+        """
+    elif nplots==12:
+        layout="""
+            ABCD
+            EFGH
+            ILMN
+        """
+    else:
+        raise(NotImplementedError(f'Layout undefined for nplots = {nplots}'))
+
+    return layout
