@@ -1,7 +1,7 @@
 
 # Root path to the CMIP archive
 root: '/home/oveh/mnt/Betzy_CMIP'
-root_noresm: '/cluster/projects/nn2345k/ovewh/mnt'
+root_noresm: '/home/oveh/mnt/NIRD_noresm'
 # Set CMIP version
 cmip_version: 'CMIP6'
 
@@ -41,8 +41,10 @@ experiments:
 version:
   version_control:
     MPI-ESM-1-2-HAM: 'v20190628'
+    EC-Earth3-AerChem: 'v20201013'
   version_exp:
     MPI-ESM-1-2-HAM: 'latest'
+
 
 # Default table_id
 table_id_default: 'Amon' 
@@ -55,6 +57,9 @@ table_ids:
   rlutcsaf: 'AERmon'
   emidust: 'AERmon'
   od550dust: 'AERmon'
+  od550aer: 'AERmon'
+  lwp: 'AERmon'
+  cdnc: 'AERmon'
 
 
 variables: 
