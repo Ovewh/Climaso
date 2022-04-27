@@ -10,7 +10,7 @@ rule calc_clim_PI_control:
         "logs/calc_clim/{variable}_{model}_{experiment}_{freq}.log"
     wildcard_constraints:
         experiment="|".join(CONTROL_EXPS),
-        variable="!".join(config['variables'].keys())
+        #variable="\b(?:{})|([a-zA-Z0-9]+)\b".format("|".join(config['variables'].keys()))
 
     notebook:
         "../notebooks/calc_clim.py.ipynb"
@@ -24,7 +24,7 @@ rule calc_experiment_climalogies:
         "logs/calc_clim/{variable}_{model}_{experiment}_{freq}.log"
     wildcard_constraints:
         experiment="|".join(EXPERIMENTS),
-        variable="!".join(config['variables'].keys())
+        #variable="\b(?:{})|([a-zA-Z0-9]+)\b".format("|".join(config['variables'].keys()))
 
 
     notebook:

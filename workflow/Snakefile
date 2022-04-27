@@ -106,13 +106,17 @@ def get_paths(w, variable,experiment, grid_label=None, activity=None, control=Fa
         version = config['version']['version_exp'].get(w.model, 'latest')
     fname = f'{variable}_{table_id}_{model}_{experiment}_{variant}_{grid_label}'
     paths = expand(
-        f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}/{version}/{fname}_{{file_endings}}'
-        ,file_endings=file_endings)
+            f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}/{version}/{fname}_{{file_endings}}'
+            ,file_endings=file_endings)
     # Sometimes the verisons are just messed up... try one more time with latest
     if not os.path.exists(paths[0]):
         paths=expand(
         f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}/latest/{fname}_{{file_endings}}'
         ,file_endings=file_endings)
+        # Sometimes the file ending are different depending on varialbe
+        if not os.path.exists(paths[0]) and len(paths) >= 2:
+            paths = [paths[1]]
+
     return paths
 
 def get_control_path(w, variable, grid_label=None):
