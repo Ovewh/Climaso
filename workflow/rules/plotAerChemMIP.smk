@@ -53,10 +53,30 @@ rule plot_change_cdnc:
                         'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True)
     
     output:
-        outpath=outdir+'figs/AerChemMIP/delta_2xdust/cdnc_piClim-2xdust_AerChemMIP.png'
-    
+        outpath=outdir+'figs/AerChemMIP/delta_2xdust/cdnc_piClim-2xdust_AerChemMIP_{kind}.png'
+    wildcard_constraints:
+        kind='rel|abs'
+
     notebook:
         "../notebooks/plot_CDNC_change.py.ipynb"
+
+rule plot_change_lwp:
+    input:
+        path_exp = expand(outdir+'piClim-2xdust/lwp/lwp_piClim-2xdust_{model}_Ayear.nc',
+                model=['EC-Earth3-AerChem',
+                        'UKESM1-0-LL', 'MPI-ESM-1-2-HAM',
+                        'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True),
+        path_ctrl=expand(outdir+'piClim-control/lwp/lwp_piClim-control_{model}_Ayear.nc',
+                model=['EC-Earth3-AerChem', 
+                        'UKESM1-0-LL',  'MPI-ESM-1-2-HAM',
+                        'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True)
+    output:
+        outpath=outdir+'figs/AerChemMIP/delta_2xdust/lwp_piClim-2xdust_AerChemMIP_{kind}.png'
+    wildcard_constraints:
+        kind='rel|abs'
+
+    notebook:
+        "../notebooks/plot_lwp_change.py.ipynb"
 
 
 rule plot_emidust:
