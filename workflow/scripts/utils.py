@@ -7,7 +7,6 @@ def load_CMIP_data(path, **dataset_kwargs):
     if len(path) >1:
         return xr.open_mfdataset(path, chunks={'time':120}, **dataset_kwargs)
     else:
-        print(dataset_kwargs)
         dataset_kwargs.pop('data_vars')
         return xr.open_dataset(path[0], chunks={'time':120}, **dataset_kwargs)
 
@@ -33,6 +32,7 @@ def regrid_global(ds: xr.DataArray, base_ds: xr.Dataset, lon: int =3, lat: int=2
     ds = regridder(ds, keep_attrs=True)
     return ds
 
+
 def calc_relative_change(ds_ctrl: xr.Dataset, ds_exp: xr.Dataset):
     """
     Calculate the relative change of a diagnostic between
@@ -48,6 +48,24 @@ def calc_relative_change(ds_ctrl: xr.Dataset, ds_exp: xr.Dataset):
     --------
         rel_diff: dataset containing the relative difference
     """
+    return _calc_change(ds_ctrl, ds_exp,rel_change=True) 
+
+def calc_abs_change(ds_ctrl:xr.Dataset, ds_exp: xr.Dataset):
+    """
+    Calculated absolute change of diagnostic between
+    the control and experiment. Data that is on model
+    level is integrated vertically.
+
+    params:
+    -------
+        ds_ctrl: dataset containing the control experiment
+        ds_exp: dataset containing the perturbed experiment
+    
+    """
+    return _calc_change(ds_ctrl, ds_exp, rel_change=False)
+
+def _calc_change(ds_ctrl:xr.Dataset, ds_exp:xr.Dataset, rel_change: bool =False):
+
     vName = ds_ctrl.variable_id
     dvars = set(list(ds_ctrl.data_vars))
     keep_vars = set(['lev_bounds','time_bounds', 'lon_bnds','lat_bnds',vName])
@@ -66,14 +84,18 @@ def calc_relative_change(ds_ctrl: xr.Dataset, ds_exp: xr.Dataset):
         if 'year' in da_ctrl.dims:
             da_ctrl = da_ctrl.mean(dim='year')
             da_exp = da_exp.mean(dim='year')
-
-        rel_diff = ((da_exp-da_ctrl)/da_ctrl)*100
-        rel_diff.attrs['units'] = '%'
-        rel_diff.attrs['long_name'] = 'Relative change of {}'.format(da_exp.attrs['long_name']) 
-        rel_diff = rel_diff.to_dataset(name=vName)
-        rel_diff.attrs = {**rel_diff.attrs, **ds_exp.attrs}
-
-    return rel_diff
+        if rel_change:
+            diff = ((da_exp-da_ctrl)/da_ctrl)*100
+            diff.attrs['units'] = '%'
+            diff.attrs['long_name'] = 'Relative change of {}'.format(da_exp.attrs['long_name']) 
+            diff = diff.to_dataset(name=vName)
+            diff.attrs = {**diff.attrs, **ds_exp.attrs}
+        else:
+            diff = da_exp-da_ctrl
+            diff.attrs['long_name'] = 'Difference between experiment and control of {}'.format(da_exp.attrs['long_name'])
+            diff = diff.to_dataset(name=vName)
+            diff.attrs = {**diff.attrs, **ds_exp.attrs}
+    return diff
 
 def transelate_aerocom_helper(wildcards):
     print(wildcards)
