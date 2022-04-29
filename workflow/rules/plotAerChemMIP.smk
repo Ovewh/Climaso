@@ -14,6 +14,23 @@ rule plot_ERFs:
     notebook:
         "../notebooks/plot_ERFs_AerChemMIP.py.ipynb"
 
+rule plot_atm_abs:
+    input:
+        paths=expand(outdir+'piClim-2xdust/ERFs/{vName}/{vName}_piClim-2xdust_{model}_Ayear.nc', 
+                model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
+                        'MIROC6','UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
+                        'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True)
+    output:
+        outpath=outdir+'figs/AerChemMIP/ERFs/{vName}_piClim-2xdust_AerChemMIP.png'
+    
+    wildcard_constraints:
+        vName ='atmabsSW|atmabs'
+
+    notebook:
+        "../notebooks/plot_atmabs_AerChemMIP.py.ipynb"
+
+
+
 rule plot_global_avaraged_ERFs:
     input:
         paths=expand(outdir+'piClim-2xdust/ERFs/{vName}/{vName}_piClim-2xdust_{model}_Ayear.nc', 
