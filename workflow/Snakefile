@@ -149,7 +149,6 @@ else:
 if config['no_intermediate_files']:
     output_format = {key:temp(item) for key, item in output_format.items()}
 
-print("^((?!{}).)*".format("|".join(config['variables'].keys())))
 wildcard_constraints:
     freq=valid_frequencies
 
@@ -165,7 +164,8 @@ rule all:
         expand(outdir+'figs/AerChemMIP/ERFs/{vName}_piClim-2xdust_globalaverage_AerChemMIP.png',
                         vName=['ERFtsw','ERFtlw','ERFtcs','ERFt']),
         expand(outdir+'figs/AerChemMIP/ERFs/{vName}_piClim-2xdust_AerChemMIP.png',
-                        vName=['SWDirectEff','LWDirectEff', 'SWCloudEff','LWCloudEff','LWDirectEff_cs','SWDirectEff_cs','CloudEff'])
+                        vName=['SWDirectEff','LWDirectEff', 'SWCloudEff','LWCloudEff','LWDirectEff_cs','SWDirectEff_cs','CloudEff','DirectEff']),
+        outdir+'figs/AerChemMIP/delta_2xdust/cdnc_piClim-2xdust_AerChemMIP.png'
 
 
 rule clim_od550dust_aerocom_CMIP6:
