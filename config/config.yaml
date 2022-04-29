@@ -79,6 +79,7 @@ variables:
   ERFtswcs: ['rsutcs', 'rsdt']
   ERFsurf: ['rsus', 'rsds', 'rlus', 'rlds']
   ERFsurfcs: ['rsuscs','rsdscs', 'rsutcs','rlus']
+  DirectEff: ['ERFt', 'ERFtaf']
   SWDirectEff: ['ERFtsw','ERFtswaf']
   SWDirectEff_cs: ['ERFtswcs','ERFtswcsaf']
   LWDirectEff: ['ERFtlw','ERFtlwaf']
