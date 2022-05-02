@@ -22,10 +22,12 @@ def global_map(ax):
 
 
 
-def create_facet_plot(nplots: int, figsize: tuple, 
+def create_facet_plot(nplots: int, figsize: tuple=None, 
                         subplot_kw : dict ={'projection':ccrs.PlateCarree()},
                         last_axis_plain: bool = False):
-    layout = _get_layouts(nplots)
+    layout, default_figsize = _get_layouts(nplots)
+    if not figsize:
+        figsize = default_figsize
     fig ,axes = plt.subplot_mosaic(layout,figsize=figsize,subplot_kw=subplot_kw)
     last = list(axes.keys())[-1]
     
@@ -39,54 +41,64 @@ def create_facet_plot(nplots: int, figsize: tuple,
 
 
 def _get_layouts(nplots: int):
+    figsize=None
     if nplots==1:
         layout="""
             A
             """
+        figsize=(6,5)
     elif nplots==2:
         layout="""
             AB
             """
+        figsize=(7,4)    
     elif nplots==3:
         layout="""
             AABB
             .CC.
         """
+        figsize=(8,6)
     elif nplots==4:
         layout="""
             AB
             CD
         """
+        figsize=(8,6)
     elif nplots==5:
         layout="""
             AABB
             CCDD
             .EE.
         """
+        figsize=(14,12)
     elif nplots==6:
         layout="""
             AB
             CD
             EF
         """
+        figsize=(14,12)
     elif nplots==7:
         layout="""
             ABC
             DE.
             FG.
         """
+        figsize = (16,10)
     elif nplots==8:
         layout="""
             ABC
             DEF
             GH.
         """
+        figsize = (16,10)
     elif nplots==9:
         layout="""
             ABC
             DEF
             GHI
         """
+        figsize = (16,10)
     elif nplots==10:
         layout =="""
             ABC
@@ -111,4 +123,4 @@ def _get_layouts(nplots: int):
     else:
         raise(NotImplementedError(f'Layout undefined for nplots = {nplots}'))
 
-    return layout
+    return layout, figsize
