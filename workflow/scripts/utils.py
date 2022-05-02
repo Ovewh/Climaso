@@ -1,6 +1,8 @@
 import xarray as xr
 import xesmf as xe
 from pyclim_noresm.aerosol_forcing import merge_exp_ctrl
+from pyclim_noresm.general_util_funcs import global_avg
+import numpy as np
 
 def load_CMIP_data(path, **dataset_kwargs):
 
@@ -32,6 +34,30 @@ def regrid_global(ds: xr.DataArray, base_ds: xr.Dataset, lon: int =3, lat: int=2
     ds = regridder(ds, keep_attrs=True)
     return ds
 
+
+def calc_error(da: xr.DataArray, time_dim : str ='year', kind='std'):
+    """
+    Calculates the standard error of the mean.
+
+    params:
+        da: DataArray|Dataset containing timeseries data:
+    
+    """
+    if isinstance(da,xr.Dataset):
+        da = da[da.variable_id]
+    with xr.set_options(keep_attrs=True):
+        if 'lat' in da.dims:
+            da = global_avg(da)
+        
+        std = da.std(dim=time_dim)
+        if kind == 'sem' or kind == 'SEM':
+            st_error = std/np.sqrt(len(da[time_dim]))
+        else:
+            st_error=std
+        st_error.attrs['long_name'] = '{} of {}'.format(kind,st_error.attrs['long_name'])
+       
+
+        return st_error
 
 def calc_relative_change(ds_ctrl: xr.Dataset, ds_exp: xr.Dataset):
     """
