@@ -68,14 +68,18 @@ rule plot_change_cdnc:
                 model=['EC-Earth3-AerChem',  'GISS-E2-1-G', 
                         'MIROC6','UKESM1-0-LL',  'MPI-ESM-1-2-HAM',
                         'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True)
-    
+    params:
+        scaling_factor=1e-6,
+        units= '# cm-3',
+        label='CDNC',
+        rel_minmax=[-50,50]
     output:
         outpath=outdir+'figs/AerChemMIP/delta_2xdust/cdnc_piClim-2xdust_AerChemMIP_{kind}.png'
     wildcard_constraints:
         kind='rel|abs'
 
     notebook:
-        "../notebooks/plot_CDNC_change.py.ipynb"
+        "../notebooks/plot_change_notebook.py.ipynb"
 
 rule plot_change_lwp:
     input:
@@ -92,8 +96,14 @@ rule plot_change_lwp:
     wildcard_constraints:
         kind='rel|abs'
 
+    params:
+        scaling_factor=1e3,
+        units="g m-2",
+        rel_minmax=[-30,50],
+        label="Liquid water Path"
+
     notebook:
-        "../notebooks/plot_lwp_change.py.ipynb"
+        "../notebooks/plot_change_notebook.py.ipynb"
 
 rule plot_change_clivi:
     input:  
@@ -135,8 +145,8 @@ rule plot_change_clt:
         kind='rel|abs'
     params:
         label='Cloud fraction',
-        abs_minmax=[-10,20],
-        rel_minmax=[-8,8]
+        abs_minmax=[-8,8],
+        rel_minmax=[-15,15]
     notebook:
         "../notebooks/plot_change_notebook.py.ipynb"
 
@@ -198,8 +208,16 @@ rule plot_change_prs:
     wildcard_constraints:
         kind='abs|rel'
 
+    params:
+        label='$\Delta$ Precipitation',
+        abs_minmax=[-0.3,0.3],
+        rel_minmax=[-60,60],
+        scaling_factor=1000,
+        units = "[g m-2 s-1]"
+
+
     notebook:
-        "../notebooks/plot_pr_change.py.ipynb"
+        "../notebooks/plot_change_notebook.py.ipynb"
 
 
 rule plot_emidust:

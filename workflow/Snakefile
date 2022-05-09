@@ -168,6 +168,8 @@ rule all:
         outdir+'figs/AerChemMIP/delta_2xdust/cdnc_piClim-2xdust_AerChemMIP.png'
 
 
+
+
 rule clim_od550dust_aerocom_CMIP6:
     input:
         expand(outdir+'{model}_{experiment}/renamed/aerocom3_{model}_{experiment}_{variable}_Column_2010_monthly.nc',
