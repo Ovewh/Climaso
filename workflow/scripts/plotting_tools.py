@@ -26,8 +26,9 @@ def create_facet_plot(
     figsize: tuple = None,
     subplot_kw: dict = {"projection": ccrs.PlateCarree()},
     last_axis_plain: bool = False,
+    create_cax=True
 ):
-    layout, default_figsize = _get_layouts(nplots)
+    layout, default_figsize, cax_loc = _get_layouts(nplots)
     if not figsize:
         figsize = default_figsize
     fig, axes = plt.subplot_mosaic(layout, figsize=figsize, subplot_kw=subplot_kw)
@@ -38,10 +39,15 @@ def create_facet_plot(
         axes[last] = fig.add_subplot(
             axes[last].get_gridspec().nrows, axes[last].get_gridspec().ncols, nplots
         )
-    return fig, axes
+    if create_cax:
+        cax = fig.add_axes(cax_loc)
+    else: 
+        cax=None
+    return fig, axes, cax
 
 
 def _get_layouts(nplots: int):
+    cax_loc = None
     figsize = None
     if nplots == 1:
         layout = """
@@ -72,6 +78,7 @@ def _get_layouts(nplots: int):
             .EE.
         """
         figsize = (14, 12)
+        cax_loc = [0.94,0.2,0.02,0.62]
     elif nplots == 6:
         layout = """
             AB
@@ -79,6 +86,7 @@ def _get_layouts(nplots: int):
             EF
         """
         figsize = (14, 12)
+        cax_loc = [0.94,0.2,0.02,0.62]
     elif nplots == 7:
         layout = """
             ABC
@@ -86,6 +94,7 @@ def _get_layouts(nplots: int):
             FG.
         """
         figsize = (16, 10)
+        cax_loc = [0.94,0.2,0.02,0.62]
     elif nplots == 8:
         layout = """
             ABC
@@ -93,6 +102,7 @@ def _get_layouts(nplots: int):
             GH.
         """
         figsize = (16, 10)
+        cax_loc = [0.94,0.2,0.02,0.62]
     elif nplots == 9:
         layout = """
             ABC
@@ -100,6 +110,7 @@ def _get_layouts(nplots: int):
             GHI
         """
         figsize = (16, 10)
+        cax_loc = [0.94,0.2,0.02,0.62]
     elif nplots == 10:
         layout == """
             ABC
@@ -123,5 +134,7 @@ def _get_layouts(nplots: int):
         """
     else:
         raise (NotImplementedError(f"Layout undefined for nplots = {nplots}"))
+    if not cax_loc:
+        cax_loc=[0.94,0.2,0.02,0.62]
 
-    return layout, figsize
+    return layout, figsize, cax_loc
