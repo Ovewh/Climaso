@@ -29,6 +29,23 @@ def copy_meta_data_CMIP(attrs):
     new_attrs = {k: attrs[k] for k in set(list(attrs.keys())) - set(remove_keys)}
     return new_attrs
 
+def compute_annual_emission_budget(ds: xr.Dataset, grid_area: xr.Dataset):
+    """
+    Computes annual emission budget from monthly data 
+    
+    Params
+    ------
+        ds :  monthly emission flux, 
+        grid_area: area of each grid cell 
+    """
+    yearly_budget = ds[ds.variable_id].resample(time='Y').mean()*365*24*60*60
+    
+    
+    yearly_budget = yearly_budget*grid_area['cell_area']
+    yearly_budget = yearly_budget.sum(dim=['lon','lat'])*1e-9
+    yearly_budget.attrs['units'] = 'Tg year-1'
+    mean_yearly_budget = yearly_budget.mean(dim='time')
+    return mean_yearly_budget
 
 def regrid_global(ds: xr.DataArray, base_ds: xr.Dataset, lon: int = 3, lat: int = 2):
     """
@@ -71,7 +88,7 @@ def calc_error(da: xr.DataArray, time_dim: str = "year", kind="std"):
         return st_error
 
 
-def calc_relative_change(ds_ctrl: xr.Dataset, ds_exp: xr.Dataset):
+def calc_relative_change(ds_ctrl: xr.Dataset, ds_exp: xr.Dataset, time_slice: slice = None):
     """
     Calculate the relative change of a diagnostic between
     the control and experiment. The data is on model level
@@ -81,6 +98,7 @@ def calc_relative_change(ds_ctrl: xr.Dataset, ds_exp: xr.Dataset):
     ------
         ds_ctrl: dataset containing the control experiment
         ds_exp: dataset containing the perturbed experiment
+        time_slice: slice time based on index
 
     returns
     --------
@@ -89,7 +107,7 @@ def calc_relative_change(ds_ctrl: xr.Dataset, ds_exp: xr.Dataset):
     return _calc_change(ds_ctrl, ds_exp, rel_change=True)
 
 
-def calc_abs_change(ds_ctrl: xr.Dataset, ds_exp: xr.Dataset):
+def calc_abs_change(ds_ctrl: xr.Dataset, ds_exp: xr.Dataset, time_slice=None):
     """
     Calculated absolute change of diagnostic between
     the control and experiment. Data that is on model
@@ -99,12 +117,14 @@ def calc_abs_change(ds_ctrl: xr.Dataset, ds_exp: xr.Dataset):
     -------
         ds_ctrl: dataset containing the control experiment
         ds_exp: dataset containing the perturbed experiment
+        time_slice : slice time based on index
 
     """
-    return _calc_change(ds_ctrl, ds_exp, rel_change=False)
+    return _calc_change(ds_ctrl, ds_exp, rel_change=False, time_slice=time_slice)
 
 
-def _calc_change(ds_ctrl: xr.Dataset, ds_exp: xr.Dataset, rel_change: bool = False):
+def _calc_change(ds_ctrl: xr.Dataset, ds_exp: xr.Dataset, 
+                    rel_change: bool = False, time_slice=None):
 
     vName = ds_ctrl.variable_id
     dvars = set(list(ds_ctrl.data_vars))
@@ -122,6 +142,9 @@ def _calc_change(ds_ctrl: xr.Dataset, ds_exp: xr.Dataset, rel_change: bool = Fal
             da_ctrl = ds[f"control_{vName}"]
             da_exp = ds[vName]
         if "year" in da_ctrl.dims:
+            if time_slice:
+                da_ctrl = da_ctrl.isel(year=time_slice)
+                da_exp = da_ctrl.isel(year=time_slice)
             da_ctrl = da_ctrl.mean(dim="year")
             da_exp = da_exp.mean(dim="year")
         if rel_change:
