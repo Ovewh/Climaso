@@ -95,6 +95,30 @@ rule plot_change_lwp:
     notebook:
         "../notebooks/plot_lwp_change.py.ipynb"
 
+rule plot_change_clivi:
+    input:  
+        path_exp = expand(outdir+'piClim-2xdust/clivi/clivi_piClim-2xdust_{model}_Ayear.nc',
+                model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
+                        'UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
+                        'CNRM-ESM2-1','NorESM2-LM']),
+        path_ctrl = expand(outdir + 'piClim-control/clivi/clivi_piClim-control_{model}_Ayear.nc',
+                    model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
+                        'UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
+                        'CNRM-ESM2-1','NorESM2-LM'])
+    output:
+        outpath=outdir+'figs/AerChemMIP/delta_2xdust/clivi_piClim-2xdust_AerChemMIP_{kind}.png'
+    wildcard_constraints:
+        kind='rel|abs'
+    params:
+        scaling_factor=1000,
+        units= '[g m-2]',
+        label='Ice water path',
+        abs_minmax=[-10,20],
+        rel_minmax=[-50,50]
+
+    notebook:
+        "../notebooks/plot_change_notebook.py.ipynb"
+
 rule plot_change_clt:
     input:
         path_exp = expand(outdir+'piClim-2xdust/clt/clt_piClim-2xdust_{model}_Ayear.nc',
@@ -109,9 +133,12 @@ rule plot_change_clt:
         outpath=outdir+'figs/AerChemMIP/delta_2xdust/clt_piClim-2xdust_AerChemMIP_{kind}.png'
     wildcard_constraints:
         kind='rel|abs'
-
+    params:
+        label='Cloud fraction',
+        abs_minmax=[-10,20],
+        rel_minmax=[-8,8]
     notebook:
-        "../notebooks/plot_clt_change.py.ipynb"
+        "../notebooks/plot_change_notebook.py.ipynb"
 
 rule plot_change_ts:
     input:
@@ -175,15 +202,13 @@ rule plot_change_prs:
         "../notebooks/plot_pr_change.py.ipynb"
 
 
-
-
 rule plot_emidust:
     input:
         paths=expand(outdir+'{experiment}/emidust/emidust_{experiment}_{model}_Amon.nc',
                     model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 'MIROC6',
                         'UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
                         'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True),
-        areacello = expand('input_data/gridarea_{model}.nc',
+        areacello = expand('workflow/input_data/gridarea_{model}.nc',
                     model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 'MIROC6',
                         'UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
                         'CNRM-ESM2-1','NorESM2-LM'])
@@ -199,11 +224,11 @@ rule plot_emidust:
 
 rule plot_depdust:
     input:
-        paths=expand(outdir+'{experiment}/emidust/depdust_{experiment}_{model}_Amon.nc',
+        paths=expand(outdir+'{experiment}/depdust/depdust_{experiment}_{model}_Amon.nc',
                     model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 'MIROC6',
                         'UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
                         'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True),
-        areacello = expand('input_data/gridarea_{model}.nc',
+        areacello = expand('workflow/input_data/gridarea_{model}.nc',
                     model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 'MIROC6',
                         'UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
                         'CNRM-ESM2-1','NorESM2-LM'])
@@ -215,3 +240,31 @@ rule plot_depdust:
     
     notebook:
         "../notebooks/plot_emidust.py.ipynb"
+
+rule generate_table:
+    input:
+        clt_exp=rules.plot_change_clt.input.path_exp,
+        clt_ctrl=rules.plot_change_clt.input.path_ctrl,
+        lwp_ctrl=rules.plot_change_lwp.input.path_ctrl,
+        lwp_exp = rules.plot_change_lwp.input.path_exp,
+        prs_exp = rules.plot_change_prs.input.path_exp,
+        prs_ctrl = rules.plot_change_prs.input.path_ctrl,
+        areacello=rules.plot_depdust.input.areacello,
+        emidust_ctrl = expand(rules.plot_emidust.input.paths,zip, 
+                    experiment=['piClim-control']),
+        emidust_exp = expand(rules.plot_emidust.input.paths,zip, 
+                    experiment=['piClim-2xdust']),
+        ERFaci = expand(rules.plot_ERFaci.input.paths, zip, 
+                    vName=['CloudEff','DirectEff','SWCloudEff', 'LWCloudEff','LWDirectEff','SWDirectEff']),
+        ERFt = expand(rules.plot_ERFs.input.paths, zip,
+                     vName=['ERFt','ERFtsw','ERFtlw']),
+        atmabs = expand(rules.plot_atm_abs.input.paths, zip, 
+                    vName=['atmabs'])
+    wildcard_constraints:
+        ext = 'csv|tex'
+
+    output:
+        outpath=outdir+'diagnostics_table.{ext}'
+    
+    notebook:
+        "../notebooks/generate_table.py.ipynb"
