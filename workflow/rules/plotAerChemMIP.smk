@@ -166,9 +166,13 @@ rule plot_change_ts:
         outpath=outdir+'figs/AerChemMIP/delta_2xdust/ts_piClim-2xdust_AerChemMIP_{kind}.png'
     wildcard_constraints:
         kind='abs'
+    params:
+        label= '$\Delta$ T',
+        rel_minmax=[-30,50]
+        units=['K']
 
     notebook:
-        "../notebooks/plot_ts_change.py.ipynb"
+        "../notebooks/plot_change_notebook.py.ipynb"
 
 rule plot_change_tas:
     input:
@@ -187,8 +191,13 @@ rule plot_change_tas:
     wildcard_constraints:
         kind='abs'
 
+    params:
+        label= '$\Delta$ T',
+        rel_minmax=[-30,50]
+        units=['K']
+
     notebook:
-        "../notebooks/plot_ts_change.py.ipynb"
+        "../notebooks/plot_change_notebook.py.ipynb"
 
 
 rule plot_change_prs:
@@ -213,7 +222,8 @@ rule plot_change_prs:
         abs_minmax=[-0.3,0.3],
         rel_minmax=[-60,60],
         scaling_factor=1000,
-        units = "[g m-2 s-1]"
+        units = "[g m-2 s-1]",
+        cmap='BrBG'
 
 
     notebook:
