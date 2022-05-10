@@ -168,7 +168,7 @@ rule plot_change_ts:
         kind='abs'
     params:
         label= '$\Delta$ T',
-        rel_minmax=[-30,50]
+        rel_minmax=[-30,50],
         units=['K']
 
     notebook:
@@ -193,7 +193,7 @@ rule plot_change_tas:
 
     params:
         label= '$\Delta$ T',
-        rel_minmax=[-30,50]
+        rel_minmax=[-30,50],
         units=['K']
 
     notebook:
