@@ -61,6 +61,24 @@ def regrid_global(ds: xr.DataArray, base_ds: xr.Dataset, lon: int = 3, lat: int 
     ds = regridder(ds, keep_attrs=True)
     return ds
 
+def calc_error_gridded(da: xr.DataArray, time_dim: str='year', kind='std'):
+    if isinstance(da, xr.Dataset):
+        da = da[da.variable_id]
+    with xr.set_options(keep_attrs=True):
+        std = da.std(dim=time_dim)
+        if kind == "sem" or kind == "SEM":
+            st_error = std / np.sqrt(len(da[time_dim]))
+        try:
+            st_error.attrs["long_name"] = "{} of {}".format(
+            kind, st_error.attrs["long_name"]
+            )
+        except KeyError:
+            st_error.attrs["long name"] = "{} of {}".format(
+            kind, st_error.attrs["long name"]
+            )
+
+    return st_error
+
 
 def calc_error(da: xr.DataArray, time_dim: str = "year", kind="std"):
     """
@@ -81,11 +99,17 @@ def calc_error(da: xr.DataArray, time_dim: str = "year", kind="std"):
             st_error = std / np.sqrt(len(da[time_dim]))
         else:
             st_error = std
-        st_error.attrs["long_name"] = "{} of {}".format(
+        try:
+            st_error.attrs["long_name"] = "{} of {}".format(
             kind, st_error.attrs["long_name"]
-        )
+            )
+        except KeyError:
+            st_error.attrs["long name"] = "{} of {}".format(
+            kind, st_error.attrs["long name"]
+            )
 
-        return st_error
+
+    return st_error
 
 
 def calc_relative_change(ds_ctrl: xr.Dataset, ds_exp: xr.Dataset, time_slice: slice = None):
