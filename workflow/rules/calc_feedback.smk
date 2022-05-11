@@ -7,7 +7,7 @@ rule calc_feedback:
         emis_2xCO2 = expand(rules.calc_experiment_climalogies.output.outpath, freq='Ayear', 
                         experiment='abrupt-4xCO2',allow_missing=True),
         t_ctrl = expand(rules.calc_experiment_climalogies.output.outpath, freq='Ayear', 
-                        experiment='piControl',allow_missing=True)
+                        experiment='piControl',allow_missing=True),
         area_cello='workflow/input_data/gridarea_{model}.nc',
         forcing =outdir + '{experiment}/ERFs/{erf}/{erf}_{experiment}_{model}_Ayear.nc',
 
