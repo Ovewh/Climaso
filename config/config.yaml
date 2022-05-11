@@ -34,8 +34,10 @@ model_specific_variant:
 experiments:
   control:
     - 'piClim-control'
+    - 'piControl'
   experiments:
     - 'piClim-2xdust'
+    - 'abrupt-4xCO2'
 
 # If prefered version is not latest or latest does not exist?
 version:

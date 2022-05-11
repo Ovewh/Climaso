@@ -154,6 +154,7 @@ wildcard_constraints:
 
 include: 'rules/compute_ERF.smk'
 include: 'rules/calculate_single_variable_climatologies.smk'
+include: 'rules/calc_feedback.smk'
 include: 'rules/plotAerChemMIP.smk'
 
 
@@ -165,7 +166,7 @@ rule all:
                         vName=['ERFtsw','ERFtlw','ERFtcs','ERFt']),
         expand(outdir+'figs/AerChemMIP/ERFs/{vName}_piClim-2xdust_AerChemMIP.png',
                         vName=['SWDirectEff','LWDirectEff', 'SWCloudEff','LWCloudEff','LWDirectEff_cs','SWDirectEff_cs','CloudEff','DirectEff']),
-        outdir+'figs/AerChemMIP/delta_2xdust/cdnc_piClim-2xdust_AerChemMIP.png'
+        # outdir+'figs/AerChemMIP/delta_2xdust/cdnc_piClim-2xdust_AerChemMIP.png'
 
 
 
