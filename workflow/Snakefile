@@ -47,15 +47,20 @@ except FileNotFoundError:
 try:
     with open(config['lookup_file_endings'], 'r') as f:
         LOOK_FNAMES=yaml.safe_load(f)
-    if config.get('lookup_file_endings_NorESM', None):
-        with open(config['lookup_file_endings_NorESM'], 'r') as f:
-            LOOK_FNAMES_NORESM = yaml.safe_load(f)
 
 except FileNotFoundError:
     LOOK_FNAMES=generate_file_ending_lookup_table(ROOT_PATH,ALL_ALLOWED,CMIP_VER)
     with open('config/lookup_file_endings.yaml', 'w') as f:
-        LOOK_FNAMES=yaml.dump(LOOK_FNAMES,f,default_flow_style=False)
-    
+        yaml.dump(LOOK_FNAMES,f,default_flow_style=False)
+
+try:
+    if config.get('lookup_file_endings_NorESM', None):
+        with open(config['lookup_file_endings_NorESM'], 'r') as f:
+            LOOK_FNAMES_NORESM = yaml.safe_load(f)
+except FileNotFoundError:
+    LOOK_FNAMES_NORESM=generate_file_ending_lookup_table(ROOT_PATH_NORESM,ALL_ALLOWED,CMIP_VER)
+    with open(config['lookup_file_endings_NorESM'], 'w') as f:
+        yaml.dump(LOOK_FNAMES,f,default_flow_style=False)
 
 
 def get_paths(w, variable,experiment, grid_label=None, activity=None, control=False):
