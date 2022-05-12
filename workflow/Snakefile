@@ -121,12 +121,14 @@ def get_paths(w, variable,experiment, grid_label=None, activity=None, control=Fa
         # Sometimes the file ending are different depending on varialbe
         if not os.path.exists(paths[0]) and len(paths) >= 2:
             paths = [paths[1]]
-
     return paths
 
 def get_control_path(w, variable, grid_label=None):
     if grid_label == None:
         grid_label = config['default_grid_label']
+    
+    if w.get('experiment', None) == 'piControl':
+        paths = get_paths(w, variable,'piControl', grid_label,activity='CMIP', control=False)
     try:
         paths = get_paths(w, variable,'piClim-control', grid_label,activity='RFMIP', control=True)
     except KeyError:
