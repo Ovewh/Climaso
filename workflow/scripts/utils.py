@@ -5,10 +5,32 @@ from pyclim_noresm.general_util_funcs import global_avg
 import numpy as np
 
 
+def make_consistent(dsets):
+    template_ds = dsets[0]
+    fixed_dsets = []
+    for ds in dsets:
+        ds = ds.reindex(
+                {"lon": template_ds.lon, "lat": template_ds.lat}, 
+                method="nearest"
+                )
+        ds = ds.assign(
+            {"lon_bnds": template_ds.lon_bnds, "lat_bnds": template_ds.lat_bnds})
+        fixed_dsets.append(ds)
+    return fixed_dsets
+
 def load_CMIP_data(path, **dataset_kwargs):
 
     if len(path) > 1:
-        return xr.open_mfdataset(path, chunks={"time": 120}, **dataset_kwargs)
+        try:
+            ds = xr.open_mfdataset(path, chunks={"time": 120}, **dataset_kwargs)
+        except xr.MergeError:
+            dvar = dataset_kwargs.pop("data_vars")
+            if not isinstance(dvar, list):
+                dvar = list(dvar)
+            dsets = [xr.open_dataset(p, **dataset_kwargs) for p in path]
+            dsets = make_consistent(dsets)
+            ds = xr.concat(dsets,dim='time', data_vars=dvar) 
+        return ds
     else:
         dataset_kwargs.pop("data_vars")
         return xr.open_dataset(path[0], chunks={"time": 120}, **dataset_kwargs)
@@ -192,7 +214,6 @@ def _calc_change(ds_ctrl: xr.Dataset, ds_exp: xr.Dataset,
 
 
 def transelate_aerocom_helper(wildcards):
-    print(wildcards)
     if wildcards.freq == "2010":
         freq = "clim"
     elif wildcards.freq == "monthly":
