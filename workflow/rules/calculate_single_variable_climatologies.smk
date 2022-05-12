@@ -10,7 +10,8 @@ rule calc_clim_PI_control:
         "logs/calc_clim/{variable}_{model}_{experiment}_{freq}.log"
     wildcard_constraints:
         experiment="|".join(CONTROL_EXPS),
-
+    params:
+        accumalative_vars = config['accumalative_vars']
     notebook:
         "../notebooks/calc_clim.py.ipynb"
 
@@ -24,6 +25,7 @@ rule calc_experiment_climalogies:
     wildcard_constraints:
         experiment="|".join(EXPERIMENTS),
 
-
+    params:
+        accumalative_vars = config['accumalative_vars']
     notebook:
         "../notebooks/calc_clim.py.ipynb"

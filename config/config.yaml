@@ -34,10 +34,10 @@ model_specific_variant:
 experiments:
   control:
     - 'piClim-control'
-    - 'piControl'
   experiments:
     - 'piClim-2xdust'
     - 'abrupt-4xCO2'
+    - 'piControl'
 
 # If prefered version is not latest or latest does not exist?
 version:
@@ -91,6 +91,12 @@ variables:
   LWCloudEff : ['ERFtlwaf','ERFtlwcsaf']
   atmabsSW: ['ERFtsw','ERFsurfsw']
   atmabs: ['ERFt','ERFsurf']
+
+# These variables will be accumulated when resampled e.g. from Amon to Ayear
+accumalative_vars:
+  - emidust
+  - depdust
+
 
 # If this is set to another value than null it will not use
 # lookup tables to get the correct grid label.
