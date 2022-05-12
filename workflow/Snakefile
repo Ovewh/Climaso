@@ -85,16 +85,26 @@ def get_paths(w, variable,experiment, grid_label=None, activity=None, control=Fa
         activity = LOOK_EXP[experiment]
     model = w.model
     if control:
-        variant=config['model_specific_variant']['control'].get(model, config['variant_default'])
+        prefered_variant=config['model_specific_variant']['control'].get(model, config['variant_default'])
     else:
-        variant = config['model_specific_variant']['experiment'].get(model, config['variant_default'])
+        prefered_variant = config['model_specific_variant']['experiment'].get(model, config['variant_default'])
     table_id = TABLE_IDS.get(variable,DEFAULT_TABLE_ID)
     institution = LOOK_INSTITU[model]
     try:
-        file_endings = look_fnames[activity][model][experiment][variant][table_id]['fn']
+        file_endings = look_fnames[activity][model][experiment]
     except:
-        raise KeyError(f"File ending is not defined for this combination of {activity}, {model}, {experiment}, {variant} and {table_id} " +
+        raise KeyError(f"File ending is not defined for this combination of {activity}, {model} and {experiment} " +
                         "please update config/lookup_file_endings.yaml accordingly")
+    available_variants = list(file_endings.keys())
+    if prefered_variant in available_variants:
+        file_endings = file_endings[prefered_variant][table_id]['fn']
+        variant = prefered_variant
+    else:
+        print("did not find prefered variant {} in [{}]".format(prefered_variant,' '.join(available_variants)))
+        print("selecting variant {}".format(available_variants[0]))
+        file_endings = file_endings[available_variants[0]][table_id]['fn']
+        variant = available_variants[0]
+    file_endings = sorted(file_endings)
     if grid_label == None:
         grid_label = look_fnames[activity][model][experiment][variant][table_id]['gl'][0]
     check_path = f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}'
@@ -121,6 +131,18 @@ def get_paths(w, variable,experiment, grid_label=None, activity=None, control=Fa
         # Sometimes the file ending are different depending on varialbe
         if not os.path.exists(paths[0]) and len(paths) >= 2:
             paths = [paths[1]]
+
+    all_exist = all([os.path.exists(p) for p in paths])
+
+    if os.path.exists(check_path) and not all_exist:
+        print("Could not find path matching file endings globbing..")
+        fn = glob_wildcards(
+            f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}/{version}/{fname}_{{file_endings}}')
+        paths = expand(
+            f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}/{version}/{fname}_{{file_endings}}'
+            ,file_endings=fn.file_endings)
+
+
     return paths
 
 def get_control_path(w, variable, grid_label=None):

@@ -249,7 +249,17 @@ rule plot_emidust:
     notebook:
         "../notebooks/plot_emidust.py.ipynb"
 
+rule plot_feedbacks:
+    input:
+        paths=expand(outdir + '{experiment}/Feedback_per_emis/{erf}_{variable}_{experiment}_{model}_Ayear.yaml',
+                    model=[ 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'GFDL-ESM4',
+                        'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True)
+    output:
+        outpath=outdir+'figs/AerChemMIP/Feedbacks/Feedback_per_emis_{erf}_{variable}_{experiment}.png'
 
+    notebook:
+        "../notebooks/plot_feedback.py.ipynb"
 rule plot_depdust:
     input:
         paths=expand(outdir+'{experiment}/depdust/depdust_{experiment}_{model}_Amon.nc',

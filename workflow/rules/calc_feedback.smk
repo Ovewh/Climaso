@@ -17,7 +17,7 @@ rule calc_feedback:
 
 
     output:
-        outpath=outdir+'{experiment}/Feedback_per_emis/{erf}_{variable}_{experiment}_{model}_Ayear.nc'
+        outpath=outdir+'{experiment}/Feedback_per_emis/{erf}_{variable}_{experiment}_{model}_Ayear.yaml'
     wildcard_constraints:
         erf='|'.join(config['variables'].keys())
 
