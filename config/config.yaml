@@ -45,7 +45,10 @@ version:
     MPI-ESM-1-2-HAM: 'v20190628'
     EC-Earth3-AerChem: 'v20201013'
   version_exp:
-    MPI-ESM-1-2-HAM: 'latest'
+    piClim-2x-dust:
+      MPI-ESM-1-2-HAM: 'latest'
+    abrupt-4xCO2:
+      MPI-ESM-1-2-HAM: 'v20190628'
 
 
 # Default table_id

@@ -118,7 +118,9 @@ def get_paths(w, variable,experiment, grid_label=None, activity=None, control=Fa
     if control:
         version = config['version']['version_control'].get(w.model, 'latest')
     else:
-        version = config['version']['version_exp'].get(w.model, 'latest')
+        version = config['version']['version_exp'].get(experiment, 'latest')
+        if version != 'latest':
+            version = version.get(w.model, 'latest')
     fname = f'{variable}_{table_id}_{model}_{experiment}_{variant}_{grid_label}'
     paths = expand(
             f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}/{version}/{fname}_{{file_endings}}'
@@ -135,6 +137,7 @@ def get_paths(w, variable,experiment, grid_label=None, activity=None, control=Fa
     all_exist = all([os.path.exists(p) for p in paths])
 
     if os.path.exists(check_path) and not all_exist:
+        expected_paths = paths
         print("Could not find path matching file endings globbing..")
         fn = glob_wildcards(
             f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}/{version}/{fname}_{{file_endings}}')
@@ -142,7 +145,9 @@ def get_paths(w, variable,experiment, grid_label=None, activity=None, control=Fa
             f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}/{version}/{fname}_{{file_endings}}'
             ,file_endings=fn.file_endings)
 
-
+        paths = sorted(paths)
+        if not paths:
+            paths=expected_paths
     return paths
 
 def get_control_path(w, variable, grid_label=None):

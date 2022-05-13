@@ -252,8 +252,8 @@ rule plot_emidust:
 rule plot_feedbacks:
     input:
         paths=expand(outdir + '{experiment}/Feedback_per_emis/{erf}_{variable}_{experiment}_{model}_Ayear.yaml',
-                    model=[ 'GISS-E2-1-G',
-                        'UKESM1-0-LL', 'GFDL-ESM4',
+                    model=[ 'GISS-E2-1-G','EC-Earth3-AerChem', 'MIROC6',
+                        'UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
                         'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True)
     output:
         outpath=outdir+'figs/AerChemMIP/Feedbacks/Feedback_per_emis_{erf}_{variable}_{experiment}.png'
