@@ -249,14 +249,21 @@ rule plot_emidust:
     notebook:
         "../notebooks/plot_emidust.py.ipynb"
 
-rule plot_feedbacks:
+rule plot_feedback_decomposed:
     input:
-        paths=expand(outdir + '{experiment}/Feedback_per_emis/{erf}_{variable}_{experiment}_{model}_Ayear.yaml',
+        paths_ERFt=expand(outdir + '{experiment}/Feedback_per_emis/ERFt_{variable}_{experiment}_{model}_Ayear.yaml',
                     model=[ 'GISS-E2-1-G','EC-Earth3-AerChem', 'MIROC6',
                         'UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True)
+                        'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True),
+        paths_CloudEff = expand(outdir + '{experiment}/Feedback_per_emis/CloudEff_{variable}_{experiment}_{model}_Ayear.yaml',
+                            model=['MPI-ESM-1-2-HAM','EC-Earth3-AerChem','CNRM-ESM2-1','NorESM2-LM','UKESM1-0-LL'],
+                            allow_missing=True),
+        paths_DirectEff = expand(outdir + '{experiment}/Feedback_per_emis/DirectEff_{variable}_{experiment}_{model}_Ayear.yaml',
+                            model=['MPI-ESM-1-2-HAM','EC-Earth3-AerChem','CNRM-ESM2-1','NorESM2-LM','UKESM1-0-LL'],
+                            allow_missing=True)
+
     output:
-        outpath=outdir+'figs/AerChemMIP/Feedbacks/Feedback_per_emis_{erf}_{variable}_{experiment}.png'
+        outpath=outdir+'figs/AerChemMIP/Feedbacks/Feedback_per_emis_decomposed_{variable}_{experiment}.png'
 
     notebook:
         "../notebooks/plot_feedback.py.ipynb"
