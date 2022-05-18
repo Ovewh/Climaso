@@ -10,13 +10,14 @@ def make_consistent(dsets):
     fixed_dsets = []
     for ds in dsets:
         ds = ds.reindex(
-                {"lon": template_ds.lon, "lat": template_ds.lat}, 
-                method="nearest"
-                )
+            {"lon": template_ds.lon, "lat": template_ds.lat}, method="nearest"
+        )
         ds = ds.assign(
-            {"lon_bnds": template_ds.lon_bnds, "lat_bnds": template_ds.lat_bnds})
+            {"lon_bnds": template_ds.lon_bnds, "lat_bnds": template_ds.lat_bnds}
+        )
         fixed_dsets.append(ds)
     return fixed_dsets
+
 
 def load_CMIP_data(path, **dataset_kwargs):
 
@@ -29,7 +30,7 @@ def load_CMIP_data(path, **dataset_kwargs):
                 dvar = list(dvar)
             dsets = [xr.open_dataset(p, **dataset_kwargs) for p in path]
             dsets = make_consistent(dsets)
-            ds = xr.concat(dsets,dim='time', data_vars=dvar) 
+            ds = xr.concat(dsets, dim="time", data_vars=dvar)
         return ds
     else:
         dataset_kwargs.pop("data_vars")
@@ -51,23 +52,24 @@ def copy_meta_data_CMIP(attrs):
     new_attrs = {k: attrs[k] for k in set(list(attrs.keys())) - set(remove_keys)}
     return new_attrs
 
+
 def compute_annual_emission_budget(ds: xr.Dataset, grid_area: xr.Dataset):
     """
-    Computes annual emission budget from monthly data 
-    
+    Computes annual emission budget from monthly data
+
     Params
     ------
-        ds :  monthly emission flux, 
-        grid_area: area of each grid cell 
+        ds :  monthly emission flux,
+        grid_area: area of each grid cell
     """
-    yearly_budget = ds[ds.variable_id].resample(time='Y').mean()*365*24*60*60
-    
-    
-    yearly_budget = yearly_budget*grid_area['cell_area']
-    yearly_budget = yearly_budget.sum(dim=['lon','lat'])*1e-9
-    yearly_budget.attrs['units'] = 'Tg year-1'
-    mean_yearly_budget = yearly_budget.mean(dim='time')
+    yearly_budget = ds[ds.variable_id].resample(time="Y").mean() * 365 * 24 * 60 * 60
+
+    yearly_budget = yearly_budget * grid_area["cell_area"]
+    yearly_budget = yearly_budget.sum(dim=["lon", "lat"]) * 1e-9
+    yearly_budget.attrs["units"] = "Tg year-1"
+    mean_yearly_budget = yearly_budget.mean(dim="time")
     return mean_yearly_budget
+
 
 def regrid_global(ds: xr.DataArray, base_ds: xr.Dataset, lon: int = 3, lat: int = 2):
     """
@@ -83,20 +85,23 @@ def regrid_global(ds: xr.DataArray, base_ds: xr.Dataset, lon: int = 3, lat: int 
     ds = regridder(ds, keep_attrs=True)
     return ds
 
-def calc_error_gridded(da: xr.DataArray, time_dim: str='year', kind='std'):
+
+def calc_error_gridded(da: xr.DataArray, time_dim: str = "year", kind="std"):
     if isinstance(da, xr.Dataset):
         da = da[da.variable_id]
     with xr.set_options(keep_attrs=True):
         std = da.std(dim=time_dim)
         if kind == "sem" or kind == "SEM":
             st_error = std / np.sqrt(len(da[time_dim]))
+        else:
+            st_error = std
         try:
             st_error.attrs["long_name"] = "{} of {}".format(
-            kind, st_error.attrs["long_name"]
+                kind, st_error.attrs["long_name"]
             )
         except KeyError:
             st_error.attrs["long name"] = "{} of {}".format(
-            kind, st_error.attrs["long name"]
+                kind, st_error.attrs["long name"]
             )
 
     return st_error
@@ -123,18 +128,19 @@ def calc_error(da: xr.DataArray, time_dim: str = "year", kind="std"):
             st_error = std
         try:
             st_error.attrs["long_name"] = "{} of {}".format(
-            kind, st_error.attrs["long_name"]
+                kind, st_error.attrs["long_name"]
             )
         except KeyError:
             st_error.attrs["long name"] = "{} of {}".format(
-            kind, st_error.attrs["long name"]
+                kind, st_error.attrs["long name"]
             )
-
 
     return st_error
 
 
-def calc_relative_change(ds_ctrl: xr.Dataset, ds_exp: xr.Dataset, time_slice: slice = None):
+def calc_relative_change(
+    ds_ctrl: xr.Dataset, ds_exp: xr.Dataset, time_slice: slice = None, time_average: bool=False
+):
     """
     Calculate the relative change of a diagnostic between
     the control and experiment. The data is on model level
@@ -150,10 +156,12 @@ def calc_relative_change(ds_ctrl: xr.Dataset, ds_exp: xr.Dataset, time_slice: sl
     --------
         rel_diff: dataset containing the relative difference
     """
-    return _calc_change(ds_ctrl, ds_exp, rel_change=True)
+    return _calc_change(ds_ctrl, ds_exp, rel_change=True, time_slice=time_slice,time_average=time_average)
 
 
-def calc_abs_change(ds_ctrl: xr.Dataset, ds_exp: xr.Dataset, time_slice=None):
+def calc_abs_change(
+    ds_ctrl: xr.Dataset, ds_exp: xr.Dataset, time_slice=None, time_average: bool=False
+):
     """
     Calculated absolute change of diagnostic between
     the control and experiment. Data that is on model
@@ -166,11 +174,22 @@ def calc_abs_change(ds_ctrl: xr.Dataset, ds_exp: xr.Dataset, time_slice=None):
         time_slice : slice time based on index
 
     """
-    return _calc_change(ds_ctrl, ds_exp, rel_change=False, time_slice=time_slice)
+    return _calc_change(
+        ds_ctrl,
+        ds_exp,
+        rel_change=False,
+        time_slice=time_slice,
+        time_average=time_average,
+    )
 
 
-def _calc_change(ds_ctrl: xr.Dataset, ds_exp: xr.Dataset, 
-                    rel_change: bool = False, time_slice=None):
+def _calc_change(
+    ds_ctrl: xr.Dataset,
+    ds_exp: xr.Dataset,
+    rel_change: bool = False,
+    time_slice=None,
+    time_average=False,
+):
 
     vName = ds_ctrl.variable_id
     dvars = set(list(ds_ctrl.data_vars))
@@ -187,12 +206,19 @@ def _calc_change(ds_ctrl: xr.Dataset, ds_exp: xr.Dataset,
         else:
             da_ctrl = ds[f"control_{vName}"]
             da_exp = ds[vName]
+        
         if "year" in da_ctrl.dims:
-            if time_slice:
-                da_ctrl = da_ctrl.isel(year=time_slice)
-                da_exp = da_ctrl.isel(year=time_slice)
-            da_ctrl = da_ctrl.mean(dim="year")
-            da_exp = da_exp.mean(dim="year")
+            t_dim='year'
+        else:
+            t_dim='time'
+        
+        if time_slice:
+            da_ctrl = da_ctrl.isel({f'{t_dim}':time_slice})
+            da_exp = da_exp.isel({f'{t_dim}':time_slice})
+        if time_average:
+            da_ctrl = da_ctrl.mean({f'{t_dim}':time_slice})
+            da_exp = da_exp.mean({f'{t_dim}':time_slice})
+
         if rel_change:
             diff = ((da_exp - da_ctrl) / da_ctrl) * 100
             diff.attrs["units"] = "%"
