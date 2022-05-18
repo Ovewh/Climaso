@@ -294,6 +294,8 @@ rule generate_table:
         lwp_exp = rules.plot_change_lwp.input.path_exp,
         prs_exp = rules.plot_change_prs.input.path_exp,
         prs_ctrl = rules.plot_change_prs.input.path_ctrl,
+        clivi_exp = rules.plot_change_clivi.input.path_exp,
+        clivi_ctrl = rules.plot_change_clivi.input.path_ctrl,
         areacello=rules.plot_depdust.input.areacello,
         emidust_ctrl = expand(rules.plot_emidust.input.paths,zip, 
                     experiment=['piClim-control']),
@@ -304,12 +306,19 @@ rule generate_table:
         ERFt = expand(rules.plot_ERFs.input.paths, zip,
                      vName=['ERFt','ERFtsw','ERFtlw']),
         atmabs = expand(rules.plot_atm_abs.input.paths, zip, 
-                    vName=['atmabs'])
-    wildcard_constraints:
-        ext = 'csv|tex'
+                    vName=['atmabs']),
+        feedback_tot = expand(rules.plot_feedback_decomposed.input.paths_ERFt, 
+                                experiment=['piClim-2xdust'], variable=['emidust']),
+        feedback_Clouds = expand(rules.plot_feedback_decomposed.input.paths_CloudEff, 
+                                experiment=['piClim-2xdust'], variable=['emidust']),
+        feedback_Direct = expand(rules.plot_feedback_decomposed.input.paths_DirectEff, 
+                                experiment=['piClim-2xdust'], variable=['emidust'])
 
     output:
-        outpath=outdir+'diagnostics_table.{ext}'
+        outpath=outdir+'aerChemMIP_2xdust_table.csv',
+        forcing_table=outdir+'forcing_table.png',
+        diagnostics_table_path=outdir+'diagnostics_table.png',
+        feedback_table = outdir+'feedback_table.png'
     
     notebook:
         "../notebooks/generate_table.py.ipynb"
