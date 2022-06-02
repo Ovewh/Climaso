@@ -1,11 +1,12 @@
 # Snakemake workflow: CLimate Impact of AeroSOls 
 
 [![Snakemake](https://img.shields.io/badge/snakemake-≥6.3.0-brightgreen.svg)](https://snakemake.github.io)
-[![GitHub actions status](https://github.com/<owner>/<repo>/workflows/Tests/badge.svg?branch=main)](https://github.com/<owner>/<repo>/actions?query=branch%3Amain+workflow%3ATests)
+[![GitHub actions
+status](https://github.com/<owner>/<repo>/workflows/Tests/badge.svg?branch=main)](https://github.com/<owner>/<repo>/actions?query=branch%3Amain+workflow%3ATests)
 
 
-A Snakemake workflow for analysing CMIP6 model output. This workflow is designed work with CMIP6
-model data stored in DKRZ data format. 
+A Snakemake workflow for analysing CMIP6 model output. This workflow is designed
+work with CMIP6 model data stored in DKRZ data format. 
 
 ## Installation
 
@@ -22,13 +23,19 @@ conda activate ./dustysnake
 ``` 
 ## Usage
 
+![dag](dag_t.svg)
+*How the different rules are connected inorder to create the final tables.*
+
 The workflow can be configured in the `config/config.yaml` file. Here which
-experiment and activities to analyze can be defined. Current version has been primarily developed for analyzing AerChemMIP type of experiments.  
+experiment and activities to analyze can be defined. Current version has been
+primarily developed for analyzing AerChemMIP type of experiments.  
 
-* Uses the `lookup_*.yaml` files are used to find the  CMIP6 files, to avoid to extensive globbing search. 
-  To make it faster when working on mounted file systems. 
+* Uses the `lookup_*.yaml` files are used to find the  CMIP6 files, to avoid to
+  extensive globbing search. To make it faster when working on mounted file
+  systems. 
 
-* Extending the workflow can be done trough adding additional rules. Following the standard snakemake format.
+* Extending the workflow can be done trough adding additional rules. Following
+  the standard snakemake format.
 
 ### Running the workflow:
 Default is to run the `all` rule defined in the `Snakefile`:
@@ -78,6 +85,8 @@ snakemake -j2 generate_table
 ```
 
 ## Mounting of CMIP6 storage server
-This workflow relies on the having access to the Betzy and Nird storage system. Most of the 
-CMIP6 data archived in Norway is stored at the Betzy, while the NorESM output is archived on the 
-NIRD server. However it should also be possible to make the workflow work on any storage systems also as the data is archived following the DKRZ data format. 
+This workflow relies on the having access to the Betzy and Nird storage system.
+Most of the CMIP6 data archived in Norway is stored at the Betzy super computer, while the
+NorESM output is archived on the NIRD storage server. However it should also be possible
+to make the workflow work on any storage systems also as the data is archived
+following the DKRZ data format. 
