@@ -313,7 +313,8 @@ rule generate_table:
                                 experiment=['piClim-2xdust'], variable=['emidust']),
         feedback_Direct = expand(rules.plot_feedback_decomposed.input.paths_DirectEff, 
                                 experiment=['piClim-2xdust'], variable=['emidust'])
-
+    log:
+        "logs/generate_table.log"
     output:
         outpath=outdir+'aerChemMIP_2xdust_table.csv',
         forcing_table=outdir+'forcing_table.png',
