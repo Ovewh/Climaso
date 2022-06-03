@@ -38,6 +38,8 @@ experiments:
     - 'piClim-2xdust'
     - 'abrupt-4xCO2'
     - 'piControl'
+    - 'histSST'
+    - 'hist-piAer'
 
 # If prefered version is not latest or latest does not exist?
 version:
