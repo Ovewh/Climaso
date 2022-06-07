@@ -60,7 +60,7 @@ try:
 except FileNotFoundError:
     LOOK_FNAMES_NORESM=generate_file_ending_lookup_table(ROOT_PATH_NORESM,ALL_ALLOWED,CMIP_VER)
     with open(config['lookup_file_endings_NorESM'], 'w') as f:
-        yaml.dump(LOOK_FNAMES,f,default_flow_style=False)
+        yaml.dump(LOOK_FNAMES_NORESM,f,default_flow_style=False)
 
 
 def get_paths(w, variable,experiment, grid_label=None, activity=None, control=False):
@@ -97,14 +97,11 @@ def get_paths(w, variable,experiment, grid_label=None, activity=None, control=Fa
                         "please update config/lookup_file_endings.yaml accordingly")
     available_variants = list(file_endings.keys())
     if prefered_variant in available_variants:
-        file_endings = file_endings[prefered_variant][table_id]['fn']
         variant = prefered_variant
     else:
         print("did not find prefered variant {} in [{}]".format(prefered_variant,' '.join(available_variants)))
         print("selecting variant {}".format(available_variants[0]))
-        file_endings = file_endings[available_variants[0]][table_id]['fn']
         variant = available_variants[0]
-    file_endings = sorted(file_endings)
     if grid_label == None:
         grid_label = look_fnames[activity][model][experiment][variant][table_id]['gl'][0]
     check_path = f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}'
@@ -122,23 +119,8 @@ def get_paths(w, variable,experiment, grid_label=None, activity=None, control=Fa
         if version != 'latest':
             version = version.get(w.model, 'latest')
     fname = f'{variable}_{table_id}_{model}_{experiment}_{variant}_{grid_label}'
-    paths = expand(
-            f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}/{version}/{fname}_{{file_endings}}'
-            ,file_endings=file_endings)
-    # Sometimes the verisons are just messed up... try one more time with latest
-    if not os.path.exists(paths[0]):
-        paths=expand(
-        f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}/latest/{fname}_{{file_endings}}'
-        ,file_endings=file_endings)
-        # Sometimes the file ending are different depending on varialbe
-        if not os.path.exists(paths[0]) and len(paths) >= 2:
-            paths = [paths[1]]
 
-    all_exist = all([os.path.exists(p) for p in paths])
-
-    if os.path.exists(check_path) and not all_exist:
-        expected_paths = paths
-        print("Could not find path matching file endings globbing..")
+    if os.path.exists(check_path):
         fn = glob_wildcards(
             f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}/{version}/{fname}_{{file_endings}}')
         paths = expand(
@@ -146,8 +128,6 @@ def get_paths(w, variable,experiment, grid_label=None, activity=None, control=Fa
             ,file_endings=fn.file_endings)
 
         paths = sorted(paths)
-        if not paths:
-            paths=expected_paths
     return paths
 
 def get_control_path(w, variable, grid_label=None):

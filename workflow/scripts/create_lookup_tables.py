@@ -56,7 +56,6 @@ def generate_file_ending_lookup_table(root_dir,experiments ,cmip_ver='CMIP6'):
                                             if table_id.is_dir():
                                                 variable = next(table_id.iterdir())
 
-                                                fnames = []
                                                 list_gl = []
                                                 for gl in variable.iterdir():
                                                     gl_iter = gl.iterdir()
@@ -66,10 +65,7 @@ def generate_file_ending_lookup_table(root_dir,experiments ,cmip_ver='CMIP6'):
                                                             version = next(gl_iter)
                                                         except:
                                                             continue 
-                                                    if version.is_dir():
-                                                        for fname in version.iterdir():
-                                                            fnames.append(fname.parts[-1].split('_')[-1])
                                                     list_gl.append(gl.parts[-1])
-                                                lookup_dir[activity][model_name][experiment_name][variant_name][table_id.parts[-1]] = {'fn':fnames,'gl':list_gl}
+                                                lookup_dir[activity][model_name][experiment_name][variant_name][table_id.parts[-1]] = {'gl':list_gl}
 
     return lookup_dir
