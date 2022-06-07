@@ -73,7 +73,8 @@ def get_paths(w, variable,experiment, grid_label=None, activity=None, control=Fa
                 a named tuple that contains the snakemake wildcards
 
     """
-    if w.model in ["NorESM2-LM", "NorESM2-MM"]:
+    model = w.model
+    if model in ["NorESM2-LM", "NorESM2-MM"]:
         root_path = f'{ROOT_PATH_NORESM}/{CMIP_VER}'
         look_fnames = LOOK_FNAMES_NORESM
     else:
@@ -83,7 +84,10 @@ def get_paths(w, variable,experiment, grid_label=None, activity=None, control=Fa
         activity= activity
     else:
         activity = LOOK_EXP[experiment]
-    model = w.model
+        
+        if experiment not in list(look_fnames[activity][model].keys()):
+            activity = config.get('default_activity','CMIP')
+        
     if control:
         prefered_variant=config['model_specific_variant']['control'].get(model, config['variant_default'])
     else:
@@ -133,13 +137,15 @@ def get_paths(w, variable,experiment, grid_label=None, activity=None, control=Fa
 def get_control_path(w, variable, grid_label=None):
     if grid_label == None:
         grid_label = config['default_grid_label']
-    
     if w.get('experiment', None) == 'piControl':
         paths = get_paths(w, variable,'piControl', grid_label,activity='CMIP', control=False)
-    try:
-        paths = get_paths(w, variable,'piClim-control', grid_label,activity='RFMIP', control=True)
-    except KeyError:
-        paths = get_paths(w, variable,'piClim-control', grid_label,activity='AerChemMIP', control=True)
+    elif w.get('experiment',None) == 'histSST':
+        paths = get_paths(w, variable, 'hist-piAer', grid_label, activity='AerChemMIP',control=False)
+    else:
+        try:
+            paths = get_paths(w, variable,'piClim-control', grid_label,activity='RFMIP', control=True)
+        except KeyError:
+            paths = get_paths(w, variable,'piClim-control', grid_label,activity='AerChemMIP', control=True)
     return paths
 
 output_format = {}
@@ -170,6 +176,7 @@ include: 'rules/compute_ERF.smk'
 include: 'rules/calculate_single_variable_climatologies.smk'
 include: 'rules/calc_feedback.smk'
 include: 'rules/plotAerChemMIP.smk'
+include: 'rules/calc_historical_forcing.smk'
 
 
 rule all:

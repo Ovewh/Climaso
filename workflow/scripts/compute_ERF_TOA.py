@@ -14,7 +14,6 @@ exp_up_LW = load_CMIP_data(snakemake.input.exp_upwelling_LW, data_vars=[vName_up
 ctrl_dw_SW = load_CMIP_data(snakemake.input.ctrl_downwelling_SW,data_vars=[vName_dw_SW])
 ctrl_up_SW = load_CMIP_data(snakemake.input.ctrl_upwelling_SW, data_vars=[vName_up_SW])
 ctrl_up_LW = load_CMIP_data(snakemake.input.ctrl_upwelling_LW,data_vars=[vName_up_LW])
-
 dw_SW = merge_exp_ctrl(exp_dw_SW, ctrl_dw_SW)
 up_LW = merge_exp_ctrl(exp_up_LW, ctrl_up_LW)
 up_SW = merge_exp_ctrl(exp_up_SW, ctrl_up_SW)
