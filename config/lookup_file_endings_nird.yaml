@@ -229,6 +229,75 @@ AerChemMIP:
         fx:
           gl:
           - gn
+    histSST-piAer:
+      r1i1p1f1:
+        AERday:
+          gl:
+          - gn
+        AERmon:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        CFmon:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r1i1p2f1:
+        AERday:
+          gl:
+          - gn
+        AERmon:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        CFmon:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
     piClim-2xdust:
       r1i1p1f1:
         AERday:

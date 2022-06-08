@@ -110,6 +110,14 @@ AerChemMIP:
         Omon:
           gl:
           - gn
+    histSST-piAer:
+      r1i1p1f1:
+        AERmon:
+          gl:
+          - gr
+        Amon:
+          gl:
+          - gr
     piClim-2xdust:
       r1i1p1f1:
         AERmon:
@@ -157,6 +165,20 @@ AerChemMIP:
           gl:
           - gr1
         fx:
+          gl:
+          - gr1
+    histSST-piAer:
+      r1i1p1f1:
+        AERmon:
+          gl:
+          - gr1
+        Amon:
+          gl:
+          - gr1
+        CFmon:
+          gl:
+          - gr1
+        Emon:
           gl:
           - gr1
     piClim-2xdust:
@@ -231,6 +253,11 @@ AerChemMIP:
         SImon:
           gl:
           - gn
+    histSST-piAer:
+      r1i1p3f1:
+        Amon:
+          gl:
+          - gn
     piClim-2xdust:
       r1i1p3f1:
         AERmon:
@@ -299,6 +326,23 @@ AerChemMIP:
           gl:
           - gn
     histSST:
+      r1i1p1f1:
+        AERmon:
+          gl:
+          - gn
+        AERmonZ:
+          gl:
+          - gnz
+        Amon:
+          gl:
+          - gn
+        CFmon:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+    histSST-piAer:
       r1i1p1f1:
         AERmon:
           gl:
@@ -402,6 +446,14 @@ AerChemMIP:
         Amon:
           gl:
           - gn
+    histSST-piAer:
+      r1i1p1f1:
+        AERmon:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
     piClim-2xdust:
       r1i1p1f1:
         AERmon:
@@ -460,6 +512,11 @@ AerChemMIP:
         fx:
           gl:
           - gn
+    histSST-piAer:
+      r1i1p1f1:
+        Amon:
+          gl:
+          - gn
   NorESM2-LM:
     hist-piAer:
       r1i1p1f1:
@@ -501,6 +558,20 @@ AerChemMIP:
           gl:
           - gn
     histSST:
+      r1i1p1f2:
+        AERmon:
+          gl:
+          - gn
+        AERmonZ:
+          gl:
+          - gnz
+        Amon:
+          gl:
+          - gn
+        CFmon:
+          gl:
+          - gn
+    histSST-piAer:
       r1i1p1f2:
         AERmon:
           gl:
@@ -930,6 +1001,7 @@ CMIP:
           - gn
         Omon:
           gl:
+          - gr
           - gn
         SImon:
           gl:
@@ -1040,6 +1112,7 @@ CMIP:
           - gn
         Omon:
           gl:
+          - gr
           - gn
         SImon:
           gl:
@@ -1587,6 +1660,9 @@ CMIP:
           gl:
           - gr
         Amon:
+          gl:
+          - gr
+        Ofx:
           gl:
           - gr
         Omon:
@@ -2354,12 +2430,18 @@ CMIP:
   GISS-E2-2-H:
     abrupt-4xCO2:
       r1i1p1f1:
+        Omon:
+          gl:
+          - gn
         SImon:
           gl:
           - gn
     piControl:
       r1i1p1f1:
         Amon:
+          gl:
+          - gn
+        Omon:
           gl:
           - gn
         SImon:
@@ -2893,6 +2975,9 @@ CMIP:
           - gn
       r1i1p4f2:
         Amon:
+          gl:
+          - gn
+        Ofx:
           gl:
           - gn
   MIROC-ES2L:
@@ -3579,6 +3664,9 @@ CMIP:
           gl:
           - gn
         Emon:
+          gl:
+          - gn
+        Ofx:
           gl:
           - gn
         SImon:
