@@ -132,6 +132,10 @@ def get_paths(w, variable,experiment, grid_label=None, activity=None, control=Fa
             ,file_endings=fn.file_endings)
 
         paths = sorted(paths)
+    else:
+        raise FileNotFoundError(f"{check_path} does not exist")
+        import sys
+        sys.exit()
     return paths
 
 def get_control_path(w, variable, grid_label=None):
@@ -140,7 +144,7 @@ def get_control_path(w, variable, grid_label=None):
     if w.get('experiment', None) == 'piControl':
         paths = get_paths(w, variable,'piControl', grid_label,activity='CMIP', control=False)
     elif w.get('experiment',None) == 'histSST':
-        paths = get_paths(w, variable, 'hist-piAer', grid_label, activity='AerChemMIP',control=False)
+        paths = get_paths(w, variable, 'histSST-piAer', grid_label, activity='AerChemMIP',control=False)
     else:
         try:
             paths = get_paths(w, variable,'piClim-control', grid_label,activity='RFMIP', control=True)
@@ -173,7 +177,7 @@ wildcard_constraints:
     freq=valid_frequencies
 
 include: 'rules/compute_ERF.smk'
-include: 'rules/calculate_single_variable_climatologies.smk'
+include: 'rules/utils.smk'
 include: 'rules/calc_feedback.smk'
 include: 'rules/plotAerChemMIP.smk'
 include: 'rules/calc_historical_forcing.smk'
