@@ -66,6 +66,7 @@ table_ids:
   emidust: 'AERmon'
   od550dust: 'AERmon'
   od550aer: 'AERmon'
+  od550csaer: 'AERmon'
   lwp: 'AERmon'
   cdnc: 'AERmon'
 
