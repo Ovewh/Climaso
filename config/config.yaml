@@ -40,6 +40,8 @@ experiments:
     - 'piControl'
     - 'histSST'
     - 'hist-piAer'
+    - 'histSST-piAer'
+    - 'historical'
 
 # If prefered version is not latest or latest does not exist?
 version:
@@ -65,6 +67,8 @@ table_ids:
   emidust: 'AERmon'
   od550dust: 'AERmon'
   od550aer: 'AERmon'
+  od550csaer: 'AERmon'
+  od550lt1aer: 'AERmon'
   lwp: 'AERmon'
   cdnc: 'AERmon'
 
@@ -75,7 +79,7 @@ variables:
   ERFtaf: ['rsutaf','rsdt','rlutaf']
   ERFtcsaf: ['rsutcsaf','rsdt','rlutcsaf']
   ERFtsw: ['rsut','rsdt']
-  ERFtswaf: ['rsutaf', 'rsdt']
+  ERFtswaf: ['rsutaf', 'rsdt']  
   ERFtswcsaf: ['rsutcsaf','rsdt']
   ERFtlw: ['rlut']
   ERFtlwaf: ['rlutaf']

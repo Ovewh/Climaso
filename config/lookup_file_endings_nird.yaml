@@ -229,6 +229,75 @@ AerChemMIP:
         fx:
           gl:
           - gn
+    histSST-piAer:
+      r1i1p1f1:
+        AERday:
+          gl:
+          - gn
+        AERmon:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        CFmon:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r1i1p2f1:
+        AERday:
+          gl:
+          - gn
+        AERmon:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        CFmon:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
     piClim-2xdust:
       r1i1p1f1:
         AERday:
@@ -327,6 +396,1207 @@ CMIP:
           gl:
           - gn
         SImon:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+    historical:
+      r10i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r11i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r12i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r13i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r14i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r15i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r16i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r17i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r18i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r19i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r1i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r20i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r21i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r22i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r23i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r24i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r25i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r26i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r27i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r28i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r29i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r2i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r30i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r3i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r4i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r5i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r6i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r7i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r8i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r9i1p1f1:
+        AERday:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
+        SImon:
+          gl:
+          - gn
+        day:
           gl:
           - gn
         fx:
@@ -512,6 +1782,220 @@ CMIP:
         fx:
           gl:
           - gn
+    historical:
+      r1i1p1f1:
+        3hr:
+          gl:
+          - gn
+        6hrLev:
+          gl:
+          - gn
+        6hrPlev:
+          gl:
+          - gn
+        6hrPlevPt:
+          gl:
+          - gn
+        AERday:
+          gl:
+          - gn
+        AERmon:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CF3hr:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        CFmon:
+          gl:
+          - gn
+        E3hr:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Oday:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gr
+        Oyr:
+          gl:
+          - gn
+          - gr
+        SIday:
+          gl:
+          - gn
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r2i1p1f1:
+        3hr:
+          gl:
+          - gn
+        6hrLev:
+          gl:
+          - gn
+        6hrPlev:
+          gl:
+          - gn
+        6hrPlevPt:
+          gl:
+          - gn
+        AERday:
+          gl:
+          - gn
+        AERmon:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CF3hr:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        CFmon:
+          gl:
+          - gn
+        E3hr:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Oday:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gr
+        Oyr:
+          gl:
+          - gn
+          - gr
+        SIday:
+          gl:
+          - gn
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r3i1p1f1:
+        3hr:
+          gl:
+          - gn
+        6hrLev:
+          gl:
+          - gn
+        6hrPlev:
+          gl:
+          - gn
+        6hrPlevPt:
+          gl:
+          - gn
+        AERday:
+          gl:
+          - gn
+        AERmon:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CF3hr:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        CFmon:
+          gl:
+          - gn
+        E3hr:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Oday:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gr
+        Oyr:
+          gl:
+          - gn
+          - gr
+        SIday:
+          gl:
+          - gn
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
     piControl:
       RETRACTED: {}
       r1i1p1f1:
@@ -588,6 +2072,220 @@ CMIP:
   NorESM2-MM:
     abrupt-4xCO2:
       r1i1p1f1:
+        3hr:
+          gl:
+          - gn
+        6hrLev:
+          gl:
+          - gn
+        6hrPlev:
+          gl:
+          - gn
+        6hrPlevPt:
+          gl:
+          - gn
+        AERday:
+          gl:
+          - gn
+        AERmon:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CF3hr:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        CFmon:
+          gl:
+          - gn
+        E3hr:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Oday:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gr
+        Oyr:
+          gl:
+          - gn
+          - gr
+        SIday:
+          gl:
+          - gn
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+    historical:
+      r1i1p1f1:
+        3hr:
+          gl:
+          - gn
+        6hrLev:
+          gl:
+          - gn
+        6hrPlev:
+          gl:
+          - gn
+        6hrPlevPt:
+          gl:
+          - gn
+        AERday:
+          gl:
+          - gn
+        AERmon:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CF3hr:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        CFmon:
+          gl:
+          - gn
+        E3hr:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Oday:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gr
+        Oyr:
+          gl:
+          - gn
+          - gr
+        SIday:
+          gl:
+          - gn
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r2i1p1f1:
+        3hr:
+          gl:
+          - gn
+        6hrLev:
+          gl:
+          - gn
+        6hrPlev:
+          gl:
+          - gn
+        6hrPlevPt:
+          gl:
+          - gn
+        AERday:
+          gl:
+          - gn
+        AERmon:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CF3hr:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        CFmon:
+          gl:
+          - gn
+        E3hr:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Oday:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gr
+        Oyr:
+          gl:
+          - gn
+          - gr
+        SIday:
+          gl:
+          - gn
+        SImon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r3i1p1f1:
         3hr:
           gl:
           - gn

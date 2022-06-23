@@ -39,3 +39,8 @@ MANIFEST
 *.pdf
 *.svg
 *.core.*
+
+.vscode/
+aerocom/
+*.out
+*.html
