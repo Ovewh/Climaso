@@ -106,6 +106,17 @@ accumalative_vars:
   - emidust
   - depdust
 
+# Define the pressurelevels for low, middle and high clouds hPa: 
+cloud_def:
+  low: 
+    bottom: 1000
+    top: 700
+  middle:
+    bottom: 700
+    top: 400
+  high:
+    bottom: 400
+    top: null
 
 # If this is set to another value than null it will not use
 # lookup tables to get the correct grid label.
