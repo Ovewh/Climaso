@@ -24,12 +24,12 @@ model_specific_variant:
     GISS-E2-1-G : 'r1i1p3f1'
     CNRM-ESM2-1 : 'r1i1p1f2'
     MIROC6 : 'r11i1p1f1'
-    NorESM2-LM : 'r1i1p1f2'
+    NorESM2-LM : 'r1i1p2f1'
   experiment:
     UKESM1-0-LL : 'r1i1p1f4'
     GISS-E2-1-G : 'r1i1p3f1'
     CNRM-ESM2-1 : 'r1i1p1f2'
-    NorESM2-LM : 'r1i1p1f2'
+    NorESM2-LM : 'r1i1p2f1'
 
 
 experiments:
@@ -72,6 +72,7 @@ table_ids:
   od550lt1aer: 'AERmon'
   lwp: 'AERmon'
   cdnc: 'AERmon'
+  mmrdust: 'AERmon'
 
 
 variables: 
@@ -131,7 +132,12 @@ variable_scalings:
   cli:
     c : 1000
     units : 'g g-1'  
-
+  cdnc:
+    c : 0.0000001
+    units: '# cm-3'
+  mmrdust:
+    c : 1000
+    units : 'g g-1' 
 # If this is set to another value than null it will not use
 # lookup tables to get the correct grid label.
 default_grid_label: null
