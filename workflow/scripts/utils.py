@@ -160,7 +160,7 @@ def calc_relative_change(
 
 
 def calc_abs_change(
-    ds_ctrl: xr.Dataset, ds_exp: xr.Dataset, time_slice=None, time_average: bool=False
+    ds_ctrl: xr.Dataset, ds_exp: xr.Dataset, time_slice=None, time_average: bool=False, vertical_sum: bool=True
 ):
     """
     Calculated absolute change of diagnostic between
@@ -180,6 +180,7 @@ def calc_abs_change(
         rel_change=False,
         time_slice=time_slice,
         time_average=time_average,
+        vertical_sum =vertical_sum,
     )
 
 
@@ -189,6 +190,7 @@ def _calc_change(
     rel_change: bool = False,
     time_slice=None,
     time_average=False,
+    vertical_sum=True,
 ):
 
     vName = ds_ctrl.variable_id
@@ -200,9 +202,12 @@ def _calc_change(
         ds_exp = ds_exp.drop_vars(dvars - keep_vars).squeeze()
         ds = merge_exp_ctrl(ds_ctrl, ds_exp)
 
-        if "lev" in ds_ctrl.dims:
+        if "lev" in ds_ctrl.dims and vertical_sum==True:
             da_ctrl = ds[f"control_{vName}"].sum(dim="lev")
             da_exp = ds[vName].sum(dim="lev")
+        elif "lev" in ds_ctrl.dims and vertical_sum==False:
+            da_ctrl = ds[f"control_{vName}"]
+            da_exp = ds[vName]
         else:
             da_ctrl = ds[f"control_{vName}"]
             da_exp = ds[vName]
