@@ -155,11 +155,11 @@ rule plot_change_ts:
         path_exp = expand(outdir+'piClim-2xdust/ts/ts_piClim-2xdust_{model}_Ayear.nc',
                  model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 
                          'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True),
+                        'CNRM-ESM2-1','NorESM2-LM', 'UKESM1-0-LL','MIROC6'], allow_missing=True),
         path_ctrl=expand(outdir+'piClim-control/ts/ts_piClim-control_{model}_Ayear.nc',
                  model=['EC-Earth3-AerChem', 'GISS-E2-1-G',  
                         'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True)
+                        'CNRM-ESM2-1','NorESM2-LM', 'UKESM1-0-LL','MIROC6'], allow_missing=True)
 
     
     output:
@@ -169,7 +169,9 @@ rule plot_change_ts:
     params:
         label= '$\Delta$ T',
         rel_minmax=[-30,50],
-        units=['K']
+        units=['K'],
+        draw_error_mask=False,
+        abs_minmax=[-0.5,0.5]
 
     notebook:
         "../notebooks/plot_change_notebook.py.ipynb"
@@ -285,6 +287,52 @@ rule plot_depdust:
     
     notebook:
         "../notebooks/plot_emidust.py.ipynb"
+
+rule plot_level_cloud_changes:
+    input:
+        paths = expand(outdir+'piClim-2xdust/delta_{variable}/delta_{variable}_piClim-2xdust_{model}.nc',
+                        model=['GISS-E2-1-G','EC-Earth3-AerChem', 'MIROC6' ,'IPSL-CM6A-LR-INCA',
+                        'MPI-ESM-1-2-HAM', 
+                        'UKESM1-0-LL',
+                            
+                        'CNRM-ESM2-1','NorESM2-LM'],allow_missing=True)
+    output:
+        outpath = outdir + 'figs/AerChemMIP/delta_{variable}_{plevel}_piClim-2xdust.png'
+
+    wildcard_constraints:
+        plevel='low|middle|high'
+
+
+    notebook:
+        "../notebooks/plot_level_cloud_change.py.ipynb"
+
+rule plot_single_model_cloud_canges:
+    input:
+        path = outdir+'piClim-2xdust/delta_{variable}/delta_{variable}_piClim-2xdust_{model}.nc'
+    output:
+        outpath = outdir+'figs/AerChemMIP/delta_2xdust/single_model_plots/delta_{variable}_{plevel}_piClim-2xdust_{model}.png'
+
+    wildcard_constraints:
+        plevel='low|middle|high'
+    
+    notebook:
+        "../notebooks/plot_level_cloud_change_single_model.py.ipynb"
+
+
+
+rule plot_level_changes:
+    input:
+        expand(rules.plot_level_cloud_changes.output, variable=['cli', 'cl'], plevel=['low','middle','high'],
+            model=['GISS-E2-1-G','EC-Earth3-AerChem', 'MIROC6','CNRM-ESM2-1','NorESM2-LM'])
+
+# rule plot_all_AerChemMIP:
+#     input:
+#         expand(rules.plot_level_changes.output, 
+#                 model=['GISS-E2-1-G','EC-Earth3-AerChem', 'MIROC6' ,'IPSL-CM6A-LR-INCA',
+#                         'CNRM-ESM2-1','NorESM2-LM'], variable='mmrdust', plevel=['low','middle','high'])
+#         expand(rules.plot_level_cloud_changes.output, variable=['cli', 'cl'], plevel=['low','middle','high'],
+#             model=['GISS-E2-1-G','EC-Earth3-AerChem', 'MIROC6','CNRM-ESM2-1','NorESM2-LM', 'MPI-ESM-1-2-HAM'
+#             ,'IPSL-CM6A-LR-INCA','UKESM1-0-LL'])
 
 rule generate_table:
     input:
