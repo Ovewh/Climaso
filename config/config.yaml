@@ -5,6 +5,12 @@ root_noresm: '/home/oveh/mnt/NIRD_noresm'
 # Set CMIP version
 cmip_version: 'CMIP6'
 
+#Regrid all models to common grid
+regrid_params:
+  dxdy:
+    - 1.75
+    - 2.00
+
 # Set output format, can provide store output in aerocom naming convention
 # By setting output format to aerocom
 output_format: 'default'

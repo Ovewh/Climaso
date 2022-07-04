@@ -5,6 +5,8 @@ from pyclim_noresm.general_util_funcs import global_avg
 import numpy as np
 
 
+
+
 def make_consistent(dsets):
     template_ds = dsets[0]
     fixed_dsets = []
@@ -71,7 +73,10 @@ def compute_annual_emission_budget(ds: xr.Dataset, grid_area: xr.Dataset):
     return mean_yearly_budget
 
 
-def regrid_global(ds: xr.DataArray, base_ds: xr.Dataset, lon: int = 3, lat: int = 2):
+def regrid_global(ds: xr.Dataset, ds_out: xr.Dataset=None, 
+                        lon: int = 3, 
+                        lat: int = 2,
+                        method: str = "conservative",):
     """
     Return regridded model output to get all the
     models on a common grid.
@@ -80,8 +85,9 @@ def regrid_global(ds: xr.DataArray, base_ds: xr.Dataset, lon: int = 3, lat: int 
     --------
         ds: Dataarray containting data field that should be regriddedd
     """
-    ds_out = xe.util.grid_global(lon, lat, cf=True)
-    regridder = xe.Regridder(ds, ds_out, "conservative")
+    if not ds_out:
+        ds_out = xe.util.grid_global(lon, lat, cf=True)
+    regridder = xe.Regridder(ds, ds_out, method=method)
     ds = regridder(ds, keep_attrs=True)
     return ds
 
