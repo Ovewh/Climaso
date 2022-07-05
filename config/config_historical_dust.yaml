@@ -1,0 +1,154 @@
+
+# Root path to the CMIP archive
+root: '/home/oveh/mnt/Betzy_CMIP'
+root_noresm: '/home/oveh/mnt/NIRD_noresm'
+# Set CMIP version
+cmip_version: 'CMIP6'
+
+#Regrid all models to common grid
+regrid_params:
+  dxdy:
+    - 1.75
+    - 2.00
+
+# Set output format, can provide store output in aerocom naming convention
+# By setting output format to aerocom
+output_format: 'default'
+
+# relative path to root directory of output 
+# default = 'results'
+
+out_dir : null
+no_intermediate_files: False
+
+# Default model variant used nothing else is specified
+variant_default: 'r1i1p1f1'
+
+model_specific_variant:
+  control:
+    UKESM1-0-LL : 'r1i1p1f4'
+    GISS-E2-1-G : 'r1i1p3f1'
+    CNRM-ESM2-1 : 'r1i1p1f2'
+    MIROC6 : 'r11i1p1f1'
+    NorESM2-LM : 'r1i1p2f1'
+  experiment:
+    UKESM1-0-LL : 'r1i1p1f4'
+    GISS-E2-1-G : 'r1i1p3f1'
+    CNRM-ESM2-1 : 'r1i1p1f2'
+    NorESM2-LM : 'r1i1p2f1'
+    MIROC-ES2L: 'r1i1p1f2'
+
+
+experiments:
+  control:
+    - 'piClim-control'
+  experiments:
+    - 'piClim-2xdust'
+    - 'abrupt-4xCO2'
+    - 'piControl'
+    - 'histSST'
+    - 'hist-piAer'
+    - 'histSST-piAer'
+    - 'historical'
+    - 'hist-noLu'
+
+# If prefered version is not latest or latest does not exist?
+version:
+  version_control:
+    MPI-ESM-1-2-HAM: 'v20190628'
+    EC-Earth3-AerChem: 'v20201013'
+  version_exp:
+    piClim-2x-dust:
+      MPI-ESM-1-2-HAM: 'latest'
+    abrupt-4xCO2:
+      MPI-ESM-1-2-HAM: 'v20190628'
+
+
+# Default table_id
+table_id_default: 'Amon' 
+
+# Variables that not in default table_id: (default is Amon)
+table_ids:
+  rlutaf: 'AERmon'
+  rsutcsaf: 'AERmon'
+  rsutaf: 'AERmon'
+  rlutcsaf: 'AERmon'
+  emidust: 'AERmon'
+  od550dust: 'AERmon'
+  od550aer: 'AERmon'
+  od550csaer: 'AERmon'
+  od550lt1aer: 'AERmon'
+  lwp: 'AERmon'
+  cdnc: 'AERmon'
+  mmrdust: 'AERmon'
+
+
+variables: 
+  ERFt: ['rsut', 'rsdt','rlut']
+  ERFtcs: ['rsutcs','rsdt','rlutcs']
+  ERFtaf: ['rsutaf','rsdt','rlutaf']
+  ERFtcsaf: ['rsutcsaf','rsdt','rlutcsaf']
+  ERFtsw: ['rsut','rsdt']
+  ERFtswaf: ['rsutaf', 'rsdt']  
+  ERFtswcsaf: ['rsutcsaf','rsdt']
+  ERFtlw: ['rlut']
+  ERFtlwaf: ['rlutaf']
+  ERFtlwcs: ['rlutcs']
+  ERFtlwcsaf : ['rlutcsaf']
+  ERFsurfsw: ['rsus','rsds']
+  ERFsurfswcs: ['rsuscs', 'rsdscs']
+  ERFtswcs: ['rsutcs', 'rsdt']
+  ERFsurf: ['rsus', 'rsds', 'rlus', 'rlds']
+  ERFsurfcs: ['rsuscs','rsdscs', 'rsutcs','rlus']
+  DirectEff: ['ERFt', 'ERFtaf']
+  SWDirectEff: ['ERFtsw','ERFtswaf']
+  SWDirectEff_cs: ['ERFtswcs','ERFtswcsaf']
+  LWDirectEff: ['ERFtlw','ERFtlwaf']
+  LWDirectEff_cs: ['ERFtlwcs','ERFtlwcsaf']
+  CloudEff: ['ERFtaf','ERFtcsaf']
+  SWCloudEff : ['ERFtswaf','ERFtswcsaf']
+  LWCloudEff : ['ERFtlwaf','ERFtlwcsaf']
+  atmabsSW: ['ERFtsw','ERFsurfsw']
+  atmabs: ['ERFt','ERFsurf']
+
+# These variables will be accumulated when resampled e.g. from Amon to Ayear
+accumalative_vars:
+  - emidust
+  - depdust
+
+# Define the pressurelevels for low, middle and high clouds hPa: 
+cloud_def:
+  low: 
+    bottom: 1000
+    top: 700
+  middle:
+    bottom: 700
+    top: 400
+  high:
+    bottom: 400
+    top: null
+
+
+
+variable_scalings:
+  clivi:
+    c : 1000
+    units : 'g m-2'
+  clwvi:
+    c : 1000
+    units: 'g m-2'
+  cli:
+    c : 1000
+    units : 'g g-1'  
+  cdnc:
+    c : 0.0000001
+    units: '# cm-3'
+  mmrdust:
+    c : 1000
+    units : 'g g-1' 
+# If this is set to another value than null it will not use
+# lookup tables to get the correct grid label.
+default_grid_label: null
+
+lookup_file_endings: 'config/lookup_file_endings.yaml'
+lookup_file_endings_NorESM: 'config/lookup_file_endings_nird.yaml'

@@ -187,6 +187,7 @@ include: 'rules/utils.smk'
 include: 'rules/calc_feedback.smk'
 include: 'rules/diagnose_cloud_changes.smk'
 include: 'rules/plotAerChemMIP.smk'
+include: 'rules/dust_historical.smk'
 
 
 
