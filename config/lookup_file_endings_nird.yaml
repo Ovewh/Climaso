@@ -2431,7 +2431,55 @@ DAMIP:
 DCPP:
   NorCPM1: {}
 LUMIP:
-  NorESM2-LM: {}
+  NorESM2-LM:
+    hist-noLu:
+      r1i1p1f1:
+        AERmon:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFmon:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        Eyr:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        Oday:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gr
+        Oyr:
+          gl:
+          - gn
+          - gr
+        SIday:
+          gl:
+          - gn
+        SImon:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
 OMIP:
   NorESM2-LM: {}
 PAMIP:

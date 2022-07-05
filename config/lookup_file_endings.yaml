@@ -839,6 +839,9 @@ CMIP:
         Lmon:
           gl:
           - gn
+        Oday:
+          gl:
+          - gn
         Ofx:
           gl:
           - gn
@@ -1160,6 +1163,9 @@ CMIP:
         Emon:
           gl:
           - gn
+        Oday:
+          gl:
+          - gn
         Omon:
           gl:
           - gn
@@ -1279,6 +1285,9 @@ CMIP:
           gl:
           - gn
         Lmon:
+          gl:
+          - gn
+        Oday:
           gl:
           - gn
         Omon:
@@ -1403,6 +1412,9 @@ CMIP:
     historical:
       r1i1p1f1:
         Amon:
+          gl:
+          - gn
+        Oday:
           gl:
           - gn
         Omon:
@@ -1542,6 +1554,10 @@ CMIP:
           - gn
         Lmon:
           gl:
+          - gn
+        Oday:
+          gl:
+          - gr
           - gn
         Ofx:
           gl:
@@ -1919,6 +1935,9 @@ CMIP:
           gl:
           - gn
         Lmon:
+          gl:
+          - gn
+        Oday:
           gl:
           - gn
         Ofx:
@@ -2307,6 +2326,9 @@ CMIP:
     historical:
       r1i1p1f1:
         Amon:
+          gl:
+          - gn
+        Oday:
           gl:
           - gn
         Ofx:
@@ -2880,6 +2902,10 @@ CMIP:
         Lmon:
           gl:
           - gr
+        Oday:
+          gl:
+          - gr1
+          - gn
         Ofx:
           gl:
           - gn
@@ -3400,6 +3426,9 @@ CMIP:
           gl:
           - gn
         Lmon:
+          gl:
+          - gn
+        Oday:
           gl:
           - gn
         Ofx:
@@ -4578,6 +4607,9 @@ CMIP:
         Amon:
           gl:
           - gr
+        Oday:
+          gl:
+          - gn
         Ofx:
           gl:
           - gn
@@ -5084,6 +5116,10 @@ CMIP:
         Emon:
           gl:
           - gr1
+        Oday:
+          gl:
+          - gr
+          - gn
         Ofx:
           gl:
           - gr
@@ -6050,6 +6086,9 @@ CMIP:
         Lmon:
           gl:
           - gn
+        Oday:
+          gl:
+          - gn
         Omon:
           gl:
           - gn
@@ -6162,6 +6201,9 @@ CMIP:
         Emon:
           gl:
           - gn
+        Oday:
+          gl:
+          - gn
         Omon:
           gl:
           - gn
@@ -6204,6 +6246,11 @@ CMIP:
           gl:
           - gn
         SImon:
+          gl:
+          - gn
+    historical:
+      r1i1p1f1:
+        Oday:
           gl:
           - gn
     piControl:
@@ -6721,6 +6768,9 @@ CMIP:
         Lmon:
           gl:
           - gr
+        Oday:
+          gl:
+          - gn
         Ofx:
           gl:
           - gn
@@ -7720,6 +7770,9 @@ CMIP:
         Lmon:
           gl:
           - gn
+        Oday:
+          gl:
+          - gn
         Ofx:
           gl:
           - gn
@@ -8196,6 +8249,9 @@ CMIP:
         Lmon:
           gl:
           - gn
+        Oday:
+          gl:
+          - gn
         Ofx:
           gl:
           - gn
@@ -8426,6 +8482,9 @@ CMIP:
           gl:
           - gn
         Lmon:
+          gl:
+          - gn
+        Oday:
           gl:
           - gn
         Ofx:
@@ -8803,6 +8862,10 @@ CMIP:
         Lmon:
           gl:
           - gn
+        Oday:
+          gl:
+          - gr
+          - gn
         Ofx:
           gl:
           - gn
@@ -8960,6 +9023,9 @@ CMIP:
     historical:
       r1i1p1f1:
         Amon:
+          gl:
+          - gn
+        Oday:
           gl:
           - gn
         Omon:
@@ -9309,6 +9375,9 @@ CMIP:
         Lmon:
           gl:
           - gn
+        Oday:
+          gl:
+          - gn
         Ofx:
           gl:
           - gn
@@ -9500,7 +9569,24 @@ HighResMIP:
   HadGEM3-GC31-LL: {}
   HadGEM3-GC31-MM: {}
 LUMIP:
-  IPSL-CM6A-LR: {}
+  CNRM-ESM2-1:
+    hist-noLu:
+      r1i1p1f2:
+        AERmon:
+          gl:
+          - gr
+  IPSL-CM6A-LR:
+    hist-noLu:
+      r1i1p1f1:
+        Ofx:
+          gl:
+          - gn
+  MIROC-ES2L:
+    hist-noLu:
+      r1i1p1f2:
+        AERmon:
+          gl:
+          - gn
 OMIP:
   CESM2: {}
   CMCC-CM2-HR4: {}
@@ -9600,7 +9686,12 @@ RFMIP:
         fx:
           gl:
           - gn
-  EC-Earth3: {}
+  EC-Earth3:
+    piClim-control:
+      r1i1p1f1:
+        Amon:
+          gl:
+          - gr
   EC-Earth3-AerChem:
     piClim-control:
       r1i1p1f1:

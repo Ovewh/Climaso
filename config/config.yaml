@@ -49,6 +49,7 @@ experiments:
     - 'hist-piAer'
     - 'histSST-piAer'
     - 'historical'
+    - 'hist-noLu'
 
 # If prefered version is not latest or latest does not exist?
 version:
