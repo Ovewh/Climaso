@@ -1716,7 +1716,6 @@ CMIP:
           - gn
   NorESM2-LM:
     abrupt-4xCO2:
-      RETRACTED: {}
       r1i1p1f1:
         6hrLev:
           gl:
@@ -1997,7 +1996,6 @@ CMIP:
           gl:
           - gn
     piControl:
-      RETRACTED: {}
       r1i1p1f1:
         3hr:
           gl:
