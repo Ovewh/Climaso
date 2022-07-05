@@ -146,7 +146,8 @@ rule plot_change_clt:
     params:
         label='Cloud fraction',
         abs_minmax=[-8,8],
-        rel_minmax=[-15,15]
+        rel_minmax=[-15,15],
+        draw_error_mask=True
     notebook:
         "../notebooks/plot_change_notebook.py.ipynb"
 
@@ -225,7 +226,8 @@ rule plot_change_prs:
         rel_minmax=[-60,60],
         scaling_factor=1000,
         units = "[g m-2 s-1]",
-        cmap='BrBG'
+        cmap='BrBG',
+        draw_error_mask=True
 
 
     notebook:
@@ -279,7 +281,9 @@ rule plot_depdust:
                     model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 'MIROC6',
                         'UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
                         'CNRM-ESM2-1','NorESM2-LM'])
-    
+    params:
+        regrid=False
+
     output:
         outpath=outdir+'figs/AerChemMIP/depdust_{experiment}_Ayear_map.png' 
     wildcard_constraints:
