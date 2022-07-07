@@ -66,26 +66,33 @@ rule plot_historical_timeseries:
         '../notebooks/plot_time_series.py.ipynb' 
 
 
-rule plot_change_historical:
+rule plot_change_historical_Forces:
     input:
-        paths_hist=expand(outdir+'histSST/{vName}/{vName}_histSST_{model}_Ayear.nc',
+        pertubation=expand(outdir+'histSST/{vName}/{vName}_histSST_{model}_Ayear.nc',
                    model=['NorESM2-LM', 'MPI-ESM-1-2-HAM',
-                      'EC-Earth3-AerChem'], allow_missing=True),
-        paths_piaer_hist=expand(outdir+'histSST-piAer/{vName}/{vName}_histSST-piAer_{model}_Ayear.nc',
+                      'EC-Earth3-AerChem'
+                      ], 
+                      allow_missing=True),
+        baseline=expand(outdir+'histSST-piAer/{vName}/{vName}_histSST-piAer_{model}_Ayear.nc',
                     model=['NorESM2-LM', 'MPI-ESM-1-2-HAM',
-                      'EC-Earth3-AerChem'], allow_missing=True)
+                      'EC-Earth3-AerChem'
+                      ], allow_missing=True)
 
+    wildcard_constraints:
+        ext='csv|png|pdf'
 
     output:
-        outpath=outdir+'figs/forcing_history/{vName}_historical_CMIP6_{kind}_diff.png'        
+        outpath=outdir+'figs/forcing_history/{vName}_historical_CMIP6_{kind}_diff.{ext}'        
+    params:
+        start_year=1950
 
     notebook:
         "../notebooks/plot_change_time_series.py.ipynb"
 
 rule build_historical_ts_figures:
     input:
-        expand(rules.plot_change_historical.output.outpath, 
-                vName=['clt','clwvi','clivi','od550aer','od550lt1aer'], kind='abs'),
+        expand(rules.plot_change_historical_Forces.output.outpath, 
+                vName=['clt','clwvi','clivi','od550aer','od550lt1aer'], kind='abs', ext=['png','csv']),
         expand(rules.plot_historical_timeseries.output.outpath, 
                 vName=['clt','clwvi','clivi','od550aer','od550lt1aer'], experiment=['histSST', 'histSST-piAer']),
         expand(rules.plot_ERFs_historical.output.outpath,
