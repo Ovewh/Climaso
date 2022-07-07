@@ -30,12 +30,12 @@ model_specific_variant:
     GISS-E2-1-G : 'r1i1p3f1'
     CNRM-ESM2-1 : 'r1i1p1f2'
     MIROC6 : 'r11i1p1f1'
-    NorESM2-LM : 'r1i1p1f2'
+    NorESM2-LM : 'r1i1p2f1'
   experiment:
     UKESM1-0-LL : 'r1i1p1f4'
     GISS-E2-1-G : 'r1i1p3f1'
     CNRM-ESM2-1 : 'r1i1p1f2'
-    NorESM2-LM : 'r1i1p1f2'
+    NorESM2-LM : 'r1i1p2f1'
 
 
 experiments:
