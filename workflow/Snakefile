@@ -189,6 +189,7 @@ include: 'rules/diagnose_cloud_changes.smk'
 include: 'rules/plotAerChemMIP.smk'
 include: 'rules/dust_historical.smk'
 
+include: 'rules/calc_historical_forcing.smk'
 
 
 rule all:

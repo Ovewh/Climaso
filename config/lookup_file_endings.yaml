@@ -1273,7 +1273,7 @@ CMIP:
         Omon:
           gl:
           - gn
-        SImon:
+        day:
           gl:
           - gn
     historical:
@@ -1366,7 +1366,8 @@ CMIP:
         Omon:
           gl:
           - gn
-        SImon:
+      r4i1p1f1:
+        Amon:
           gl:
           - gn
       r1i1p1f2:
@@ -1419,6 +1420,7 @@ CMIP:
           - gn
         Omon:
           gl:
+          - gr
           - gn
         SImon:
           gl:
@@ -1452,9 +1454,6 @@ CMIP:
         AERmon:
           gl:
           - gn
-        AERmonZ:
-          gl:
-          - gn
         Amon:
           gl:
           - gn
@@ -1471,7 +1470,14 @@ CMIP:
           gl:
           - gr
           - gn
+        Oyr:
+          gl:
+          - gr
+          - gn
         SImon:
+          gl:
+          - gn
+        day:
           gl:
           - gn
         fx:
@@ -1488,12 +1494,9 @@ CMIP:
         Emon:
           gl:
           - gn
-        Ofx:
-          gl:
-          - gn
         Omon:
           gl:
-          - gn
+          - gr
         Oyr:
           gl:
           - gr
@@ -1504,7 +1507,8 @@ CMIP:
         day:
           gl:
           - gn
-        fx:
+      r1i1p1f1:
+        AERday:
           gl:
           - gn
       r11i1p1f1:
@@ -1702,6 +1706,10 @@ CMIP:
           - gn
         Emon:
           gl:
+          - gr
+        Oyr:
+          gl:
+          - gr
           - gn
         Omon:
           gl:
@@ -1719,6 +1727,7 @@ CMIP:
           - gn
         Amon:
           gl:
+          - gr
           - gn
         Emon:
           gl:
@@ -1732,6 +1741,10 @@ CMIP:
           - gn
         day:
           gl:
+          - gr
+        Oyr:
+          gl:
+          - gr
           - gn
       r9i1p1f1:
         AERmon:
@@ -1742,6 +1755,7 @@ CMIP:
           - gn
         Emon:
           gl:
+          - gr
           - gn
         Omon:
           gl:
@@ -1760,8 +1774,13 @@ CMIP:
           - gn
         AERmonZ:
           gl:
+          - gr
           - gn
         Amon:
+          gl:
+          - gr
+          - gn
+        Oyr:
           gl:
           - gn
         CFmon:
@@ -1774,7 +1793,8 @@ CMIP:
           gl:
           - gr
           - gn
-        Omon:
+      r3i1p1f1:
+        Amon:
           gl:
           - gr
           - gn
@@ -1784,6 +1804,7 @@ CMIP:
           - gn
         SImon:
           gl:
+          - gr
           - gn
         fx:
           gl:
@@ -1811,6 +1832,11 @@ CMIP:
       r1i1p1f1:
         AERmon:
           gl:
+          - gr
+          - gn
+        Oyr:
+          gl:
+          - gr
           - gn
         AERmonZ:
           gl:
@@ -1820,6 +1846,11 @@ CMIP:
           - gn
         CFmon:
           gl:
+          - gr
+          - gn
+        Oyr:
+          gl:
+          - gr
           - gn
         Eday:
           gl:
@@ -1840,6 +1871,10 @@ CMIP:
           - gn
         Oyr:
           gl:
+          - gn
+        Oyr:
+          gl:
+          - gr
           - gn
         SImon:
           gl:
@@ -1883,7 +1918,8 @@ CMIP:
         SImon:
           gl:
           - gn
-        fx:
+      r16i1p1f1:
+        Amon:
           gl:
           - gn
   CESM2-WACCM:
@@ -1945,16 +1981,17 @@ CMIP:
           - gn
         Omon:
           gl:
-          - gr
           - gn
-        Oyr:
+      r22i1p1f1:
+        Amon:
           gl:
           - gr
           - gn
         SImon:
           gl:
           - gn
-        day:
+      r24i1p1f1:
+        Amon:
           gl:
           - gn
         fx:
@@ -1972,11 +2009,9 @@ CMIP:
           - gn
         Omon:
           gl:
-          - gr
           - gn
         Oyr:
           gl:
-          - gr
           - gn
         SImon:
           gl:
@@ -1994,18 +2029,20 @@ CMIP:
         Emon:
           gl:
           - gn
-        Omon:
+      r34i1p1f1:
+        Amon:
           gl:
-          - gr
           - gn
-        Oyr:
+      r35i1p1f1:
+        Amon:
           gl:
           - gr
           - gn
         SImon:
           gl:
           - gn
-        day:
+      r37i1p1f1:
+        Amon:
           gl:
           - gn
     piControl:
@@ -2028,7 +2065,8 @@ CMIP:
         Ofx:
           gl:
           - gn
-        Omon:
+      r41i1p1f1:
+        Amon:
           gl:
           - gn
         Oyr:
@@ -2047,6 +2085,7 @@ CMIP:
         AERmon:
           gl:
           - gn
+      r44i1p1f1:
         Amon:
           gl:
           - gn
@@ -2057,7 +2096,8 @@ CMIP:
           gl:
           - gr
           - gn
-        SImon:
+      r46i1p1f1:
+        Amon:
           gl:
           - gn
     historical:
@@ -2071,7 +2111,8 @@ CMIP:
         Amon:
           gl:
           - gn
-        CFmon:
+      r49i1p1f1:
+        Amon:
           gl:
           - gn
         Eday:
@@ -2091,7 +2132,8 @@ CMIP:
           gl:
           - gr
           - gn
-        SImon:
+      r50i1p1f1:
+        Amon:
           gl:
           - gn
         fx:
@@ -2159,6 +2201,12 @@ CMIP:
         Ofx:
           gl:
           - gn
+        CFmon:
+          gl:
+          - gn
+        Ofx:
+          gl:
+          - gn
         Omon:
           gl:
           - gn
@@ -2207,10 +2255,10 @@ CMIP:
         Ofx:
           gl:
           - gn
-        Omon:
+        AERmon:
           gl:
           - gn
-        SImon:
+        AERmonZ:
           gl:
           - gn
     historical:
@@ -2241,7 +2289,7 @@ CMIP:
         Omon:
           gl:
           - gn
-        SImon:
+        Oyr:
           gl:
           - gn
         day:
@@ -2290,7 +2338,7 @@ CMIP:
         AERmonZ:
           gl:
           - gn
-        Amon:
+        Eday:
           gl:
           - gn
         Emon:
@@ -2300,6 +2348,9 @@ CMIP:
           gl:
           - gn
         Omon:
+          gl:
+          - gn
+        Oyr:
           gl:
           - gn
         SImon:
@@ -2375,7 +2426,7 @@ CMIP:
         Omon:
           gl:
           - gn
-        SImon:
+        day:
           gl:
           - gn
         fx:
@@ -8168,6 +8219,9 @@ CMIP:
         Emon:
           gl:
           - gn
+        Lmon:
+          gl:
+          - gn
         Ofx:
           gl:
           - gn
@@ -8207,7 +8261,7 @@ CMIP:
         Omon:
           gl:
           - gn
-        SImon:
+        day:
           gl:
           - gn
         fx:
@@ -8240,10 +8294,10 @@ CMIP:
         Amon:
           gl:
           - gn
-        CFmon:
+        Ofx:
           gl:
           - gn
-        Emon:
+        Omon:
           gl:
           - gn
         Lmon:
@@ -8255,7 +8309,8 @@ CMIP:
         Ofx:
           gl:
           - gn
-        Omon:
+      r4i1p1f1:
+        AERmon:
           gl:
           - gn
         Oyr:
@@ -9118,7 +9173,10 @@ CMIP:
         Amon:
           gl:
           - gn
-        Ofx:
+  NorESM2-LM:
+    abrupt-4xCO2:
+      r1i1p1f1:
+        AERmon:
           gl:
           - gn
   NorESM1-F:
