@@ -107,6 +107,18 @@ rule calc_direct_radiative_effect:
     script:
         "../scripts/compute_direct_radiative_effect.py"
 
+rule calc_forcing_efficiency_per_aod:
+    input:
+        forcing = outdir + '{experiment}/ERFs/{vName}/{vName}_{experiment}_{model}_Ayear.nc',
+        aod = outdir + '{hist_pert}-{hist_base}/od550aer/od550aer_{model}_delta_{hist_pert}_{hist_base}.nc'
+    output:
+        outpath = outdir + 'forcing_efficiency/{experiment}/{vName}_{model}_delta_{hist_pert}_{hist_base}.nc' 
+
+    wildcard_constraints:
+        vName='ERFt|CloudEff|DirectEff'
+    notebook:
+        '../notebooks/calc_forcing_efficiency.py.ipynb'
+
 rule calc_absorption:
     input:
         delta_rad_surf = lambda w: outdir + f'{w.experiment}/ERFs/{VARS[w.vName][1]}/{VARS[w.vName][1]}_{w.experiment}_{w.model}_{w.freq}.nc',
