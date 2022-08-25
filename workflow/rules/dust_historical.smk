@@ -1,7 +1,7 @@
 
 
 
-rule plot_change_historical:
+rule plot_change_historical_dust:
     input:
         pertubation = expand(outdir+'historical/{vName}/{vName}_historical_{model}_Ayear.nc',
                         model=['NorESM2-LM',
@@ -14,7 +14,8 @@ rule plot_change_historical:
     
         area_weights = expand('workflow/input_data/gridarea_{model}.nc',model=['NorESM2-LM','CNRM-ESM2-1'])
     output:
-        outpath=outdir+'figs/historical/delta_{vName}_historical_ts.png'
+        outpath=expand(outdir+'figs/historical/delta_{vName}_historical_ts.png',
+            vName=['emidust'])
     
     params:
         regrid=True
