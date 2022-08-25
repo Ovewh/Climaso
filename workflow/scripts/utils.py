@@ -66,7 +66,7 @@ def compute_annual_emission_budget(ds: xr.Dataset, grid_area: xr.Dataset):
     """
     yearly_budget = ds[ds.variable_id].resample(time="Y").mean() * 365 * 24 * 60 * 60
 
-    yearly_budget = yearly_budget * grid_area["cell_area"]
+    yearly_budget = yearly_budget * grid_area["cell_area"].load()
     yearly_budget = yearly_budget.sum(dim=["lon", "lat"]) * 1e-9
     yearly_budget.attrs["units"] = "Tg year-1"
     mean_yearly_budget = yearly_budget.mean(dim="time")
