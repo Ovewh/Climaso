@@ -375,3 +375,13 @@ rule generate_table:
     
     notebook:
         "../notebooks/generate_table.py.ipynb"
+
+rule boot_strap_sampling_dust_forcing:
+    input:  
+        rules.generate_table.output.outpath
+    output:
+        outpath = outdir +'boot_strapped_forcing_estimates.csv',
+        outplot = outdir + 'boot_strapped_forcing_boxplot.png'
+
+    notebook:
+        "../notebooks/boot_strap_table.py.ipynb"
