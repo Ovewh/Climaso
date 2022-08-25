@@ -28,6 +28,27 @@ rule calc_experiment_climalogies:
     notebook:
         "../notebooks/calc_clim.py.ipynb"
 
+rule change_historical_ts:
+    input:
+        pertubation = outdir + '{hist_pert}/{vName}/{vName}_{hist_pert}_{model}_Ayear.nc',
+        baseline = outdir + '{hist_base}/{vName}/{vName}_{hist_base}_{model}_Ayear.nc',
+    output:
+        outpath=outdir+'figs/{hist_pert}-{hist_base}_ts/{vName}/{vName}_{model}_delta_{hist_pert}_{hist_base}.{ext}'
+    wildcard_constraints:
+        ext = 'csv|png|pdf'
+    notebook:
+        "../notebooks/plot_change_time_series.py.ipynb"
+
+rule calc_change_historical:
+    input:    
+        pertubation = rules.change_historical_ts.input.pertubation,
+        baseline = rules.change_historical_ts.input.baseline
+    
+    output:
+        outpath = outdir + '{hist_pert}-{hist_base}/{vName}/{vName}_{model}_delta_{hist_pert}_{hist_base}.nc'
+
+    notebook:
+        "../notebooks/calc_difference.py.ipynb"
 
 rule cmip6_to_aerocom_fmt:
     input:
