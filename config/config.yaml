@@ -45,6 +45,7 @@ experiments:
     - 'piClim-2xdust'
     - 'abrupt-4xCO2'
     - 'piControl'
+    - 'piClim-aer'
     - 'histSST'
     - 'hist-piAer'
     - 'histSST-piAer'
@@ -80,6 +81,7 @@ table_ids:
   lwp: 'AERmon'
   cdnc: 'AERmon'
   mmrdust: 'AERmon'
+  od550bb: 'AERmon'
 
 
 variables: 

@@ -46,6 +46,8 @@ experiments:
     - 'piClim-2xdust'
     - 'abrupt-4xCO2'
     - 'piControl'
+    - 'piClim-aer'
+    - 'piClim-control'
     - 'histSST'
     - 'hist-piAer'
     - 'histSST-piAer'
