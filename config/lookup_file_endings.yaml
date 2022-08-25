@@ -22,6 +22,11 @@ AerChemMIP:
         Amon:
           gl:
           - gn
+    piClim-aer:
+      r1i1p1f1:
+        Amon:
+          gl:
+          - gn
     piClim-control:
       r1i1p1f1:
         AERmon:
@@ -182,6 +187,20 @@ AerChemMIP:
           gl:
           - gr1
     piClim-2xdust:
+      r1i1p1f1:
+        AERmon:
+          gl:
+          - gr1
+        Amon:
+          gl:
+          - gr1
+        CFmon:
+          gl:
+          - gr1
+        Emon:
+          gl:
+          - gr1
+    piClim-aer:
       r1i1p1f1:
         AERmon:
           gl:
@@ -1273,7 +1292,7 @@ CMIP:
         Omon:
           gl:
           - gn
-        day:
+        SImon:
           gl:
           - gn
     historical:
@@ -1366,8 +1385,7 @@ CMIP:
         Omon:
           gl:
           - gn
-      r4i1p1f1:
-        Amon:
+        SImon:
           gl:
           - gn
       r1i1p1f2:
@@ -1420,7 +1438,6 @@ CMIP:
           - gn
         Omon:
           gl:
-          - gr
           - gn
         SImon:
           gl:
@@ -1454,6 +1471,9 @@ CMIP:
         AERmon:
           gl:
           - gn
+        AERmonZ:
+          gl:
+          - gn
         Amon:
           gl:
           - gn
@@ -1470,14 +1490,7 @@ CMIP:
           gl:
           - gr
           - gn
-        Oyr:
-          gl:
-          - gr
-          - gn
         SImon:
-          gl:
-          - gn
-        day:
           gl:
           - gn
         fx:
@@ -1494,9 +1507,12 @@ CMIP:
         Emon:
           gl:
           - gn
+        Ofx:
+          gl:
+          - gn
         Omon:
           gl:
-          - gr
+          - gn
         Oyr:
           gl:
           - gr
@@ -1507,8 +1523,7 @@ CMIP:
         day:
           gl:
           - gn
-      r1i1p1f1:
-        AERday:
+        fx:
           gl:
           - gn
       r11i1p1f1:
@@ -1706,10 +1721,6 @@ CMIP:
           - gn
         Emon:
           gl:
-          - gr
-        Oyr:
-          gl:
-          - gr
           - gn
         Omon:
           gl:
@@ -1727,7 +1738,6 @@ CMIP:
           - gn
         Amon:
           gl:
-          - gr
           - gn
         Emon:
           gl:
@@ -1741,10 +1751,6 @@ CMIP:
           - gn
         day:
           gl:
-          - gr
-        Oyr:
-          gl:
-          - gr
           - gn
       r9i1p1f1:
         AERmon:
@@ -1755,7 +1761,6 @@ CMIP:
           - gn
         Emon:
           gl:
-          - gr
           - gn
         Omon:
           gl:
@@ -1774,13 +1779,8 @@ CMIP:
           - gn
         AERmonZ:
           gl:
-          - gr
           - gn
         Amon:
-          gl:
-          - gr
-          - gn
-        Oyr:
           gl:
           - gn
         CFmon:
@@ -1793,8 +1793,7 @@ CMIP:
           gl:
           - gr
           - gn
-      r3i1p1f1:
-        Amon:
+        Omon:
           gl:
           - gr
           - gn
@@ -1804,7 +1803,6 @@ CMIP:
           - gn
         SImon:
           gl:
-          - gr
           - gn
         fx:
           gl:
@@ -1832,11 +1830,6 @@ CMIP:
       r1i1p1f1:
         AERmon:
           gl:
-          - gr
-          - gn
-        Oyr:
-          gl:
-          - gr
           - gn
         AERmonZ:
           gl:
@@ -1846,11 +1839,6 @@ CMIP:
           - gn
         CFmon:
           gl:
-          - gr
-          - gn
-        Oyr:
-          gl:
-          - gr
           - gn
         Eday:
           gl:
@@ -1871,10 +1859,6 @@ CMIP:
           - gn
         Oyr:
           gl:
-          - gn
-        Oyr:
-          gl:
-          - gr
           - gn
         SImon:
           gl:
@@ -1918,8 +1902,7 @@ CMIP:
         SImon:
           gl:
           - gn
-      r16i1p1f1:
-        Amon:
+        fx:
           gl:
           - gn
   CESM2-WACCM:
@@ -1981,17 +1964,16 @@ CMIP:
           - gn
         Omon:
           gl:
+          - gr
           - gn
-      r22i1p1f1:
-        Amon:
+        Oyr:
           gl:
           - gr
           - gn
         SImon:
           gl:
           - gn
-      r24i1p1f1:
-        Amon:
+        day:
           gl:
           - gn
         fx:
@@ -2009,9 +1991,11 @@ CMIP:
           - gn
         Omon:
           gl:
+          - gr
           - gn
         Oyr:
           gl:
+          - gr
           - gn
         SImon:
           gl:
@@ -2029,20 +2013,18 @@ CMIP:
         Emon:
           gl:
           - gn
-      r34i1p1f1:
-        Amon:
+        Omon:
           gl:
+          - gr
           - gn
-      r35i1p1f1:
-        Amon:
+        Oyr:
           gl:
           - gr
           - gn
         SImon:
           gl:
           - gn
-      r37i1p1f1:
-        Amon:
+        day:
           gl:
           - gn
     piControl:
@@ -2065,8 +2047,7 @@ CMIP:
         Ofx:
           gl:
           - gn
-      r41i1p1f1:
-        Amon:
+        Omon:
           gl:
           - gn
         Oyr:
@@ -2085,7 +2066,6 @@ CMIP:
         AERmon:
           gl:
           - gn
-      r44i1p1f1:
         Amon:
           gl:
           - gn
@@ -2096,8 +2076,7 @@ CMIP:
           gl:
           - gr
           - gn
-      r46i1p1f1:
-        Amon:
+        SImon:
           gl:
           - gn
     historical:
@@ -2111,8 +2090,7 @@ CMIP:
         Amon:
           gl:
           - gn
-      r49i1p1f1:
-        Amon:
+        CFmon:
           gl:
           - gn
         Eday:
@@ -2132,8 +2110,7 @@ CMIP:
           gl:
           - gr
           - gn
-      r50i1p1f1:
-        Amon:
+        SImon:
           gl:
           - gn
         fx:
@@ -2201,12 +2178,6 @@ CMIP:
         Ofx:
           gl:
           - gn
-        CFmon:
-          gl:
-          - gn
-        Ofx:
-          gl:
-          - gn
         Omon:
           gl:
           - gn
@@ -2255,10 +2226,10 @@ CMIP:
         Ofx:
           gl:
           - gn
-        AERmon:
+        Omon:
           gl:
           - gn
-        AERmonZ:
+        SImon:
           gl:
           - gn
     historical:
@@ -2289,7 +2260,7 @@ CMIP:
         Omon:
           gl:
           - gn
-        Oyr:
+        SImon:
           gl:
           - gn
         day:
@@ -2338,7 +2309,7 @@ CMIP:
         AERmonZ:
           gl:
           - gn
-        Eday:
+        Amon:
           gl:
           - gn
         Emon:
@@ -2348,9 +2319,6 @@ CMIP:
           gl:
           - gn
         Omon:
-          gl:
-          - gn
-        Oyr:
           gl:
           - gn
         SImon:
@@ -2402,6 +2370,9 @@ CMIP:
         Omon:
           gl:
           - gn
+        Oyr:
+          gl:
+          - gn
         SImon:
           gl:
           - gn
@@ -2426,7 +2397,7 @@ CMIP:
         Omon:
           gl:
           - gn
-        day:
+        SImon:
           gl:
           - gn
         fx:
@@ -2439,6 +2410,9 @@ CMIP:
         Ofx:
           gl:
           - gn
+        Omon:
+          gl:
+          - gn
         SImon:
           gl:
           - gn
@@ -2447,6 +2421,9 @@ CMIP:
           gl:
           - gr
         Ofx:
+          gl:
+          - gn
+        Omon:
           gl:
           - gn
         SImon:
@@ -2459,6 +2436,9 @@ CMIP:
         Ofx:
           gl:
           - gn
+        Omon:
+          gl:
+          - gn
         SImon:
           gl:
           - gn
@@ -2469,6 +2449,9 @@ CMIP:
         Ofx:
           gl:
           - gn
+        Omon:
+          gl:
+          - gn
         SImon:
           gl:
           - gn
@@ -2477,6 +2460,9 @@ CMIP:
           gl:
           - gr
         Ofx:
+          gl:
+          - gn
+        Omon:
           gl:
           - gn
         SImon:
@@ -6502,6 +6488,9 @@ CMIP:
         Ofx:
           gl:
           - gn
+        Omon:
+          gl:
+          - gn
         SImon:
           gl:
           - gn
@@ -6512,6 +6501,9 @@ CMIP:
         Ofx:
           gl:
           - gn
+        Omon:
+          gl:
+          - gn
         SImon:
           gl:
           - gn
@@ -6520,6 +6512,9 @@ CMIP:
           gl:
           - gr
         Ofx:
+          gl:
+          - gn
+        Omon:
           gl:
           - gn
         SImon:
@@ -6563,6 +6558,9 @@ CMIP:
         Ofx:
           gl:
           - gn
+        Omon:
+          gl:
+          - gn
         SImon:
           gl:
           - gn
@@ -6586,6 +6584,9 @@ CMIP:
         Ofx:
           gl:
           - gn
+        Omon:
+          gl:
+          - gn
         SImon:
           gl:
           - gn
@@ -6594,6 +6595,9 @@ CMIP:
           gl:
           - gr
         Ofx:
+          gl:
+          - gn
+        Omon:
           gl:
           - gn
         SImon:
@@ -6606,6 +6610,9 @@ CMIP:
         Ofx:
           gl:
           - gn
+        Omon:
+          gl:
+          - gn
         SImon:
           gl:
           - gn
@@ -6614,6 +6621,9 @@ CMIP:
           gl:
           - gr
         Ofx:
+          gl:
+          - gn
+        Omon:
           gl:
           - gn
         SImon:
@@ -6626,6 +6636,9 @@ CMIP:
         Ofx:
           gl:
           - gn
+        Omon:
+          gl:
+          - gn
         SImon:
           gl:
           - gn
@@ -6634,6 +6647,9 @@ CMIP:
           gl:
           - gr
         Ofx:
+          gl:
+          - gn
+        Omon:
           gl:
           - gn
         SImon:
@@ -8219,9 +8235,6 @@ CMIP:
         Emon:
           gl:
           - gn
-        Lmon:
-          gl:
-          - gn
         Ofx:
           gl:
           - gn
@@ -8261,7 +8274,7 @@ CMIP:
         Omon:
           gl:
           - gn
-        day:
+        SImon:
           gl:
           - gn
         fx:
@@ -8294,10 +8307,10 @@ CMIP:
         Amon:
           gl:
           - gn
-        Ofx:
+        CFmon:
           gl:
           - gn
-        Omon:
+        Emon:
           gl:
           - gn
         Lmon:
@@ -8309,8 +8322,7 @@ CMIP:
         Ofx:
           gl:
           - gn
-      r4i1p1f1:
-        AERmon:
+        Omon:
           gl:
           - gn
         Oyr:
@@ -9173,10 +9185,7 @@ CMIP:
         Amon:
           gl:
           - gn
-  NorESM2-LM:
-    abrupt-4xCO2:
-      r1i1p1f1:
-        AERmon:
+        Ofx:
           gl:
           - gn
   NorESM1-F:
@@ -9665,8 +9674,33 @@ PMIP:
   NESM3: {}
   NUIST: {}
 RFMIP:
-  ACCESS-CM2: {}
+  ACCESS-CM2:
+    piClim-aer:
+      r1i1p1f1:
+        Amon:
+          gl:
+          - gn
+        SImon:
+          gl:
+          - gn
   CESM2:
+    piClim-aer:
+      r1i1p1f1:
+        AERmon:
+          gl:
+          - gn
+        AERmonZ:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFmon:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
     piClim-control:
       r1i1p1f1:
         AERmon:
@@ -9697,6 +9731,14 @@ RFMIP:
           gl:
           - gn
   CNRM-CM6-1:
+    piClim-aer:
+      r1i1p1f2:
+        AERmon:
+          gl:
+          - gr
+        Amon:
+          gl:
+          - gr
     piClim-control:
       r1i1p1f2:
         AERmon:
@@ -9706,6 +9748,17 @@ RFMIP:
           gl:
           - gr
   CNRM-ESM2-1:
+    piClim-aer:
+      r1i1p1f2:
+        AERmon:
+          gl:
+          - gr
+        Amon:
+          gl:
+          - gr
+        Emon:
+          gl:
+          - gr
     piClim-control:
       r1i1p1f2:
         AERmon:
@@ -9727,6 +9780,23 @@ RFMIP:
           gl:
           - gr
   CanESM5:
+    piClim-aer:
+      r1i1p2f1:
+        AERmon:
+          gl:
+          - gn
+        AERmonZ:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
     piClim-control:
       r1i1p2f1:
         AERmon:
@@ -9745,12 +9815,22 @@ RFMIP:
           gl:
           - gn
   EC-Earth3:
+    piClim-aer:
+      r1i1p1f1:
+        Amon:
+          gl:
+          - gr
     piClim-control:
       r1i1p1f1:
         Amon:
           gl:
           - gr
   EC-Earth3-AerChem:
+    piClim-aer:
+      r1i1p1f1:
+        AERmon:
+          gl:
+          - gn
     piClim-control:
       r1i1p1f1:
         AERmon:
@@ -9766,6 +9846,17 @@ RFMIP:
           gl:
           - gr
   GFDL-CM4:
+    piClim-aer:
+      r1i1p1f1:
+        AERmon:
+          gl:
+          - gr1
+        CFmon:
+          gl:
+          - gr1
+        fx:
+          gl:
+          - gr1
     piClim-control:
       r1i1p1f1:
         AERmon:
@@ -9782,6 +9873,46 @@ RFMIP:
           - gr1
   GFDL-ESM4: {}
   GISS-E2-1-G:
+    piClim-aer:
+      r1i1p1f1:
+        AERmon:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        SImon:
+          gl:
+          - gn
+      r1i1p1f2:
+        Amon:
+          gl:
+          - gn
+        SImon:
+          gl:
+          - gn
+      r1i1p3f1:
+        AERmon:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFmon:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        Omon:
+          gl:
+          - gn
+        SImon:
+          gl:
+          - gn
     piClim-control:
       r1i1p1f1:
         AERmon:
@@ -9820,6 +9951,14 @@ RFMIP:
           gl:
           - gn
   HadGEM3-GC31-LL:
+    piClim-aer:
+      r1i1p1f3:
+        AERmon:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
     piClim-control:
       r1i1p1f3:
         AERmon:
@@ -9829,6 +9968,14 @@ RFMIP:
           gl:
           - gn
   IPSL-CM6A-LR:
+    piClim-aer:
+      r1i1p1f1:
+        AERmon:
+          gl:
+          - gr
+        Amon:
+          gl:
+          - gr
     piClim-control:
       r1i1p1f1:
         AERmon:
@@ -9863,6 +10010,21 @@ RFMIP:
           gl:
           - gr
   MIROC6:
+    piClim-aer:
+      r11i1p1f1:
+        AERmon:
+          gl:
+          - gn
+      r1i1p1f1:
+        Amon:
+          gl:
+          - gn
+        CFmon:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
     piClim-control:
       r11i1p1f1:
         AERmon:
@@ -9882,6 +10044,14 @@ RFMIP:
           gl:
           - gn
   MPI-ESM-1-2-HAM:
+    piClim-aer:
+      r1i1p1f1:
+        AERmon:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
     piClim-control:
       r1i1p1f1:
         AERmon:
@@ -9921,6 +10091,20 @@ RFMIP:
           gl:
           - gn
   MRI-ESM2-0:
+    piClim-aer:
+      r1i1p1f1:
+        AERmon:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFmon:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
     piClim-control:
       r1i1p1f1:
         AERmon:

@@ -2489,6 +2489,75 @@ PMIP:
   NorESM2-LM: {}
 RFMIP:
   NorESM2-LM:
+    piClim-aer:
+      r1i1p1f1:
+        AERday:
+          gl:
+          - gn
+        AERmon:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        CFmon:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
+      r1i1p2f1:
+        AERday:
+          gl:
+          - gn
+        AERmon:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        CFmon:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
     piClim-control:
       r1i1p1f1:
         AERday:
@@ -2559,6 +2628,41 @@ RFMIP:
           gl:
           - gn
   NorESM2-MM:
+    piClim-aer:
+      r1i1p1f1:
+        AERday:
+          gl:
+          - gn
+        AERmon:
+          gl:
+          - gn
+        Amon:
+          gl:
+          - gn
+        CFday:
+          gl:
+          - gn
+        CFmon:
+          gl:
+          - gn
+        Eday:
+          gl:
+          - gn
+        Emon:
+          gl:
+          - gn
+        LImon:
+          gl:
+          - gn
+        Lmon:
+          gl:
+          - gn
+        day:
+          gl:
+          - gn
+        fx:
+          gl:
+          - gn
     piClim-control:
       r1i1p1f1:
         AERday:
