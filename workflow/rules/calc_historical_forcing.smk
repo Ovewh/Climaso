@@ -89,6 +89,20 @@ rule plot_change_historical_Forces:
     notebook:
         "../notebooks/plot_change_time_series.py.ipynb"
 
+rule regional_forcing_trends_FORCeS:
+    input:
+        forcing_ec = outdir + '{experiment}/ERFs/{vName}/{vName}_{experiment}_EC-Earth3-AerChem_Ayear.nc',
+        forcing_mpi = outdir + '{experiment}/ERFs/{vName}/{vName}_{experiment}_MPI-ESM-1-2-HAM_Ayear.nc',
+        forcing_noresm = outdir + '{experiment}/ERFs/{vName}/{vName}_{experiment}_NorESM2-LM_Ayear.nc'
+    output:
+        mask = outdir + 'figs/FORCeS_trends/FORCeS_models_trends_forcing_regions_{vName}_{experiment}.nc',
+        plot_abs = outdir + 'figs/FORCeS_trends/FORCeS_models_trends_forcing_regions_plot_abs_{vName}_{experiment}.png',
+        plot_rel =outdir + 'figs/FORCeS_trends/FORCeS_models_trends_forcing_regions_plot_rel_{vName}_{experiment}.png',
+        plot_std =outdir + 'figs/FORCeS_trends/FORCeS_models_trends_forcing_regions_plot_std_{vName}_{experiment}.png'
+    notebook:
+        "../notebooks/examination_of_aerosol_forcing_regional_trends.py.ipynb"
+
+
 rule build_historical_ts_figures:
     input:
         expand(rules.plot_change_historical_Forces.output.outpath, 

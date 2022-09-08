@@ -1,3 +1,32 @@
+
+# rule calc_dust_loading:
+#     input:
+#         mmr = lambda w: get_paths(w,'mmrdust',w.experiment,grid_label=config['default_grid_label']),
+#         air_mass = lambda w: get_paths(w,'airmass',w.experiment,grid_label=config['default_grid_label'])
+#     output:
+#         outpath = expand(output_format['single_variable'],variable=['loaddust'],allow_missing=True)
+#     wildcard_constraints:
+#         model = 'EC-Earth3-AerChem|MPI-ESM-1-2-HAM',
+#         experiment="|".join(EXPERIMENTS)
+
+#     priority: 50
+#     notebook:
+#         "../notebooks/calc_load.py.ipynb"
+
+# rule calc_dust_loading_ctrl:
+#     input:
+#         mmr = lambda w: get_control_path(w, 'mmrdust', 'gn'),
+#         # air_mass = lambda w: get_control_path(w,'airmass', 'gn')
+#     output:
+#         outpath = expand(output_format['single_variable'],variable=['loaddust'],allow_missing=True)
+#     wildcard_constraints:
+#         model = 'EC-Earth3-AerChem|MPI-ESM-1-2-HAM',
+#         # experiment="|".join(CONTROL_EXPS)
+    
+#     priority: 50
+#     notebook:
+#         "../notebooks/calc_load.py.ipynb"
+
 rule calc_clim_PI_control:
     input:
         pi_clim_var = lambda w: get_control_path(w, w.variable),
