@@ -51,18 +51,28 @@ experiments:
     - 'histSST-piAer'
     - 'historical'
     - 'hist-noLu'
+    - 'piClim-2xss'
+    - 'piClim-2xDMS'
+    - 'piClim-lu'
+    - 'piClim-CH4'
+    - 'piClim-NTCF'
+    - 'piClim-BC'
+    - 'piClim-SO2'
+    - 'piClim-OC'
 
 # If prefered version is not latest or latest does not exist?
 version:
   version_control:
-    MPI-ESM-1-2-HAM: 'v20190628'
+    MPI-ESM-1-2-HAM: 'v20190627'
     EC-Earth3-AerChem: 'v20201013'
   version_exp:
-    piClim-2x-dust:
-      MPI-ESM-1-2-HAM: 'latest'
+    piClim-2xdust:
+      MPI-ESM-1-2-HAM: 'v20200120'
+      EC-Earth3-AerChem: 'v20210615'
     abrupt-4xCO2:
       MPI-ESM-1-2-HAM: 'v20190628'
-
+    piClim-SO2:
+      MPI-ESM-1-2-HAM: 'v20200120'
 
 # Default table_id
 table_id_default: 'Amon' 
@@ -82,6 +92,13 @@ table_ids:
   cdnc: 'AERmon'
   mmrdust: 'AERmon'
   od550bb: 'AERmon'
+  loaddust: 'Emon'
+  airmass: 'AERmon'
+  mmrss: 'AERmon'
+  mmrsoa: 'AERmon'
+  mmroa:  'AERmon'
+  mmrbc: 'AERmon'
+  mmrso4: 'AERmon'
 
 
 variables: 
