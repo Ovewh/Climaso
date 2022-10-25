@@ -1,61 +1,36 @@
 
-# rule calc_dust_loading:
-#     input:
-#         mmr = lambda w: get_paths(w,'mmrdust',w.experiment,grid_label=config['default_grid_label']),
-#         air_mass = lambda w: get_paths(w,'airmass',w.experiment,grid_label=config['default_grid_label'])
-#     output:
-#         outpath = expand(output_format['single_variable'],variable=['loaddust'],allow_missing=True)
-#     wildcard_constraints:
-#         model = 'EC-Earth3-AerChem|MPI-ESM-1-2-HAM',
-#         experiment="|".join(EXPERIMENTS)
 
-#     priority: 50
-#     notebook:
-#         "../notebooks/calc_load.py.ipynb"
+rule make_local_catalogue:
+    output:
+        outpath = 'catalogues/{activity}_{source}_CMIP6.csv.gz'
+    params:
+        root_path = lambda w: config[f"root_{w.source}"] + f'/{w.activity}/',
+        depth = 5
+    shell:
+        "python workflow/scripts/builders/cmip.py --root-path {params.root_path} --csv-filepath {output.outpath} -d {params.depth} -v 6 --pick-latest-version"
 
-# rule calc_dust_loading_ctrl:
-#     input:
-#         mmr = lambda w: get_control_path(w, 'mmrdust', 'gn'),
-#         # air_mass = lambda w: get_control_path(w,'airmass', 'gn')
-#     output:
-#         outpath = expand(output_format['single_variable'],variable=['loaddust'],allow_missing=True)
-#     wildcard_constraints:
-#         model = 'EC-Earth3-AerChem|MPI-ESM-1-2-HAM',
-#         # experiment="|".join(CONTROL_EXPS)
-    
-#     priority: 50
-#     notebook:
-#         "../notebooks/calc_load.py.ipynb"
-
-rule calc_clim_PI_control:
+rule build_catalogues:
     input:
-        pi_clim_var = lambda w: get_control_path(w, w.variable),
+        expand('catalogues/{activity}_{source}_CMIP6.csv.gz', activity = config['activities'], source = ['betzy', 'noresm'])
+    output:
+        table='catalogues/merge_CMIP6.csv.gz',
+        json='catalogues/merge_CMIP6.json'
+    notebook:
+        '../notebooks/merge_catalogues.py.ipynb'        
+
+rule get_data_intake:
+    input:
+        catalog = rules.build_catalogues.output.json
     output:
         outpath = output_format['single_variable']
+    params:
+        accumalative_vars = config['accumalative_vars']
     
     log:
         "logs/calc_clim/{variable}_{model}_{experiment}_{freq}.log"
-    wildcard_constraints:
-        experiment="|".join(CONTROL_EXPS),
-    params:
-        accumalative_vars = config['accumalative_vars']
     notebook:
-        "../notebooks/calc_clim.py.ipynb"
+        "../notebooks/get_data_intake.py.ipynb"
 
-rule calc_experiment_climalogies:
-    input: 
-        pi_clim_var = lambda w: get_paths(w,w.variable,w.experiment,grid_label=config['default_grid_label'])
-    output:
-        outpath = output_format['single_variable']
-    log:
-        "logs/calc_clim/{variable}_{model}_{experiment}_{freq}.log"
-    wildcard_constraints:
-        experiment="|".join(EXPERIMENTS),
-
-    params:
-        accumalative_vars = config['accumalative_vars']
-    notebook:
-        "../notebooks/calc_clim.py.ipynb"
 
 rule change_historical_ts:
     input:
