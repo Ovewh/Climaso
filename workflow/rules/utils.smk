@@ -13,7 +13,7 @@ rule build_catalogues:
     input:
         expand('catalogues/{activity}_{source}_CMIP6.csv.gz', activity = config['activities'], source = ['betzy', 'noresm'])
     output:
-        table='catalogues/merge_CMIP6.csv.gz',
+        table='catalogues/merge_CMIP6.csv',
         json='catalogues/merge_CMIP6.json'
     notebook:
         '../notebooks/merge_catalogues.py.ipynb'        
