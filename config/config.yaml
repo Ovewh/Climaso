@@ -1,10 +1,14 @@
 
 # Root path to the CMIP archive
-root: '/home/oveh/mnt/Betzy_CMIP'
-root_noresm: '/home/oveh/mnt/NIRD_noresm'
+root_betzy: '/home/oveh/mnt/Betzy_CMIP/CMIP6'
+root_noresm: '/home/oveh/mnt/NIRD_noresm/CMIP6'
 # Set CMIP version
 cmip_version: 'CMIP6'
 
+activities:
+  - 'AerChemMIP'
+  - 'RFMIP'
+  - 'CMIP'
 #Regrid all models to common grid
 regrid_params:
   dxdy:
@@ -25,17 +29,27 @@ no_intermediate_files: False
 variant_default: 'r1i1p1f1'
 
 model_specific_variant:
-  control:
+  piClim-control:
     UKESM1-0-LL : 'r1i1p1f4'
     GISS-E2-1-G : 'r1i1p3f1'
     CNRM-ESM2-1 : 'r1i1p1f2'
     MIROC6 : 'r11i1p1f1'
     NorESM2-LM : 'r1i1p2f1'
-  experiment:
+  piClim-2xdust:
     UKESM1-0-LL : 'r1i1p1f4'
     GISS-E2-1-G : 'r1i1p3f1'
     CNRM-ESM2-1 : 'r1i1p1f2'
     NorESM2-LM : 'r1i1p2f1'
+  abrupt-4xCO2:
+    CNRM-ESM2-1 : 'r1i1p1f2'
+    UKESM1-0-LL : 'r1i1p1f2 '
+    GISS-E2-1-G : 'r1i1p3f1'
+  piControl:
+    CNRM-ESM2-1 : 'r1i1p1f2'
+    UKESM1-0-LL : 'r1i1p1f2'
+    GISS-E2-1-G : 'r1i1p3f1'
+
+
 
 
 experiments:
@@ -60,19 +74,6 @@ experiments:
     - 'piClim-SO2'
     - 'piClim-OC'
 
-# If prefered version is not latest or latest does not exist?
-version:
-  version_control:
-    MPI-ESM-1-2-HAM: 'v20190627'
-    EC-Earth3-AerChem: 'v20201013'
-  version_exp:
-    piClim-2xdust:
-      MPI-ESM-1-2-HAM: 'v20200120'
-      EC-Earth3-AerChem: 'v20210615'
-    abrupt-4xCO2:
-      MPI-ESM-1-2-HAM: 'v20190628'
-    piClim-SO2:
-      MPI-ESM-1-2-HAM: 'v20200120'
 
 # Default table_id
 table_id_default: 'Amon' 
@@ -164,9 +165,3 @@ variable_scalings:
   mmrdust:
     c : 1000
     units : 'g g-1' 
-# If this is set to another value than null it will not use
-# lookup tables to get the correct grid label.
-default_grid_label: null
-
-lookup_file_endings: 'config/lookup_file_endings.yaml'
-lookup_file_endings_NorESM: 'config/lookup_file_endings_nird.yaml'
