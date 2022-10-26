@@ -44,3 +44,5 @@ MANIFEST
 aerocom/
 *.out
 *.html
+PET0.ESMF_LogFile
+*.csv.gz

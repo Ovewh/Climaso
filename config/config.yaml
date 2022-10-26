@@ -42,7 +42,7 @@ model_specific_variant:
     NorESM2-LM : 'r1i1p2f1'
   abrupt-4xCO2:
     CNRM-ESM2-1 : 'r1i1p1f2'
-    UKESM1-0-LL : 'r1i1p1f2 '
+    UKESM1-0-LL : 'r1i1p1f2'
     GISS-E2-1-G : 'r1i1p3f1'
   piControl:
     CNRM-ESM2-1 : 'r1i1p1f2'
