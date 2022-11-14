@@ -231,39 +231,77 @@ rule toa_imbalance_dust_correlations_histSST:
 rule toa_dustload_relationship:
     input:
         noresm_rad = expand(outdir + '{experiment}/{vName}/{vName}_{experiment}_NorESM2-LM_Ayear.nc',
-                            vName=['rsut','rsdt','rlut','rlutcs','rsutcs'],
-                            experiment=['piClim-control','piClim-aer', 'piClim-2xdust','piClim-2xss','piClim-lu','piClim-SO2']),
+                            vName=['rsdt','rlut','rlutcs','rsutcs'],
+                            experiment=['piClim-control','piClim-aer', 'piClim-2xdust','piClim-2xss','piClim-lu','piClim-SO2', 'piClim-BC']),
         noresm_load = expand(outdir + '{experiment}/{vName}/{vName}_{experiment}_NorESM2-LM_Ayear.nc',
                         vName=['mmrdust','airmass'], experiment=['piClim-control','piClim-aer', 'piClim-2xdust', 
                                 'piClim-2xss','piClim-lu','piClim-SO2', 'piClim-BC'] ),     
+        
         ec_rad = expand(outdir + '{experiment}/{vName}/{vName}_{experiment}_EC-Earth3-AerChem_Ayear.nc',
-                            vName=['rsut','rsdt','rlut','rlutcs','rsutcs'],
+                            vName=['rsdt','rlutcs','rsutcs'],
                             experiment=['piClim-control','piClim-aer', 'piClim-2xdust','piClim-CH4', 'piClim-NTCF']),    
         ec_load = expand(outdir + '{experiment}/{vName}/{vName}_{experiment}_EC-Earth3-AerChem_Ayear.nc',
-                        vName=['mmrdust','airmass'], experiment=['piClim-control','piClim-aer', 'piClim-2xdust'] ),        
+                        vName=['mmrdust','airmass'], experiment=['piClim-control','piClim-aer', 'piClim-2xdust','piClim-CH4', 'piClim-NTCF']),        
+        
         
         mpi_load = expand(outdir + '{experiment}/{vName}/{vName}_{experiment}_MPI-ESM-1-2-HAM_Ayear.nc',
-                        vName=['mmrdust','airmass'], experiment=['piClim-control','piClim-aer', 'piClim-2xdust',, 
-                                                                'piClim-OC','piClim-SO2', 'piClim-2xDMS', 'piClim-BC'] ),  
+                        vName=['mmrdust','airmass'], experiment=['piClim-control','piClim-aer', 'piClim-2xdust','piClim-2xss', 
+                                                                'piClim-OC','piClim-SO2']),  
         
         mpi_rad = expand(outdir + '{experiment}/{vName}/{vName}_{experiment}_MPI-ESM-1-2-HAM_Ayear.nc',
-                            vName=['rsut','rsdt','rlut','rlutcs','rsutcs'],
-                            experiment=['piClim-control','piClim-aer', 'piClim-2xdust', 'piClim-2xss',
-                                'piClim-OC','piClim-SO2', 'piClim-2xDMS', 'piClim-BC']),    
+                            vName=['rsdt','rlutcs','rsutcs'],
+                            experiment=['piClim-control','piClim-aer', 'piClim-2xdust', 'piClim-2xss', 
+                                'piClim-OC','piClim-SO2']),    
 
         histSST_rad = expand(outdir + 'histSST/{vName}/{vName}_histSST_{model}_Ayear.nc',
-                    vName=['rsut','rsdt','rlut','rlutcs','rsutcs'], 
+                    vName=['rsdt','rlutcs','rsutcs'], 
                     model=['NorESM2-LM','EC-Earth3-AerChem','MPI-ESM-1-2-HAM']),
         histSST_load = expand(outdir + 'histSST/{vName}/{vName}_histSST_{model}_Ayear.nc',
                         vName=['mmrdust','airmass'], model=['EC-Earth3-AerChem','MPI-ESM-1-2-HAM', 'NorESM2-LM']),
         
     output:
-        toa_dustload_txt = outdir + 'figs/antropogenic_forcing_variability/dustload_toa_imbalance.yaml',
-        toa_dustload_png = outdir + 'figs/antropogenic_forcing_variability/dustload_toa_imbalance.png'
+        toa_dustload_txt = outdir + 'figs/antropogenic_forcing_variability/dustload_toa_imbalance.csv',
+        toa_dustload_png = outdir + 'figs/antropogenic_forcing_variability/dustload_toa_imbalance.png',
+        toa_dustload_sw_png = outdir + 'figs/antropogenic_forcing_variability/dustload_toa_sw_imbalance.png'
 
     notebook:
         "../notebooks/inter_annual_variability/dustload_toa_imbalance_relationship.py.ipynb"
 
+rule toa_load_relationships_NorESM:
+    input:
+        noresm_rad = expand(outdir + '{experiment}/{vName}/{vName}_{experiment}_NorESM2-LM_Ayear.nc',
+                            vName=['rsdt','rlut','rlutcs','rsutcs'],
+                            experiment=['piClim-control','piClim-aer', 'piClim-2xdust','piClim-2xss','piClim-lu','piClim-SO2', 'piClim-BC']),
+        noresm_load = expand(outdir + '{experiment}/{vName}/{vName}_{experiment}_NorESM2-LM_Ayear.nc',
+                        vName=['mmrdust','mmrss','mmrsoa','mmrbc','mmrso4','airmass',], experiment=['piClim-control','piClim-aer', 'piClim-2xdust', 
+                                'piClim-2xss','piClim-lu','piClim-SO2', 'piClim-BC'] ),     
+        noresm_clt = expand(outdir + '{experiment}/{vName}/{vName}_{experiment}_NorESM2-LM_Ayear.nc',
+                        vName=['clt'], experiment=['piClim-control','piClim-aer', 'piClim-2xdust', 
+                                'piClim-2xss','piClim-lu','piClim-SO2', 'piClim-BC'] ),     
+
+        
+    output:
+        toa_load_sw_png = outdir + 'figs/antropogenic_forcing_variability/load_toa_imbalance_sw_NorESM.png',
+        toa_load_png = outdir + 'figs/antropogenic_forcing_variability/load_toa_imbalance_NorESM.png'
+
+    notebook:
+        "../notebooks/inter_annual_variability/load_toa_imbalance_relationship_NorESM.py.ipynb"
+
+
+rule remove_dust_variability:
+    input:
+        histSST_ERFcs = expand(outdir + 'histSST/ERFs/ERFtcs/ERFtcs_histSST_{model}_Ayear.nc',
+            model=['EC-Earth3-AerChem', 'NorESM2-LM', 'MPI-ESM-1-2-HAM']),
+        histSST_load = expand(outdir + 'histSST/{vName}/{vName}_histSST_{model}_Ayear.nc',
+                    vName=['mmrdust','airmass'], model=['EC-Earth3-AerChem','MPI-ESM-1-2-HAM', 'NorESM2-LM']),   
+        histSST_piaer_load = expand(outdir + 'histSST-piAer/{vName}/{vName}_histSST-piAer_{model}_Ayear.nc',
+                    vName=['mmrdust','airmass'], model=['EC-Earth3-AerChem','MPI-ESM-1-2-HAM', 'NorESM2-LM']),
+        toa_dustload_txt = outdir + 'figs/antropogenic_forcing_variability/dustload_toa_imbalance.csv'   
+    output:
+        outpath = outdir + 'figs/antropogenic_forcing_variability/clearsky_ERF_without_dustload.png',
+        outpath1950 = outdir + 'figs/antropogenic_forcing_variability/clearsky_ERF_without_dustload_1950-1980.png',
+    notebook:
+         "../notebooks/inter_annual_variability/remove_dust_loadcontrib_from_ERFcs.py.ipynb"
 
 rule noresm_dustload_forcing_variability:
     input:
