@@ -7,9 +7,6 @@
 import os
 import glob
 import yaml
-from scripts.create_lookup_tables import (generate_experiment_lookup_table,
-                                    generate_institu_lookup_table,
-                                    generate_file_ending_lookup_table)
 import socket
 from pathlib import Path
 

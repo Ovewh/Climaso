@@ -25,6 +25,10 @@ output_format: 'default'
 out_dir : null
 no_intermediate_files: False
 
+time_slice:
+  piControl : [50,150]
+  abrupt-4xCO2 : [50,150]
+
 # Default model variant used nothing else is specified
 variant_default: 'r1i1p1f1'
 
@@ -93,13 +97,13 @@ table_ids:
   cdnc: 'AERmon'
   mmrdust: 'AERmon'
   od550bb: 'AERmon'
-  loaddust: 'Emon'
   airmass: 'AERmon'
   mmrss: 'AERmon'
   mmrsoa: 'AERmon'
   mmroa:  'AERmon'
   mmrbc: 'AERmon'
   mmrso4: 'AERmon'
+  loaddust: 'AERmon'
 
 
 variables: 
