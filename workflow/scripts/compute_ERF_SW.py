@@ -16,7 +16,7 @@ ctrl_up_SW = load_CMIP_data(snakemake.input.ctrl_upwelling_SW, data_vars=[vName_
 up_SW = merge_exp_ctrl(exp_up_SW, ctrl_up_SW)
 dw_SW = merge_exp_ctrl(exp_dw_SW, ctrl_dw_SW)
 
-if vName_up_SW in ['rsutaf', 'rsutafcs'] and snakemake.wildcards.model=='NorESM2-LM':
+if vName_up_SW in ['rsutaf', 'rsutafcs'] and  snakemake.wildcards.model in ['NorESM2-LM','NorESM2.0.6dev-LM']:
     with xr.set_options(keep_attrs=True):
         up_SW[vName_up_SW] = np.abs(up_SW[vName_up_SW]-dw_SW[vName_dw_SW])
         up_SW[f'control_{vName_up_SW}'] = np.abs(up_SW[f'control_{vName_up_SW}']-dw_SW[f'control_{vName_dw_SW}'])
