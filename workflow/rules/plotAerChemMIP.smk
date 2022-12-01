@@ -4,7 +4,7 @@ rule plot_ERFs:
         paths=expand(outdir+'piClim-2xdust/ERFs/{vName}/{vName}_piClim-2xdust_{model}_Ayear.nc', 
                 model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
                         'MIROC6','UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True)
+                        'CNRM-ESM2-1','NorESM2-LM','NorESM2.0.6dev-LM'], allow_missing=True)
     output:
         outpath=outdir+'figs/AerChemMIP/ERFs/{vName}_piClim-2xdust_AerChemMIP.png'
     
@@ -20,7 +20,7 @@ rule plot_atm_abs:
         paths=expand(outdir+'piClim-2xdust/ERFs/{vName}/{vName}_piClim-2xdust_{model}_Ayear.nc', 
                 model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
                         'MIROC6','UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True)
+                        'CNRM-ESM2-1','NorESM2-LM', 'NorESM2.0.6dev-LM'], allow_missing=True)
     output:
         outpath=outdir+'figs/AerChemMIP/ERFs/{vName}_piClim-2xdust_AerChemMIP.png'
     
@@ -37,7 +37,7 @@ rule plot_global_avaraged_ERFs:
         paths=expand(outdir+'piClim-2xdust/ERFs/{vName}/{vName}_piClim-2xdust_{model}_Ayear.nc', 
                 model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
                         'MIROC6','UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True)
+                        'CNRM-ESM2-1','NorESM2-LM','NorESM2.0.6dev-LM'], allow_missing=True)
     output:
         outpath=outdir+'figs/AerChemMIP/ERFs/{vName}_piClim-2xdust_globalaverage_AerChemMIP.png'
     wildcard_constraints:
@@ -49,13 +49,16 @@ rule plot_global_avaraged_ERFs:
 rule plot_ERFaci:
     input:
         paths=expand(outdir+'piClim-2xdust/ERFs/{vName}/{vName}_piClim-2xdust_{model}_Ayear.nc',
-            model=['MPI-ESM-1-2-HAM','EC-Earth3-AerChem','CNRM-ESM2-1','NorESM2-LM','UKESM1-0-LL', 'GFDL-ESM4','IPSL-CM6A-LR-INCA'],
+            model=['MPI-ESM-1-2-HAM','EC-Earth3-AerChem','CNRM-ESM2-1','NorESM2-LM','UKESM1-0-LL', 'GFDL-ESM4','IPSL-CM6A-LR-INCA',
+            'NorESM2.0.6dev-LM'],
             allow_missing=True)
     output:
         outpath=outdir+'figs/AerChemMIP/ERFs/{vName}_piClim-2xdust_AerChemMIP.png'
     wildcard_constraints:
         vName = 'SWDirectEff|LWDirectEff|SWCloudEff|LWCloudEff|LWDirectEff_cs|SWDirectEff_cs|CloudEff|DirectEff'
-    
+    params:
+        draw_error_mask=False
+
     notebook:
         "../notebooks/plot_Radiative_effects_AerChemMIP.py.ipynb"
     
@@ -87,11 +90,11 @@ rule plot_change_lwp:
         path_exp = expand(outdir+'piClim-2xdust/lwp/lwp_piClim-2xdust_{model}_Ayear.nc',
                 model=['EC-Earth3-AerChem',
                         'UKESM1-0-LL', 'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True),
+                        'CNRM-ESM2-1','NorESM2-LM', 'NorESM2.0.6dev-LM'], allow_missing=True),
         path_ctrl=expand(outdir+'piClim-control/lwp/lwp_piClim-control_{model}_Ayear.nc',
                 model=['EC-Earth3-AerChem', 
                         'UKESM1-0-LL',  'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True)
+                        'CNRM-ESM2-1','NorESM2-LM', 'NorESM2.0.6dev-LM'], allow_missing=True)
     output:
         outpath=outdir+'figs/AerChemMIP/delta_2xdust/lwp_piClim-2xdust_AerChemMIP_{kind}.png'
     wildcard_constraints:
@@ -135,11 +138,11 @@ rule plot_change_clt:
         path_exp = expand(outdir+'piClim-2xdust/clt/clt_piClim-2xdust_{model}_Ayear.nc',
                  model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
                         'MIROC6','UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True),
+                        'CNRM-ESM2-1','NorESM2-LM', 'NorESM2.0.6dev-LM'], allow_missing=True),
         path_ctrl=expand(outdir+'piClim-control/clt/clt_piClim-control_{model}_Ayear.nc',
                  model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
                         'MIROC6','UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True)
+                        'CNRM-ESM2-1','NorESM2-LM', 'NorESM2.0.6dev-LM'], allow_missing=True)
     output:
         outpath=outdir+'figs/AerChemMIP/delta_2xdust/clt_piClim-2xdust_AerChemMIP_{kind}.png'
     wildcard_constraints:
@@ -203,17 +206,37 @@ rule plot_change_tas:
     notebook:
         "../notebooks/plot_change_notebook.py.ipynb"
 
+rule plot_ccn_change:
+    input:
+        path_ctrl= expand(outdir+'piClim-control/ccn/ccn_piClim-control_{model}_Ayear.nc',
+                 model=['MPI-ESM-1-2-HAM','NorESM2-LM'], allow_missing=True),
+        path_exp = expand(outdir+'piClim-2xdust/ccn/ccn_piClim-2xdust_{model}_Ayear.nc',
+                 model=['MPI-ESM-1-2-HAM','NorESM2-LM'], allow_missing=True)
+    output:
+        outpath=outdir+'figs/AerChemMIP/delta_2xdust/ccn_piClim-2xdust_AerChemMIP_{kind}.png'
+
+    wildcard_constraints:
+        kind='abs|rel'
+
+    params:
+        label = '$\Delta$ CCN',
+        scaling_factor = 1e-6,
+        units = 'cm$^{-3}$',
+
+
+    notebook:
+        "../notebooks/plot_change_notebook.py.ipynb"
 
 rule plot_change_prs:
     input:
         path_exp = expand(outdir+'piClim-2xdust/pr/pr_piClim-2xdust_{model}_Ayear.nc',
                  model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
                         'MIROC6','UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True),
+                        'CNRM-ESM2-1','NorESM2-LM','NorESM2.0.6dev-LM'], allow_missing=True),
         path_ctrl=expand(outdir+'piClim-control/pr/pr_piClim-control_{model}_Ayear.nc',
                 model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
                         'MIROC6','UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True)
+                        'CNRM-ESM2-1','NorESM2-LM','NorESM2.0.6dev-LM'], allow_missing=True)
 
     
     output:
@@ -296,7 +319,7 @@ rule plot_depdust:
 rule plot_level_cloud_changes:
     input:
         paths = expand(outdir+'piClim-2xdust/delta_{variable}/delta_{variable}_piClim-2xdust_{model}.nc',
-                        model=['GISS-E2-1-G','EC-Earth3-AerChem', 'MIROC6' ,'IPSL-CM6A-LR-INCA',
+                        model=['GISS-E2-1-G','EC-Earth3-AerChem', 'MIROC6' ,
                         'MPI-ESM-1-2-HAM', 
                         'UKESM1-0-LL',
                             
@@ -324,6 +347,26 @@ rule plot_single_model_cloud_canges:
         "../notebooks/plot_level_cloud_change_single_model.py.ipynb"
 
 
+rule plot_lwp_aerchemmip:
+    input:
+        expand(outdir+"{experiment}/lwp/lwp_{experiment}_{model}_Ayear.nc",
+                model=['EC-Earth3-AerChem',
+                    'UKESM1-0-LL', 'MPI-ESM-1-2-HAM',
+                    'CNRM-ESM2-1','NorESM2-LM', 'NorESM2.0.6dev-LM'], allow_missing=True)
+    output:
+        outpath=outdir+'figs/AerChemMIP/lwp_{experiment}_map.png'
+    params:
+        vmin=0,
+        vmax=90,
+        cb_extend='max',
+        label='LWP [g/m2]',
+        nlevels=16,
+        scaling_factor=1000,
+        add_global_avg=True,
+        time_slice=slice(3,-2)
+
+    notebook:
+        "../notebooks/plot_absolute_fields.py.ipynb"
 
 rule plot_level_changes:
     input:

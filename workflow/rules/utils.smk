@@ -11,7 +11,10 @@ rule make_local_catalogue:
 
 rule build_catalogues:
     input:
-        expand('catalogues/{activity}_{source}_CMIP6.csv.gz', activity = config['activities'], source = ['betzy', 'noresm'])
+        expand('catalogues/{activity}_{source}_CMIP6.csv.gz', 
+                activity = config['activities'], 
+                source = ['betzy', 'noresm']),
+        'catalogues/AerChemMIP_noresmdev_CMIP6.csv.gz'
     output:
         table='catalogues/merge_CMIP6.csv',
         json='catalogues/merge_CMIP6.json'
