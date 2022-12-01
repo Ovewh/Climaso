@@ -81,6 +81,6 @@
   "id": "merge_CMIP6",
   "description": "Intake catalog for CLIMASO, combining data local and cloud data",
   "title": null,
-  "last_updated": "2022-10-26T09:31:58Z",
+  "last_updated": "2022-12-01T08:08:39Z",
   "catalog_file": "file:///home/oveh/Documents/PhD/Dust_climate/Climaso/catalogues/merge_CMIP6.csv"
 }

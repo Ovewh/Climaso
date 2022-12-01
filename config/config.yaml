@@ -2,6 +2,7 @@
 # Root path to the CMIP archive
 root_betzy: '/home/oveh/mnt/Betzy_CMIP/CMIP6'
 root_noresm: '/home/oveh/mnt/NIRD_noresm/CMIP6'
+root_noresmdev: '/home/oveh/mnt/NIRD_data/NorESM2_AerChemMIP_rerun_bugfix/CMIP6'
 # Set CMIP version
 cmip_version: 'CMIP6'
 
@@ -39,11 +40,13 @@ model_specific_variant:
     CNRM-ESM2-1 : 'r1i1p1f2'
     MIROC6 : 'r11i1p1f1'
     NorESM2-LM : 'r1i1p2f1'
+    NorESM2.0.6dev-LM: 'r1i1p3f1'
   piClim-2xdust:
     UKESM1-0-LL : 'r1i1p1f4'
     GISS-E2-1-G : 'r1i1p3f1'
     CNRM-ESM2-1 : 'r1i1p1f2'
     NorESM2-LM : 'r1i1p2f1'
+    NorESM2.0.6dev-LM: 'r1i1p3f1'
   abrupt-4xCO2:
     CNRM-ESM2-1 : 'r1i1p1f2'
     UKESM1-0-LL : 'r1i1p1f2'
@@ -104,6 +107,7 @@ table_ids:
   mmrbc: 'AERmon'
   mmrso4: 'AERmon'
   loaddust: 'AERmon'
+  ccn: 'AERmon'
 
 
 variables: 
