@@ -49,6 +49,7 @@ def create_facet_plot(
 def _get_layouts(nplots: int):
     cax_loc = None
     figsize = None
+    layout = ""
     if nplots == 1:
         layout = """
             A
@@ -112,12 +113,14 @@ def _get_layouts(nplots: int):
         figsize = (16, 10)
         cax_loc = [0.94,0.2,0.02,0.62]
     elif nplots == 10:
-        layout == """
+        layout = """
             ABC
             DEF
             GHI
-            L
+            LLL
         """
+        figsize = (18, 14)
+        cax_loc = [0.94,0.2,0.02,0.62]
     elif nplots == 11:
         layout = """
             ABC
