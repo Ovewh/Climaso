@@ -86,6 +86,9 @@ experiments:
 table_id_default: 'Amon' 
 
 # Variables that not in default table_id: (default is Amon)
+use_derived_vars:
+  loaddust: True
+
 table_ids:
   rlutaf: 'AERmon'
   rsutcsaf: 'AERmon'
@@ -155,7 +158,16 @@ cloud_def:
     bottom: 400
     top: null
 
-
+cloud_def_height:
+  low: 
+    bottom: 0
+    top: 3000
+  middle:
+    bottom: 3000
+    top: 6000
+  high:
+    bottom: 6000
+    top: null
 
 variable_scalings:
   clivi:
