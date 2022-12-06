@@ -9,8 +9,9 @@ rule plot_ERFs:
         outpath=outdir+'figs/AerChemMIP/ERFs/{vName}_piClim-2xdust_AerChemMIP.png'
     
     wildcard_constraints:
-        vName = 'ERFtsw|ERFtlw|ERFtcs|ERFt'
-
+        vName = 'ERFtsw|ERFtlw|ERFtcs|ERFt|ERFsurf|ERFsurfsw'
+    params:
+        draw_error_mask=False,
     notebook:
         "../notebooks/plot_ERFs_AerChemMIP.py.ipynb"
 
@@ -48,7 +49,7 @@ rule plot_global_avaraged_ERFs:
 rule plot_ERFaci:
     input:
         paths=expand(outdir+'piClim-2xdust/ERFs/{vName}/{vName}_piClim-2xdust_{model}_Ayear.nc',
-            model=['MPI-ESM-1-2-HAM','EC-Earth3-AerChem','CNRM-ESM2-1','NorESM2-LM','UKESM1-0-LL'],
+            model=['MPI-ESM-1-2-HAM','EC-Earth3-AerChem','CNRM-ESM2-1','NorESM2-LM','UKESM1-0-LL', 'GFDL-ESM4','IPSL-CM6A-LR-INCA'],
             allow_missing=True)
     output:
         outpath=outdir+'figs/AerChemMIP/ERFs/{vName}_piClim-2xdust_AerChemMIP.png'
@@ -260,10 +261,10 @@ rule plot_feedback_decomposed:
                         'UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
                         'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True),
         paths_CloudEff = expand(outdir + '{experiment}/Feedback_per_emis/CloudEff_{variable}_{experiment}_{model}_Ayear.yaml',
-                            model=['MPI-ESM-1-2-HAM','EC-Earth3-AerChem','CNRM-ESM2-1','NorESM2-LM','UKESM1-0-LL'],
+                            model=['MPI-ESM-1-2-HAM','EC-Earth3-AerChem','CNRM-ESM2-1','NorESM2-LM','UKESM1-0-LL', 'GFDL-ESM4'],
                             allow_missing=True),
         paths_DirectEff = expand(outdir + '{experiment}/Feedback_per_emis/DirectEff_{variable}_{experiment}_{model}_Ayear.yaml',
-                            model=['MPI-ESM-1-2-HAM','EC-Earth3-AerChem','CNRM-ESM2-1','NorESM2-LM','UKESM1-0-LL'],
+                            model=['MPI-ESM-1-2-HAM','EC-Earth3-AerChem','CNRM-ESM2-1','NorESM2-LM','UKESM1-0-LL', 'GFDL-ESM4'],
                             allow_missing=True)
 
     output:
@@ -375,3 +376,13 @@ rule generate_table:
     
     notebook:
         "../notebooks/generate_table.py.ipynb"
+
+rule boot_strap_sampling_dust_forcing:
+    input:  
+        rules.generate_table.output.outpath
+    output:
+        outpath = outdir +'boot_strapped_forcing_estimates.csv',
+        outplot = outdir + 'boot_strapped_forcing_boxplot.png'
+
+    notebook:
+        "../notebooks/boot_strap_table.py.ipynb"

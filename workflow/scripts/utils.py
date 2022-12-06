@@ -4,9 +4,6 @@ from pyclim_noresm.aerosol_forcing import merge_exp_ctrl
 from pyclim_noresm.general_util_funcs import global_avg
 import numpy as np
 
-
-
-
 def make_consistent(dsets):
     template_ds = dsets[0]
     fixed_dsets = []
@@ -66,7 +63,7 @@ def compute_annual_emission_budget(ds: xr.Dataset, grid_area: xr.Dataset):
     """
     yearly_budget = ds[ds.variable_id].resample(time="Y").mean() * 365 * 24 * 60 * 60
 
-    yearly_budget = yearly_budget * grid_area["cell_area"]
+    yearly_budget = yearly_budget * grid_area["cell_area"].load()
     yearly_budget = yearly_budget.sum(dim=["lon", "lat"]) * 1e-9
     yearly_budget.attrs["units"] = "Tg year-1"
     mean_yearly_budget = yearly_budget.mean(dim="time")
@@ -76,7 +73,8 @@ def compute_annual_emission_budget(ds: xr.Dataset, grid_area: xr.Dataset):
 def regrid_global(ds: xr.Dataset, ds_out: xr.Dataset=None, 
                         lon: int = 3, 
                         lat: int = 2,
-                        method: str = "conservative",):
+                        method: str = "conservative",
+                        **regridder_kwargs):
     """
     Return regridded model output to get all the
     models on a common grid.
@@ -87,7 +85,7 @@ def regrid_global(ds: xr.Dataset, ds_out: xr.Dataset=None,
     """
     if not ds_out:
         ds_out = xe.util.grid_global(lon, lat, cf=True)
-    regridder = xe.Regridder(ds, ds_out, method=method)
+    regridder = xe.Regridder(ds, ds_out, method=method, **regridder_kwargs)
     ds = regridder(ds, keep_attrs=True)
     return ds
 

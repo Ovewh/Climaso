@@ -1,15 +1,25 @@
 
 
+
+
 rule calc_ERF_surf:
     input:
-        exp_downwelling_SW = lambda w: get_paths(w,VARS[w.vName][1],w.experiment),
-        exp_upwelling_SW = lambda w: get_paths(w,VARS[w.vName][0],w.experiment),
-        exp_upwelling_LW = lambda w: get_paths(w,VARS[w.vName][2],w.experiment),
-        exp_downwelling_LW = lambda w: get_paths(w,VARS[w.vName][3],w.experiment),
-        ctrl_downwelling_SW = lambda w:get_control_path(w, VARS[w.vName][1]),
-        ctrl_upwelling_SW = lambda w:get_control_path(w, VARS[w.vName][0]),
-        ctrl_upwelling_LW = lambda w:get_control_path(w, VARS[w.vName][2]),
-        ctrl_downwelling_LW = lambda w:get_control_path(w, VARS[w.vName][3])
+        exp_downwelling_SW = lambda w: expand(rules.get_data_intake.output,variable=VARS[w.vName][1],
+                                            experiment=w.experiment,freq='Ayear', model=w.model),
+        exp_upwelling_SW = lambda w: expand(rules.get_data_intake.output,variable=VARS[w.vName][0],
+                                        experiment=w.experiment, freq='Ayear',model=w.model),
+        exp_upwelling_LW = lambda w: expand(rules.get_data_intake.output,variable=VARS[w.vName][2],
+                                        experiment=w.experiment, freq='Ayear',model=w.model),
+        exp_downwelling_LW = lambda w: expand(rules.get_data_intake.output, variable=VARS[w.vName][3],
+                                experiment=w.experiment, freq='Ayear',model=w.model),
+        ctrl_downwelling_SW = lambda w: expand(rules.get_data_intake.output, variable=VARS[w.vName][1],
+                        experiment='piClim-control', freq='Ayear',model=w.model),
+        ctrl_upwelling_SW = lambda w: expand(rules.get_data_intake.output, variable=VARS[w.vName][0],
+                        experiment='piClim-control', freq='Ayear',model=w.model),
+        ctrl_upwelling_LW = lambda w: expand(rules.get_data_intake.output, variable=VARS[w.vName][2],
+                        experiment='piClim-control', freq='Ayear',model=w.model),
+        ctrl_downwelling_LW = lambda w:expand(rules.get_data_intake.output, variable=VARS[w.vName][3],
+                        experiment='piClim-control', freq='Ayear',model=w.model)
 
     output:
         outpath = outdir + '{experiment}/ERFs/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
@@ -26,12 +36,18 @@ rule calc_ERF_surf:
 
 rule calculate_ERF_TOA:
     input:
-        exp_downwelling_SW = lambda w: get_paths(w,VARS[w.vName][1],w.experiment),
-        exp_upwelling_SW =lambda w: get_paths(w,VARS[w.vName][0],w.experiment),
-        exp_upwelling_LW = lambda w: get_paths(w,VARS[w.vName][2],w.experiment),
-        ctrl_downwelling_SW = lambda w:get_control_path(w, VARS[w.vName][1]),
-        ctrl_upwelling_SW = lambda w:get_control_path(w, VARS[w.vName][0]),
-        ctrl_upwelling_LW = lambda w:get_control_path(w, VARS[w.vName][2])
+        exp_downwelling_SW = lambda w: expand(rules.get_data_intake.output,variable=VARS[w.vName][1],
+                                            experiment=w.experiment,freq='Ayear', model=w.model),
+        exp_upwelling_SW = lambda w: expand(rules.get_data_intake.output,variable=VARS[w.vName][0],
+                                        experiment=w.experiment, freq='Ayear',model=w.model),
+        exp_upwelling_LW = lambda w: expand(rules.get_data_intake.output,variable=VARS[w.vName][2],
+                                        experiment=w.experiment, freq='Ayear',model=w.model),
+        ctrl_downwelling_SW = lambda w: expand(rules.get_data_intake.output, variable=VARS[w.vName][1],
+                        experiment='piClim-control', freq='Ayear',model=w.model),
+        ctrl_upwelling_SW = lambda w: expand(rules.get_data_intake.output, variable=VARS[w.vName][0],
+                        experiment='piClim-control', freq='Ayear',model=w.model),
+        ctrl_upwelling_LW = lambda w: expand(rules.get_data_intake.output, variable=VARS[w.vName][2],
+                        experiment='piClim-control', freq='Ayear',model=w.model)
     
     output:
         outpath = outdir + '{experiment}/ERFs/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
@@ -49,10 +65,14 @@ rule calculate_ERF_TOA:
 
 rule calculate_SW_ERF:
     input:
-        exp_downwelling_SW = lambda w: get_paths(w,VARS[w.vName][1],w.experiment),
-        exp_upwelling_SW = lambda w: get_paths(w,VARS[w.vName][0],w.experiment), 
-        ctrl_downwelling_SW = lambda w:get_control_path(w, VARS[w.vName][1]),
-        ctrl_upwelling_SW = lambda w:get_control_path(w, VARS[w.vName][0])
+        exp_downwelling_SW = lambda w: expand(rules.get_data_intake.output,variable=VARS[w.vName][1],
+                                            experiment=w.experiment,freq='Ayear', model=w.model),
+        exp_upwelling_SW = lambda w: expand(rules.get_data_intake.output,variable=VARS[w.vName][0],
+                                        experiment=w.experiment, freq='Ayear',model=w.model),
+        ctrl_downwelling_SW = lambda w: expand(rules.get_data_intake.output, variable=VARS[w.vName][1],
+                        experiment='piClim-control', freq='Ayear',model=w.model),
+        ctrl_upwelling_SW = lambda w: expand(rules.get_data_intake.output, variable=VARS[w.vName][0],
+                        experiment='piClim-control', freq='Ayear',model=w.model),
     
     output:
         outpath = outdir + '{experiment}/ERFs/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
@@ -66,8 +86,10 @@ rule calculate_SW_ERF:
 
 rule calculate_ERF_TOA_LW:
     input:
-        exp_upwelling_LW = lambda w: get_paths(w,VARS[w.vName][0],w.experiment),
-        ctrl_upwelling_LW = lambda w: get_control_path(w,VARS[w.vName][0])
+        exp_upwelling_LW = lambda w: expand(rules.get_data_intake.output,variable=VARS[w.vName][0],
+                                        experiment=w.experiment, freq='Ayear',model=w.model),
+        ctrl_upwelling_LW = lambda w: expand(rules.get_data_intake.output, variable=VARS[w.vName][0],
+                        experiment='piClim-control', freq='Ayear',model=w.model)
     output:
         outpath = outdir + '{experiment}/ERFs/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
     log:
@@ -106,6 +128,18 @@ rule calc_direct_radiative_effect:
         vName='SWDirectEff|SWDirectEff_cs|LWDirectEff|LWDirectEff_cs|DirectEff'
     script:
         "../scripts/compute_direct_radiative_effect.py"
+
+rule calc_forcing_efficiency_per_aod:
+    input:
+        forcing = outdir + '{experiment}/ERFs/{vName}/{vName}_{experiment}_{model}_Ayear.nc',
+        aod = outdir + '{hist_pert}-{hist_base}/od550aer/od550aer_{model}_delta_{hist_pert}_{hist_base}.nc'
+    output:
+        outpath = outdir + 'forcing_efficiency/{experiment}/{vName}_{model}_delta_{hist_pert}_{hist_base}.nc' 
+
+    wildcard_constraints:
+        vName='ERFt|CloudEff|DirectEff'
+    notebook:
+        '../notebooks/calc_forcing_efficiency.py.ipynb'
 
 rule calc_absorption:
     input:

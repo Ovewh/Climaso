@@ -7,10 +7,8 @@
 import os
 import glob
 import yaml
-from scripts.create_lookup_tables import (generate_experiment_lookup_table,
-                                    generate_institu_lookup_table,
-                                    generate_file_ending_lookup_table)
 import socket
+from pathlib import Path
 
 configfile: 'config/config.yaml'
 
@@ -18,7 +16,7 @@ hostname = socket.gethostname()
 if 'betzy' in hostname:
     ROOT_PATH = '/cluster/shared/ESGF'
 else:
-    ROOT_PATH = config['root']
+    ROOT_PATH = config['root_betzy']
 ROOT_PATH_NORESM = config['root_noresm']
 CMIP_VER = config['cmip_version']
 VARS=config['variables']
@@ -29,138 +27,7 @@ DEFAULT_TABLE_ID=config['table_id_default']
 CONTROL_EXPS=config['experiments']['control']
 ALL_ALLOWED = EXPERIMENTS + CONTROL_EXPS
 
-try:
-    with open('config/lookup_experiments.yaml', 'r') as f:
-        LOOK_EXP=yaml.safe_load(f)
-except FileNotFoundError:
-    LOOK_EXP = generate_experiment_lookup_table(ROOT_PATH, CMIP_VER)
-    with open('config/lookup_experiments.yaml', 'w') as f:
-        LOOK_EXP=yaml.dump(LOOK_EXP,f,default_flow_style=False)
-
-try:
-    with open('config/institution.yaml', 'r') as f:
-        LOOK_INSTITU=yaml.safe_load(f)
-except FileNotFoundError:
-    LOOK_INSTITU = generate_institu_lookup_table(ROOT_PATH, CMIP_VER)
-    with open('config/institution.yaml', 'w') as f:
-        LOOK_INSTITU=yaml.dump(LOOK_INSTITU,f,default_flow_style=False)
-try:
-    with open(config['lookup_file_endings'], 'r') as f:
-        LOOK_FNAMES=yaml.safe_load(f)
-
-except FileNotFoundError:
-    LOOK_FNAMES=generate_file_ending_lookup_table(ROOT_PATH,ALL_ALLOWED,CMIP_VER)
-    with open('config/lookup_file_endings.yaml', 'w') as f:
-        yaml.dump(LOOK_FNAMES,f,default_flow_style=False)
-
-try:
-    if config.get('lookup_file_endings_NorESM', None):
-        with open(config['lookup_file_endings_NorESM'], 'r') as f:
-            LOOK_FNAMES_NORESM = yaml.safe_load(f)
-except FileNotFoundError:
-    LOOK_FNAMES_NORESM=generate_file_ending_lookup_table(ROOT_PATH_NORESM,ALL_ALLOWED,CMIP_VER)
-    with open(config['lookup_file_endings_NorESM'], 'w') as f:
-        yaml.dump(LOOK_FNAMES_NORESM,f,default_flow_style=False)
-
-
-def get_paths(w, variable,experiment, grid_label=None, activity=None, control=False):
-    """
-    Get CMIP6 model paths in database based on the lookup tables.
-
-    Parameters:
-    -----------
-        w : snake.wildcards
-                a named tuple that contains the snakemake wildcards
-
-    """
-    model = w.model
-    if model in ["NorESM2-LM", "NorESM2-MM"]:
-        root_path = f'{ROOT_PATH_NORESM}/{CMIP_VER}'
-        look_fnames = LOOK_FNAMES_NORESM
-    else:
-        root_path = f'{ROOT_PATH}/{CMIP_VER}'
-        look_fnames = LOOK_FNAMES
-    if activity:
-        activity= activity
-    else:
-        activity = LOOK_EXP[experiment]
-        
-        if experiment not in list(look_fnames[activity][model].keys()):
-            activity = config.get('default_activity','CMIP')
-        
-    if control:
-        prefered_variant=config['model_specific_variant']['control'].get(model, config['variant_default'])
-    else:
-        prefered_variant = config['model_specific_variant']['experiment'].get(model, config['variant_default'])
-    table_id = TABLE_IDS.get(variable,DEFAULT_TABLE_ID)
-    institution = LOOK_INSTITU[model]
-    try:
-        file_endings = look_fnames[activity][model][experiment]
-    except:
-        raise KeyError(f"File ending is not defined for this combination of {activity}, {model} and {experiment} " +
-                        "please update config/lookup_file_endings.yaml accordingly")
-    available_variants = list(file_endings.keys())
-    if prefered_variant in available_variants:
-        variant = prefered_variant
-    else:
-        print("did not find prefered variant {} for {} in [{}]".format(prefered_variant, model,' '.join(available_variants)))
-        print("selecting variant {}".format(available_variants[0]))
-        variant = available_variants[0]
-    if grid_label == None:
-        grid_label = look_fnames[activity][model][experiment][variant][table_id]['gl'][0]
-    check_path = f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}'
-    if os.path.exists(check_path)==False:
-        grid_labels = ['gr','gn', 'gl','grz', 'gr1']
-        i = 0
-        while os.path.exists(check_path)==False and i < len(grid_labels):
-            grid_label = grid_labels[i]
-            check_path = f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}'
-            i += 1 
-    if control:
-        version = config['version']['version_control'].get(w.model, 'latest')
-    else:
-        version = config['version']['version_exp'].get(experiment, 'latest')
-        if version != 'latest':
-            version = version.get(w.model, 'latest')
-    fname = f'{variable}_{table_id}_{model}_{experiment}_{variant}_{grid_label}'
-    if os.path.exists(check_path):
-        fn = glob_wildcards(
-            f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}/{version}/{fname}_{{file_endings}}')
-        if not fn.file_endings:
-            fn = glob_wildcards(
-            f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}/latest/{fname}_{{file_endings}}')
-            version='latest'
-            print(f'falling back to latest version... for {model}, {variable}, ')
-        paths = expand(
-            f'{root_path}/{activity}/{institution}/{model}/{experiment}/{variant}/{table_id}/{variable}/{grid_label}/{version}/{fname}_{{file_endings}}'
-            ,file_endings=fn.file_endings)
-        paths = sorted(paths)
-    else:
-        raise FileNotFoundError(f"{check_path} does not exist")
-        import sys
-        sys.exit()
-    return paths
-
-def get_control_path(w, variable, grid_label=None):
-    if grid_label == None:
-        grid_label = config['default_grid_label']
-    if w.get('experiment', None) == 'piControl':
-        paths = get_paths(w, variable,'piControl', grid_label,activity='CMIP', control=False)
-    elif w.get('experiment',None) == 'histSST':
-        paths = get_paths(w, variable, 'histSST-piAer', grid_label, activity='AerChemMIP',control=False)
-    else:
-        try:
-            paths = get_paths(w, variable,'piClim-control', grid_label,activity='RFMIP', control=True)
-        except KeyError:
-            paths = get_paths(w, variable,'piClim-control', grid_label,activity='AerChemMIP', control=True)
-    if not paths:
-        print(paths)
-        import sys; sys.exit()
-    return paths
-
 output_format = {}
-
-
 
 # set root outdir path
 if config['out_dir']:
@@ -187,7 +54,10 @@ include: 'rules/utils.smk'
 include: 'rules/calc_feedback.smk'
 include: 'rules/diagnose_cloud_changes.smk'
 include: 'rules/plotAerChemMIP.smk'
+include: 'rules/dust_historical.smk'
+include: 'rules/dust_aerosol_interannual_variability.smk'
 
+include: 'rules/calc_historical_forcing.smk'
 
 
 rule all:
