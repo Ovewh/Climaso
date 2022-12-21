@@ -207,6 +207,35 @@ rule plot_change_ts:
     notebook:
         "../notebooks/plot_change_notebook.py.ipynb"
 
+
+rule plot_change_aod:
+    input:
+        path_exp = expand(outdir+'piClim-2xdust/od550aer/od550aer_piClim-2xdust_{model}_Ayear.nc',
+                 model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA',
+                         'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
+                        'CNRM-ESM2-1','NorESM2-LM', 'UKESM1-0-LL','MIROC6'], allow_missing=True),
+        path_ctrl=expand(outdir+'piClim-control/od550aer/od550aer_piClim-control_{model}_Ayear.nc',
+                 model=['EC-Earth3-AerChem', 'GISS-E2-1-G',  'IPSL-CM6A-LR-INCA',
+                        'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
+                        'CNRM-ESM2-1','NorESM2-LM', 'UKESM1-0-LL','MIROC6'], allow_missing=True)
+
+    
+    output:
+        outpath=outdir+'figs/AerChemMIP/delta_2xdust/od550aer_piClim-2xdust_AerChemMIP_{kind}.png'
+    wildcard_constraints:
+        kind='abs'
+    params:
+        label= '$\Delta$ Od550aer',
+        rel_minmax=[-0.2,0.45],
+        units='AOD',
+        draw_error_mask=False,
+        add_global_avg=True,
+        abs_minmax=[-0.2,0.5]
+
+    notebook:
+        "../notebooks/plot_change_notebook.py.ipynb"
+
+
 rule plot_change_tas:
     input:
         path_exp = expand(outdir+'piClim-2xdust/tas/tas_piClim-2xdust_{model}_Ayear.nc',
@@ -258,11 +287,11 @@ rule plot_change_prs:
         path_exp = expand(outdir+'piClim-2xdust/pr/pr_piClim-2xdust_{model}_Ayear.nc',
                  model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
                         'MIROC6','UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1','NorESM2-LM','NorESM2.0.6dev-LM'], allow_missing=True),
+                        'CNRM-ESM2-1','NorESM2-LM','NorESM2.0.6dev-LM']),
         path_ctrl=expand(outdir+'piClim-control/pr/pr_piClim-control_{model}_Ayear.nc',
                 model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
                         'MIROC6','UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1','NorESM2-LM','NorESM2.0.6dev-LM'], allow_missing=True)
+                        'CNRM-ESM2-1','NorESM2-LM','NorESM2.0.6dev-LM'])
 
     
     output:
@@ -324,12 +353,12 @@ rule plot_feedback_decomposed:
 rule plot_depdust:
     input:
         paths=expand(outdir+'{experiment}/depdust/depdust_{experiment}_{model}_Amon.nc',
-                    model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 'MIROC6',
-                        'UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
+                    model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA',
+                        'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
                         'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True),
         areacello = expand('workflow/input_data/gridarea_{model}.nc',
-                    model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 'MIROC6',
-                        'UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
+                    model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA',
+                        'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
                         'CNRM-ESM2-1','NorESM2-LM'])
     params:
         regrid=False
@@ -394,6 +423,59 @@ rule plot_lwp_aerchemmip:
     notebook:
         "../notebooks/plot_absolute_fields.py.ipynb"
 
+rule plot_cli_aerchemmip:
+    input:
+        expand(outdir+"{experiment}/cli/cli_{experiment}_{model}_Ayear.nc",
+                model=['EC-Earth3-AerChem',
+                    'UKESM1-0-LL', 'MPI-ESM-1-2-HAM',
+                    'CNRM-ESM2-1','NorESM2-LM', 'GISS-E2-1-G'], allow_missing=True)
+    output:
+        outpath=outdir+'figs/AerChemMIP/cli_{experiment}_{plevel}_map.png'
+    params:
+        vmin=0,
+        vmax=0.025,
+        cb_extend='max',
+        label='cli [g/g]',
+        nlevels=16,
+        scaling_factor=1000,
+        method='sum',
+        add_global_avg=True,
+        time_slice=slice(3,-2)
+    wildcard_constraints:
+        plevel='low|middle|high'
+
+    conda:
+        "../envs/comp_cat.yaml"
+    notebook:
+        "../notebooks/plot_absolute_fields_cloudlevels.py.ipynb"
+
+rule plot_cl_aerchemmip:
+    input:
+        expand(outdir+"{experiment}/cl/cl_{experiment}_{model}_Ayear.nc",
+                model=['EC-Earth3-AerChem',
+                    'UKESM1-0-LL', 'MPI-ESM-1-2-HAM',
+                    'CNRM-ESM2-1','NorESM2-LM', 'GISS-E2-1-G'], allow_missing=True)
+    output:
+        outpath=outdir+'figs/AerChemMIP/cl_{experiment}_{plevel}_map.png'
+    params:
+        vmin=0,
+        vmax=70,
+        cb_extend='max',
+        label='cl %',
+        nlevels=16,
+        scaling_factor=1,
+        method='sum',
+        add_global_avg=True,
+        time_slice=slice(3,-1),
+        cmap = 'Blues'
+    wildcard_constraints:
+        plevel='low|middle|high'
+
+    conda:
+        "../envs/comp_cat.yaml"
+    notebook:
+        "../notebooks/plot_absolute_fields_cloudlevels.py.ipynb"
+
 
 rule plot_pr_aerchemmip:
     input:
@@ -427,6 +509,31 @@ rule plot_changes_dust_loading:
                     'MPI-ESM-1-2-HAM', 'UKESM1-0-LL',
                         'CNRM-ESM2-1','NorESM2-LM'], variable='loaddust', plevel=['low','middle','high'])
 
+rule plot_change_concdust:
+    input:
+        path_exp = expand(outdir + "piClim-2xdust/concdust/concdust_piClim-2xdust_{model}_Ayear.nc",
+                model=['EC-Earth3-AerChem','GISS-E2-1-G', 'MIROC6',
+                    'MPI-ESM-1-2-HAM',
+                        'NorESM2-LM']),
+        path_ctrl = expand(outdir + "piClim-control/concdust/concdust_piClim-control_{model}_Ayear.nc", 
+                    model = ['EC-Earth3-AerChem', 'GISS-E2-1-G', 'MIROC6',
+                    'MPI-ESM-1-2-HAM', 
+                        'NorESM2-LM'])
+
+    output:
+        outpath=outdir+'figs/AerChemMIP/delta_2xdust/concdust_piClim-2xdust_AerChemMIP_{kind}.png'
+
+    wildcard_constraints:
+        kind='abs|rel'
+
+    params:
+        label = '$\Delta$ concdust [kg/m3]',
+        scaling_factor = 1,
+
+
+    notebook:
+        "../notebooks/plot_change_notebook.py.ipynb"
+    
 # rule plot_all_AerChemMIP:
 #     input:
 #         expand(rules.plot_level_changes.output, 
@@ -446,7 +553,15 @@ rule generate_table:
         prs_ctrl = rules.plot_change_prs.input.path_ctrl,
         clivi_exp = rules.plot_change_clivi.input.path_exp,
         clivi_ctrl = rules.plot_change_clivi.input.path_ctrl,
+        od550aer_ctrl = rules.plot_change_aod.input.path_ctrl,
+        od550aer_exp = rules.plot_change_aod.input.path_exp,
+        concdust_ctrl = rules.plot_change_concdust.input.path_ctrl,
+        concdust_exp = rules.plot_change_concdust.input.path_exp,
         areacello=rules.plot_depdust.input.areacello,
+        depdust_ctrl = expand(rules.plot_depdust.input.paths,zip, 
+                    experiment=['piClim-control']),
+        depdust_exp = expand(rules.plot_depdust.input.paths,zip, 
+                    experiment=['piClim-2xdust']),
         emidust_ctrl = expand(rules.plot_emidust.input.paths,zip, 
                     experiment=['piClim-control']),
         emidust_exp = expand(rules.plot_emidust.input.paths,zip, 
@@ -469,7 +584,8 @@ rule generate_table:
         outpath=outdir+'aerChemMIP_2xdust_table.csv',
         forcing_table=outdir+'forcing_table.png',
         diagnostics_table_path=outdir+'diagnostics_table.png',
-        feedback_table = outdir+'feedback_table.png'
+        feedback_table = outdir+'feedback_table.png',
+        optics_diag_table = outdir+'optics_diag_table.png',
     
     notebook:
         "../notebooks/generate_table.py.ipynb"
