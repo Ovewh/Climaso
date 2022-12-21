@@ -60,14 +60,21 @@ def compute_annual_emission_budget(ds: xr.Dataset, grid_area: xr.Dataset):
     ------
         ds :  monthly emission flux,
         grid_area: area of each grid cell
-    """
-    yearly_budget = ds[ds.variable_id].resample(time="Y").mean() * 365 * 24 * 60 * 60
+    Returns
+    -------
+        yearly_budget: annual emission budget
 
+    """
+    if ds[ds.variable_id].units == 'kg m-2 s-1':
+        yearly_budget = ds[ds.variable_id] * 365 * 24 * 60 * 60
+    else:
+        yearly_budget = ds[ds.variable_id]
     yearly_budget = yearly_budget * grid_area["cell_area"].load()
     yearly_budget = yearly_budget.sum(dim=["lon", "lat"]) * 1e-9
     yearly_budget.attrs["units"] = "Tg year-1"
+    std_yearly_budget = yearly_budget.std(dim="time")
     mean_yearly_budget = yearly_budget.mean(dim="time")
-    return mean_yearly_budget
+    return mean_yearly_budget, std_yearly_budget
 
 
 def regrid_global(ds: xr.Dataset, ds_out: xr.Dataset=None, 
@@ -247,6 +254,54 @@ def _calc_change(
             diff.attrs = {**diff.attrs, **ds_exp.attrs}
     return diff
 
+def model_levels_to_pressure_levels(ds:xr.Dataset|xr.DataArray):
+    """
+    Convert model levels to pressure levels.
+    """
+    import time
+    import pathlib as pl
+    try:
+        import geocat.comp as geocomp
+    except ImportError:
+        raise ImportError(
+            "geocat-comp is required for this function. Run snakemake with --use-conda to enable it."
+        )
+    ds = ds.copy()
+    if 'ap' in ds.data_vars:
+        ds = ds.rename_vars({'ap': 'a'})
+
+    if 'lev_bounds' in ds.data_vars:
+        ds = ds.rename_vars({'lev_bounds': 'lev_bnds'})
+
+
+
+
+    if isinstance(ds,xr.Dataset):
+        da = ds[ds.variable_id]
+    else:
+        da = ds
+    if ds.cf['Z'].formula == 'p = a*p0 + b*ps':
+        da = geocomp.interpolation.interp_hybrid_to_pressure(data = da, 
+                                                        ps = ds['ps'],
+                                                        hyam = ds['a'], 
+                                                        hybm = ds['b'], 
+                                                        p0 = ds.get('p0',100000.0), 
+                                                        )
+    elif ds.cf['Z'].formula == 'p = ap + b*ps':
+        da = geocomp.interpolation.interp_hybrid_to_pressure(data=da,
+                                                        ps=ds['ps'],
+                                                        hyam      =ds['a'], 
+                                                        hybm      =ds['b'], 
+                                                        p0        =ds.get('p0', 1))
+            
+    else:
+        print('formula not reconized')
+
+    outds = da.to_dataset(name=ds.variable_id)
+    outds.attrs = ds.attrs
+
+    outds.attrs['history'] = outds.attrs['history'] + f'@{time.ctime()} converted to standard pressure levels {pl.Path.cwd().parts[-1]}'
+    return outds
 
 def transelate_aerocom_helper(wildcards):
     if wildcards.freq == "2010":
@@ -259,3 +314,28 @@ def transelate_aerocom_helper(wildcards):
         freq = wildcards.freq
 
     return freq
+
+
+def read_list_input_paths(path_list: list):
+    """
+    Read a list of input paths and return a dictionary 
+    of models and corresponding datasets and the variable name.
+
+    Parameters
+    ----------
+        path_list : list
+
+    Returns
+    -------
+        out_dict : dict
+        vname : str       
+
+    """
+    models = {pst.split('_')[-2].split('.')[0] : pst for pst in path_list}
+    out_dict = {}
+    for model, path in models.items():
+        ds = xr.open_dataset(path)
+        
+        out_dict[model] = ds
+    vname = ds.variable_id
+    return out_dict, vname
