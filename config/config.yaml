@@ -110,7 +110,9 @@ table_ids:
   mmrbc: 'AERmon'
   mmrso4: 'AERmon'
   loaddust: 'AERmon'
+  concdust: 'AERmon'
   ccn: 'AERmon'
+  abs550aer: 'AERmon'
 
 
 variables: 
@@ -145,6 +147,8 @@ variables:
 accumalative_vars:
   - emidust
   - depdust
+  - concdust
+  - loaddust
 
 # Define the pressurelevels for low, middle and high clouds hPa: 
 cloud_def:
