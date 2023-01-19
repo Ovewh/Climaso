@@ -130,9 +130,14 @@ def build_cmip(
     cmip_version,
     depth=4,
     columns=None,
-    exclude_patterns=['*/files/*', '*/latest/*','.cmorout/*', '*/NorCPM1/*', '*/NorESM1-F/*'],
+    exclude_patterns=['*/files/*', '*/latest/*','.cmorout/*', '*/NorCPM1/*', '*/NorESM1-F/*','*/NorESM2-LM/*','*/NorESM2-MM/*'],
     pick_latest_version=False,
 ):
+    if root_path.split('/')[-2] == 'NIRD_noresm':
+        exclude_patterns=['*/files/*', '*/latest/*','.cmorout/*', '*/NorCPM1/*', '*/NorESM1-F/*']
+    else:
+        exclude_patterns=exclude_patterns        
+    print(exclude_patterns)
     parsers = {'6': cmip6_parser, '5': cmip5_parser}
     cmip_columns = {
         '6': [
