@@ -277,9 +277,9 @@ def model_levels_to_pressure_levels(ds:xr.Dataset|xr.DataArray):
 
 
     if isinstance(ds,xr.Dataset):
-        da = ds[ds.variable_id]
+        da = ds[ds.variable_id].copy()
     else:
-        da = ds
+        da = ds.copy()
     if ds.cf['Z'].formula == 'p = a*p0 + b*ps':
         da = geocomp.interpolation.interp_hybrid_to_pressure(data = da, 
                                                         ps = ds['ps'],
@@ -287,7 +287,7 @@ def model_levels_to_pressure_levels(ds:xr.Dataset|xr.DataArray):
                                                         hybm = ds['b'], 
                                                         p0 = ds.get('p0',100000.0), 
                                                         )
-    elif ds.cf['Z'].formula == 'p = ap + b*ps':
+    elif ds.cf['Z'].formula in ['p = ap + b*ps','p(n,k,j,i) = ap(k) + b(k)*ps(n,j,i)']:
         da = geocomp.interpolation.interp_hybrid_to_pressure(data=da,
                                                         ps=ds['ps'],
                                                         hyam      =ds['a'], 
@@ -334,8 +334,13 @@ def read_list_input_paths(path_list: list):
     models = {pst.split('_')[-2].split('.')[0] : pst for pst in path_list}
     out_dict = {}
     for model, path in models.items():
-        ds = xr.open_dataset(path)
+        try:
+            ds = xr.open_dataset(path)
+        except ValueError:
+            ds = xr.open_dataset(path, decode_times=False)
+            ds = ds.drop(['time_bnds'])
+            ds = xr.decode_cf(ds)
         
-        out_dict[model] = ds
+        out_dict[model] = ds.copy()
     vname = ds.variable_id
     return out_dict, vname
