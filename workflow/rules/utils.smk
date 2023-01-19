@@ -5,7 +5,7 @@ rule make_local_catalogue:
         outpath = 'catalogues/{activity}_{source}_CMIP6.csv.gz'
     params:
         root_path = lambda w: config[f"root_{w.source}"] + f'/{w.activity}/',
-        depth = 5
+        depth = 6
     shell:
         "python workflow/scripts/builders/cmip.py --root-path {params.root_path} --csv-filepath {output.outpath} -d {params.depth} -v 6 --pick-latest-version"
 
@@ -34,6 +34,42 @@ rule get_data_intake:
     notebook:
         "../notebooks/get_data_intake.py.ipynb"
 
+def trans_mmr_to_load(mmr:str):
+    trans_dict = {'concdust':'mmrdust',
+                'concpm1':'mmrpm1',
+                'concpm10':'mmrpm10',
+                'concpm2p5':'mmrpm2p5',
+                'concso4':'mmrso4',
+                'concss':'mmrss',
+                'concsoa':'mmrsoa',
+                'concoa':'mmroa'}
+    return trans_dict[mmr]
+
+rule derive_column_integrated_load_airmass:
+    input:
+        mmr = lambda w: expand(output_format['single_variable'], model=w.model, experiment=w.experiment,
+                freq=w.freq, variable=trans_mmr_to_load(w.variable)),
+        airmass = lambda w: expand(output_format['single_variable'], model=w.model, experiment=w.experiment,
+                freq=w.freq, variable='airmass'),
+    output:
+        outpath = outdir + '{experiment}/derived_variables/{variable}/{variable}_{model}_{experiment}_{freq}.nc'
+    wildcard_constraints:
+        model='UKESM1-0-LL',
+        variables = 'concdust|concpm1|concpm10|concpm2p5|concso4|concss|concsoa|concoa'
+    notebook:
+        "../notebooks/derive_column_integrated_load.py.ipynb"
+
+rule derive_column_integrated_load:
+    input:
+        mmr = lambda w: expand(output_format['single_variable'], model=w.model, experiment=w.experiment,
+                freq=w.freq, variable=trans_mmr_to_load(w.variable)),
+    output:
+        outpath = outdir + '{experiment}/derived_variables/{variable}/{variable}_{model}_{experiment}_{freq}.nc'
+    wildcard_constraints:
+        variables = 'concdust|concpm1|concpm10|concpm2p5|concso4|concss|concsoa|concoa',
+        model="(?!UKESM1-0-LL).*"
+    notebook:
+        "../notebooks/derive_column_integrated_load.py.ipynb"
 
 rule change_historical_ts:
     input:
