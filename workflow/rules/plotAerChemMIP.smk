@@ -47,7 +47,22 @@ rule plot_global_avaraged_ERFs:
     notebook:
         "../notebooks/plot_ERFs_AerChemMIP_gobal_average.py.ipynb"
 
-rule plot_ERFaci:
+rule plot_albedo_radiative_effect:
+    input:
+        paths=expand(outdir+'piClim-2xdust/ERFs/{vName}/{vName}_piClim-2xdust_{model}_Ayear.nc',
+            model=['MPI-ESM-1-2-HAM','EC-Earth3-AerChem','CNRM-ESM2-1','NorESM2-LM','UKESM1-0-LL', 'GFDL-ESM4','IPSL-CM6A-LR-INCA', 
+            'NorESM2.0.6dev-LM'],
+            allow_missing=True)
+    output:
+        outpath=outdir+'figs/AerChemMIP/ERFs/{vName}_piClim-2xdust_AerChemMIP.png'
+    wildcard_constraints:
+        vName = 'ERFtswcsaf|ERFtcsaf|ERFtlwcsaf'
+    params:
+        draw_error_mask=False
+    notebook:
+        "../notebooks/plot_Radiative_effects_AerChemMIP.py.ipynb"
+
+rule plot_direct_and_cloud_effect:
     input:
         paths=expand(outdir+'piClim-2xdust/ERFs/{vName}/{vName}_piClim-2xdust_{model}_Ayear.nc',
             model=['MPI-ESM-1-2-HAM','EC-Earth3-AerChem','CNRM-ESM2-1','NorESM2-LM','UKESM1-0-LL', 'GFDL-ESM4','IPSL-CM6A-LR-INCA',
@@ -235,6 +250,32 @@ rule plot_change_aod:
     notebook:
         "../notebooks/plot_change_notebook.py.ipynb"
 
+
+rule plot_change_aaod:
+    input:
+        path_exp = expand(outdir+'piClim-2xdust/abs550aer/abs550aer_piClim-2xdust_{model}_Ayear.nc',
+                 model=['EC-Earth3-AerChem', 'GISS-E2-1-G', 'IPSL-CM6A-LR-INCA',
+                         'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
+                        'CNRM-ESM2-1','NorESM2-LM', 'UKESM1-0-LL','MIROC6'], allow_missing=True),
+        path_ctrl=expand(outdir+'piClim-control/abs550aer/abs550aer_piClim-control_{model}_Ayear.nc',
+                 model=['EC-Earth3-AerChem', 'GISS-E2-1-G',  'IPSL-CM6A-LR-INCA',
+                        'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
+                        'CNRM-ESM2-1','NorESM2-LM', 'UKESM1-0-LL','MIROC6'], allow_missing=True)
+
+    
+    output:
+        outpath=outdir+'figs/AerChemMIP/delta_2xdust/abs550aer_piClim-2xdust_AerChemMIP_{kind}.png'
+    wildcard_constraints:
+        kind='abs'
+    params:
+        label= '$\Delta$ AAOD 550mn',
+        units='AOD',
+        draw_error_mask=False,
+        add_global_avg=True,
+        abs_minmax=[-0.1,0.15],
+
+    notebook:
+        "../notebooks/plot_change_notebook.py.ipynb"
 
 rule plot_change_tas:
     input:
@@ -555,8 +596,16 @@ rule generate_table:
         clivi_ctrl = rules.plot_change_clivi.input.path_ctrl,
         od550aer_ctrl = rules.plot_change_aod.input.path_ctrl,
         od550aer_exp = rules.plot_change_aod.input.path_exp,
-        concdust_ctrl = rules.plot_change_concdust.input.path_ctrl,
-        concdust_exp = rules.plot_change_concdust.input.path_exp,
+        abs550aer_ctrl = rules.plot_change_aaod.input.path_ctrl,
+        abs550aer_exp = rules.plot_change_aaod.input.path_exp,
+        concdust_ctrl = expand(outdir + "piClim-control/derived_variables/concdust/concdust_{model}_piClim-control_Ayear.nc", 
+                    model = ['EC-Earth3-AerChem', 'GISS-E2-1-G', 'MIROC6',
+                    'MPI-ESM-1-2-HAM', 'UKESM1-0-LL', 'CNRM-ESM2-1',
+                        'NorESM2-LM', 'GFDL-ESM4']),
+        concdust_exp = expand(outdir + "piClim-2xdust/derived_variables/concdust/concdust_{model}_piClim-2xdust_Ayear.nc",
+                model=['EC-Earth3-AerChem','GISS-E2-1-G', 'MIROC6',
+                    'MPI-ESM-1-2-HAM', 'UKESM1-0-LL',
+                        'CNRM-ESM2-1','NorESM2-LM', 'GFDL-ESM4']),
         areacello=rules.plot_depdust.input.areacello,
         depdust_ctrl = expand(rules.plot_depdust.input.paths,zip, 
                     experiment=['piClim-control']),
@@ -566,12 +615,15 @@ rule generate_table:
                     experiment=['piClim-control']),
         emidust_exp = expand(rules.plot_emidust.input.paths,zip, 
                     experiment=['piClim-2xdust']),
-        ERFaci = expand(rules.plot_ERFaci.input.paths, zip, 
+        ERFaci = expand(rules.plot_direct_and_cloud_effect.input.paths, zip, 
                     vName=['CloudEff','DirectEff','SWCloudEff', 'LWCloudEff','LWDirectEff','SWDirectEff']),
         ERFt = expand(rules.plot_ERFs.input.paths, zip,
                      vName=['ERFt','ERFtsw','ERFtlw']),
         atmabs = expand(rules.plot_atm_abs.input.paths, zip, 
                     vName=['atmabs']),
+        albedo = expand(rules.plot_albedo_radiative_effect.input.paths, zip, 
+                    vName=['ERFtswcsaf','ERFtcsaf','ERFtlwcsaf']),
+        
         feedback_tot = expand(rules.plot_feedback_decomposed.input.paths_ERFt, 
                                 experiment=['piClim-2xdust'], variable=['emidust']),
         feedback_Clouds = expand(rules.plot_feedback_decomposed.input.paths_CloudEff, 
