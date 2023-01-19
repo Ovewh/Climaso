@@ -30,21 +30,37 @@ rule refractive_index_and_absorption:
 
 rule vertical_profiles:
     input:
-        path_exp = expand(outdir + "piClim-2xdust/loaddust/loaddust_piClim-2xdust_{model}_Ayear.nc",
-                model=['EC-Earth3-AerChem', 'MIROC6','CNRM-ESM2-1',
-                    'MPI-ESM-1-2-HAM',
-                        'NorESM2-LM']),
-        path_ctrl = expand(outdir + "piClim-control/loaddust/loaddust_piClim-control_{model}_Ayear.nc", 
-                    model = ['EC-Earth3-AerChem',  'MIROC6','CNRM-ESM2-1',
-                    'MPI-ESM-1-2-HAM', 
-                        'NorESM2-LM'])
+        paths = expand(outdir + "{experiment}/loaddust/loaddust_{experiment}_{model}_Ayear.nc",
+                model=['EC-Earth3-AerChem', 
+                    'MPI-ESM-1-2-HAM','MIROC6','UKESM1-0-LL',
+                        'NorESM2-LM','GFDL-ESM4','CNRM-ESM2-1' ], allow_missing=True),
+
     output:
-        path = outdir + "figs/AerChemMIP/vertical_profiles.png",
+        path = outdir + "figs/AerChemMIP/vertical_profiles_{experiment}.png",
+
+    conda:
+        "../envs/comp_cat.yaml"
     
     notebook:
         "../notebooks/dust_analysis/vertical_profiles.py.ipynb"
 
+rule calculate_lifetime:
+    input:
+        paths = expand(outdir + "{experiment}/concdust/concdust_{experiment}_{model}_Ayear.nc",
+                model=['EC-Earth3-AerChem', 
+                    'MPI-ESM-1-2-HAM','MIROC6','GISS-E2-1-G',
+                        'NorESM2-LM','GFDL-ESM4','CNRM-ESM2-1' ], allow_missing=True),
+        paths_emissions = expand(outdir + "{experiment}/emidust/emidust_{experiment}_{model}_Ayear.nc",
+                model=['EC-Earth3-AerChem', 
+                    'MPI-ESM-1-2-HAM','MIROC6','GISS-E2-1-G',
+                        'NorESM2-LM','GFDL-ESM4','CNRM-ESM2-1' ], allow_missing=True),
+        path_area = "workflow/input_data/common_grid.nc"
+    output:
+        path = outdir + "figs/AerChemMIP/lifetime_{experiment}.png",
+        table = outdir + "figs/AerChemMIP/lifetime_{experiment}.yaml"
 
+    notebook:
+        "../notebooks/dust_analysis/lifetime.py.ipynb"
 rule what_does_2xdust_mean:
     input:
         oddust550_ctrl = expand(outdir + 'piClim-control/od550dust/od550dust_piClim-control_{model}_Ayear.nc', 
