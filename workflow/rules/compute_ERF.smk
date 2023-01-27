@@ -95,7 +95,7 @@ rule calculate_ERF_TOA_LW:
     log:
         "logs/calc_ERF_LW/{vName}_{model}_{experiment}_{freq}.log"  
     wildcard_constraints:
-        vName='ERFtlw|ERFtlwaf|ERFtlwcs|ERFtlwcsaf'
+        vName='ERFtlw|ERFtlwaf|ERFtlwcs|ERFtlwcsaf|ERFsurflw'
 
     script:
         "../scripts/compute_ERF_LW_TOA.py"
@@ -148,7 +148,7 @@ rule calc_absorption:
     output:
         outpath= outdir+'{experiment}/ERFs/{vName}/{vName}_{experiment}_{model}_{freq}.nc'
     wildcard_constraints:
-        vName='atmabsSW|atmabs'
+        vName='atmabsSW|atmabs|atmabsLW'
     log:
         "logs/calc_absorption/{vName}_{model}_{experiment}_{freq}.log"
     run:
