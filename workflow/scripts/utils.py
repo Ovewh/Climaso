@@ -316,7 +316,7 @@ def transelate_aerocom_helper(wildcards):
     return freq
 
 
-def read_list_input_paths(path_list: list):
+def read_list_input_paths(path_list: list, models_pos: int = -2):
     """
     Read a list of input paths and return a dictionary 
     of models and corresponding datasets and the variable name.
@@ -331,7 +331,7 @@ def read_list_input_paths(path_list: list):
         vname : str       
 
     """
-    models = {pst.split('_')[-2].split('.')[0] : pst for pst in path_list}
+    models = {pst.split('_')[models_pos].split('.')[0] : pst for pst in path_list}
     out_dict = {}
     for model, path in models.items():
         try:
