@@ -128,6 +128,7 @@ variables:
   ERFtlwcs: ['rlutcs']
   ERFtlwcsaf : ['rlutcsaf']
   ERFsurfsw: ['rsus','rsds']
+  ERFsurflw: ['rlus', 'rlds']
   ERFsurfswcs: ['rsuscs', 'rsdscs']
   ERFtswcs: ['rsutcs', 'rsdt']
   ERFsurf: ['rsus', 'rsds', 'rlus', 'rlds']
@@ -142,6 +143,7 @@ variables:
   LWCloudEff : ['ERFtlwaf','ERFtlwcsaf']
   atmabsSW: ['ERFtsw','ERFsurfsw']
   atmabs: ['ERFt','ERFsurf']
+  atmabsLW: ['ERFtlw','ERFsurflw']
 
 # These variables will be accumulated when resampled e.g. from Amon to Ayear
 accumalative_vars:

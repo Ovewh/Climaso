@@ -23,8 +23,8 @@ MPI-ESM-1-2-HAM:
   real: 1.52
   complex: 0.0011
 
-EC-Earth3-AerChem:
-  real: 1.52
+EC-Earth3-AerChem: # Twan van Noije et al 2021.
+  real: 1.52 
   complex: 0.0011
 
 GFDL-ESM4:
