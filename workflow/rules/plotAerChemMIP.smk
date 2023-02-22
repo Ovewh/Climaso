@@ -669,16 +669,6 @@ rule generate_table:
                     vName=['atmabs','atmabsSW']),
         albedo = expand(rules.plot_albedo_radiative_effect.input.paths, zip, 
                     vName=['ERFtswcsaf','ERFtcsaf','ERFtlwcsaf']),
-        
-        feedback_tot=expand(outdir + 'piClim-2xdust/Feedback_per_emis/ERFt_emidust_piClim-2xdust_{model}_Ayear.yaml',
-                    model=[ 'GISS-E2-1-G','EC-Earth3-AerChem', 'MIROC6',
-                        'UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1','NorESM2-LM']),
-        feedback_Clouds = expand(outdir + 'piClim-2xdust/Feedback_per_emis/CloudEff_emidust_piClim-2xdust_{model}_Ayear.yaml',
-                            model=['MPI-ESM-1-2-HAM','EC-Earth3-AerChem','CNRM-ESM2-1','NorESM2-LM','UKESM1-0-LL', 'GFDL-ESM4']
-                            ),
-        feedback_Direct = expand(outdir + 'piClim-2xdust/Feedback_per_emis/DirectEff_emidust_piClim-2xdust_{model}_Ayear.yaml',
-                            model=['MPI-ESM-1-2-HAM','EC-Earth3-AerChem','CNRM-ESM2-1','NorESM2-LM','UKESM1-0-LL', 'GFDL-ESM4'])
 
     log:
         "logs/generate_table.log"
