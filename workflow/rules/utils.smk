@@ -5,16 +5,35 @@ rule make_local_catalogue:
         outpath = 'catalogues/{activity}_{source}_CMIP6.csv.gz'
     params:
         root_path = lambda w: config[f"root_{w.source}"] + f'/{w.activity}/',
-        depth = 6
-    shell:
-        "python workflow/scripts/builders/cmip.py --root-path {params.root_path} --csv-filepath {output.outpath} -d {params.depth} -v 6 --pick-latest-version"
+        depth = 9,
+    threads: 4
+    run:
+        import ecgtools
+        from ecgtools import Builder
+        from ecgtools.parsers.cmip import parse_cmip6_using_directories
+
+        if params.root_path.split('/')[-2] == 'NIRD_noresm':
+            exclude_patterns=['*/files/*', '*/latest','.cmorout/*', '*/NorCPM1/*', '*/NorESM1-F/*']
+        else:
+            exclude_patterns=['*/files/*', '*/latest','.cmorout/*', '*/NorCPM1/*', '*/NorESM1-F/*','*/NorESM2-LM/*','*/NorESM2-MM/*']        
+        builder = Builder(paths=[params.root_path], depth=params.depth,
+                        joblib_parallel_kwargs={'n_jobs': threads, 'verbose':13},
+                        exclude_patterns=['*/files/*', '*/latest/*','.cmorout/*', '*/NorCPM1/*', '*/NorESM1-F/*','*/NorESM2-LM/*','*/NorESM2-MM/*'])
+        builder.build(parsing_func=parse_cmip6_using_directories)
+
+        builder.clean_dataframe()
+        df = builder.df
+        df.to_csv(output.outpath, compression='gzip', index=False)
+    # shell:
+        # "python workflow/scripts/builders/cmip.py --root-path {params.root_path} --csv-filepath {output.outpath} -d {params.depth} -v 6 --pick-latest-version"
 
 rule build_catalogues:
     input:
         expand('catalogues/{activity}_{source}_CMIP6.csv.gz', 
                 activity = config['activities'], 
                 source = ['betzy', 'noresm']),
-        'catalogues/AerChemMIP_noresmdev_CMIP6.csv.gz'
+        'catalogues/AerChemMIP_noresmdev_CMIP6.csv.gz',
+        'catalogues/CMIP_nirdCMIPtemp_CMIP6.csv.gz'
     output:
         table='catalogues/merge_CMIP6.csv',
         json='catalogues/merge_CMIP6.json'
@@ -42,7 +61,8 @@ def trans_mmr_to_load(mmr:str):
                 'concso4':'mmrso4',
                 'concss':'mmrss',
                 'concsoa':'mmrsoa',
-                'concoa':'mmroa'}
+                'concoa':'mmroa',
+                'conch2oaer':'mmraerh2o'}
     return trans_dict[mmr]
 
 rule derive_column_integrated_load_airmass:
@@ -55,7 +75,7 @@ rule derive_column_integrated_load_airmass:
         outpath = outdir + '{experiment}/derived_variables/{variable}/{variable}_{model}_{experiment}_{freq}.nc'
     wildcard_constraints:
         model='UKESM1-0-LL',
-        variables = 'concdust|concpm1|concpm10|concpm2p5|concso4|concss|concsoa|concoa'
+        variables = 'concdust|concpm1|concpm10|concpm2p5|concso4|concss|concsoa|concoa|conch2oaer'
     notebook:
         "../notebooks/derive_column_integrated_load.py.ipynb"
 
@@ -66,10 +86,24 @@ rule derive_column_integrated_load:
     output:
         outpath = outdir + '{experiment}/derived_variables/{variable}/{variable}_{model}_{experiment}_{freq}.nc'
     wildcard_constraints:
-        variables = 'concdust|concpm1|concpm10|concpm2p5|concso4|concss|concsoa|concoa',
+        variables = 'concdust|concpm1|concpm10|concpm2p5|concso4|concss|concsoa|concoa|conch2oaer',
         model="(?!UKESM1-0-LL).*"
     notebook:
         "../notebooks/derive_column_integrated_load.py.ipynb"
+
+rule column_integrate_cdnc:
+    input:
+        cdnc = lambda w: expand(output_format['single_variable'], model=w.model, experiment=w.experiment,
+                freq=w.freq, variable='cdnc'),
+        ta = lambda w: expand(output_format['single_variable'], model=w.model, experiment=w.experiment,
+                freq=w.freq, variable='ta'),
+    output:
+        outpath = outdir + '{experiment}/derived_variables/cdncvi/cdncvi_{model}_{experiment}_{freq}.nc'
+    conda:
+        "../envs/comp_cat.yaml"
+    
+    notebook:
+        "../notebooks/derive_column_integrated_cdnc.py.ipynb"
 
 rule change_historical_ts:
     input:
