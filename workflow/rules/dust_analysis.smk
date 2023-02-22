@@ -94,6 +94,15 @@ rule calculate_MEE_change:
     notebook:
         "../notebooks/dust_analysis/MME.py.ipynb"
 
+rule dust_absorption_precip_change:
+    input:
+        diag_table = outdir+'aerChemMIP_2xdust_table.csv',
+    output:
+        outpath = outdir + "figs/AerChemMIP/piClim-2xdust_absorption_precip_change.png"
+    notebook:
+        "../notebooks/dust_analysis/dust_absorption_precip_change.py.ipynb"
+
+
 rule what_does_2xdust_mean:
     input:
         oddust550_ctrl = expand(outdir + 'piClim-control/od550dust/od550dust_piClim-control_{model}_Ayear.nc', 
