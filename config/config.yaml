@@ -1,15 +1,16 @@
 
 # Root path to the CMIP archive
-root_betzy: '/home/oveh/mnt/Betzy_CMIP/CMIP6'
+root_lustre: '/lustre/storeB/users/oveh/.synda/data/CMIP6'
 root_noresm: '/home/oveh/mnt/NIRD_noresm/CMIP6'
 root_noresmdev: '/home/oveh/mnt/NIRD_data/NorESM2_AerChemMIP_rerun_bugfix/CMIP6'
+
+seperate_Noresm : False
 # Set CMIP version
 cmip_version: 'CMIP6'
 
 activities:
   - 'AerChemMIP'
   - 'RFMIP'
-  - 'CMIP'
 #Regrid all models to common grid
 regrid_params:
   dxdy:

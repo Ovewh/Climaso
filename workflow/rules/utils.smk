@@ -11,8 +11,9 @@ rule make_local_catalogue:
         import ecgtools
         from ecgtools import Builder
         from ecgtools.parsers.cmip import parse_cmip6_using_directories
+        seperate_Noresm = config.get('seperate_Noresm', True)
 
-        if params.root_path.split('/')[-2] == 'NIRD_noresm':
+        if params.root_path.split('/')[-2] == 'NIRD_noresm' and seperate_Noresm:
             exclude_patterns=['*/files/*', '*/latest','.cmorout/*', '*/NorCPM1/*', '*/NorESM1-F/*']
         else:
             exclude_patterns=['*/files/*', '*/latest','.cmorout/*', '*/NorCPM1/*', '*/NorESM1-F/*','*/NorESM2-LM/*','*/NorESM2-MM/*']        
@@ -31,9 +32,9 @@ rule build_catalogues:
     input:
         expand('catalogues/{activity}_{source}_CMIP6.csv.gz', 
                 activity = config['activities'], 
-                source = ['betzy', 'noresm']),
-        'catalogues/AerChemMIP_noresmdev_CMIP6.csv.gz',
-        'catalogues/CMIP_nirdCMIPtemp_CMIP6.csv.gz'
+                source = ['lustre']),
+        # 'catalogues/AerChemMIP_noresmdev_CMIP6.csv.gz',
+        # 'catalogues/CMIP_nirdCMIPtemp_CMIP6.csv.gz'
     output:
         table='catalogues/merge_CMIP6.csv',
         json='catalogues/merge_CMIP6.json'
