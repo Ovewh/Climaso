@@ -106,32 +106,21 @@ rule column_integrate_cdnc:
     output:
         outpath = outdir + '{experiment}/derived_variables/cdncvi/cdncvi_{model}_{experiment}_{freq}.nc'
     conda:
-        "../envs/comp_cat.yaml"
+        "../envs/comp_http://localhost:8890/login?next=%2Ftree%3Fcat.yaml"
     
     notebook:
         "../notebooks/derive_column_integrated_cdnc.py.ipynb"
 
-rule change_historical_ts:
+rule derived_windspeed:
     input:
-        pertubation = outdir + '{hist_pert}/{vName}/{vName}_{hist_pert}_{model}_Ayear.nc',
-        baseline = outdir + '{hist_base}/{vName}/{vName}_{hist_base}_{model}_Ayear.nc',
+        u = lambda w: expand(output_format['single_variable'], model=w.model, experiment=w.experiment,
+                    freq=w.freq, variable='ua'),
+        v = lambda w: expand(output_format['single_variable'], model=w.model, experiment=w.experiment,
+                    freq=w.freq, variable='va'),
     output:
-        outpath=outdir+'figs/{hist_pert}-{hist_base}_ts/{vName}/{vName}_{model}_delta_{hist_pert}_{hist_base}.{ext}'
-    wildcard_constraints:
-        ext = 'csv|png|pdf'
+        outpath = outdir + '{experiment}/derived_variables/windspeed/windspeed_{model}_{experiment}_{freq}.nc'
     notebook:
-        "../notebooks/plot_change_time_series.py.ipynb"
-
-rule calc_change_historical:
-    input:    
-        pertubation = rules.change_historical_ts.input.pertubation,
-        baseline = rules.change_historical_ts.input.baseline
-    
-    output:
-        outpath = outdir + '{hist_pert}-{hist_base}/{vName}/{vName}_{model}_delta_{hist_pert}_{hist_base}.nc'
-
-    notebook:
-        "../notebooks/calc_difference.py.ipynb"
+        "../notebooks/derive_windspeed.py.ipynb"
 
 rule cmip6_to_aerocom_fmt:
     input:
