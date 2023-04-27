@@ -11,15 +11,20 @@ rule make_local_catalogue:
         import ecgtools
         from ecgtools import Builder
         from ecgtools.parsers.cmip import parse_cmip6_using_directories
-        seperate_Noresm = config.get('seperate_Noresm', True)
+        lustre = config.get('seperate_Noresm', True)
 
-        if params.root_path.split('/')[-2] == 'NIRD_noresm' and seperate_Noresm:
+        if params.root_path.split('/')[-2] == 'NIRD_noresm':
             exclude_patterns=['*/files/*', '*/latest','.cmorout/*', '*/NorCPM1/*', '*/NorESM1-F/*']
+        elif lustre == False:
+            exclude_patterns=['*/files/*']
+        
         else:
-            exclude_patterns=['*/files/*', '*/latest','.cmorout/*', '*/NorCPM1/*', '*/NorESM1-F/*','*/NorESM2-LM/*','*/NorESM2-MM/*']        
+            exclude_patterns=['*/files/*', '*/latest','.cmorout/*', '*/NorCPM1/*', '*/NorESM1-F/*','*/NorESM2-LM/*','*/NorESM2-MM/*']    
+            
+        print(exclude_patterns)
         builder = Builder(paths=[params.root_path], depth=params.depth,
                         joblib_parallel_kwargs={'n_jobs': threads, 'verbose':13},
-                        exclude_patterns=['*/files/*', '*/latest/*','.cmorout/*', '*/NorCPM1/*', '*/NorESM1-F/*','*/NorESM2-LM/*','*/NorESM2-MM/*'])
+                        exclude_patterns=exclude_patterns)
         builder.build(parsing_func=parse_cmip6_using_directories)
 
         builder.clean_dataframe()
