@@ -40,4 +40,5 @@ dependencies:
   - pip:
     - https://github.com/Ovewh/pyclim-NorESM/archive/master.zip
     - graphviz==0.20.*
+    - dataframe_image
 
