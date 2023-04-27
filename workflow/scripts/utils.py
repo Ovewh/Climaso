@@ -253,7 +253,7 @@ def _calc_change(
             diff = diff.to_dataset(name=vName)
             diff.attrs = {**diff.attrs, **ds_exp.attrs}
     return diff
-
+How to determine the confidence interval for the difference between two sample means
 def model_levels_to_pressure_levels(ds:xr.Dataset|xr.DataArray):
     """
     Convert model levels to pressure levels.
@@ -344,3 +344,98 @@ def read_list_input_paths(path_list: list, models_pos: int = -2):
         out_dict[model] = ds.copy()
     vname = ds.variable_id
     return out_dict, vname
+
+
+def calculate_pooled_variance(da_ctrl, da_exp):
+    """
+    Calculate the pooled variance of two samples.
+    
+    Parameters
+    ----------
+        da_ctrl : xr.DataArray or np.ndarray
+        da_exp : xr.DataArray or np.ndarray   
+
+    Returns
+    -------
+        pooled_var : float
+    """
+
+    n1 = len(da_ctrl)
+    n2 = len(da_exp)
+    var1 = np.var(da_ctrl)
+    var2 = np.var(da_exp)
+    pooled_var = ((n1-1)*var1 + (n2-1)*var2) / (n1+n2-2)
+    return pooled_var 
+
+
+def calculate_CI(da_ctrl, da_exp, alpha=0.05):
+    """
+    Calculate the confidence interval of the difference between two samples.
+    
+    Parameters
+    ----------
+        da_ctrl : xr.DataArray or np.ndarray
+        da_exp : xr.DataArray or np.ndarray
+        alpha : float, optional
+            Significance level, by default 0.05
+
+    Returns
+    -------
+        CI : tuple
+            Confidence interval
+        diff : float
+            Difference between the two samples
+    """
+    from scipy.stats import t
+
+    diff = np.mean(da_exp) - np.mean(da_ctrl)
+    pooled_var = calculate_pooled_variance(da_ctrl, da_exp)
+    std_err = np.sqrt(pooled_var) * np.sqrt(1/len(da_ctrl) + 1/len(da_exp))
+    t_value = t.ppf(1-alpha/2, len(da_ctrl)+len(da_exp)-2)
+    CI = (diff - t_value*std_err, diff + t_value*std_err)
+    return CI, diff
+
+
+
+def t_test_diff_sample_means(da_ctrl, da_exp, alpha=0.05):
+    """
+    Perform a t-test for the difference between two samples.
+    
+    Parameters
+    ----------
+        da_ctrl : xr.DataArray or np.ndarray
+        da_exp : xr.DataArray or np.ndarray
+        alpha : float, optional
+            Significance level, by default 0.05
+
+    Returns
+    -------
+        t_value : float
+            t-value of the test
+        p_value : float
+            p-value of the test
+        diff : float
+            Difference between the two samples
+    """
+    from scipy.stats import ttest_ind
+
+    t_value, p_value = ttest_ind(da_exp, da_ctrl, equal_var=False)
+    diff = np.mean(da_exp) - np.mean(da_ctrl)
+    return t_value, p_value, diff
+
+def diff_means_greater_than_varability(da_ctrl, da_exp):
+    """
+    Check if the difference between two samples is greater than the variability of the samples.
+    
+    Parameters
+    ----------
+        da_ctrl : xr.DataArray or np.ndarray
+        da_exp : xr.DataArray or np.ndarray
+
+    Returns
+    -------
+        bool
+    """
+    diff = np.mean(da_exp) - np.mean(da_ctrl)
+    pooled_var = calculate_pooled_variance(da_ctrl, da_exp)
+    return np.abs(diff) > np.sqrt(pooled_var)
