@@ -16,7 +16,7 @@ hostname = socket.gethostname()
 print(hostname)
 if 'betzy' in hostname:
     ROOT_PATH = '/cluster/shared/ESGF'
-elif 'ppi' in hostname:
+elif config['lustre']:
     ROOT_PATH = config['root_lustre']
 else:
     ROOT_PATH = config['root_betzy']

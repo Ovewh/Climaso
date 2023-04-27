@@ -136,7 +136,7 @@ rule plot_change_clwvi:
                         'GFDL-ESM4', 'UKESM1-0-LL',  'MPI-ESM-1-2-HAM',
                         'CNRM-ESM2-1','NorESM2-LM'])
     output:
-        outpath=outdir+'figs/AerChemMIP/delta_2xdust/cliwi_piClim-2xdust_AerChemMIP_{kind}.png'
+        outpath=outdir+'figs/AerChemMIP/delta_2xdust/clwvi_piClim-2xdust_AerChemMIP_{kind}.png'
     wildcard_constraints:
         kind='rel|abs'
 
@@ -253,12 +253,12 @@ rule plot_change_aaod:
 rule plot_change_tas:
     input:
         path_exp = expand(outdir+'piClim-2xdust/tas/tas_piClim-2xdust_{model}_Ayear.nc',
-                 model=['GISS-E2-1-G', 
-                        'MIROC6', 'GFDL-ESM4', 
+                 model=['GISS-E2-1-G','MPI-ESM-1-2-HAM', 'IPSL-CM6A-LR-INCA',
+                        'MIROC6', 'GFDL-ESM4', 'UKESM1-0-LL',
                         'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True),
         path_ctrl=expand(outdir+'piClim-control/tas/tas_piClim-control_{model}_Ayear.nc',
-                 model=['GISS-E2-1-G',  
-                        'MIROC6', 'GFDL-ESM4', 
+                 model=['GISS-E2-1-G', 'IPSL-CM6A-LR-INCA','MPI-ESM-1-2-HAM', 
+                        'MIROC6', 'GFDL-ESM4', 'UKESM1-0-LL',   
                         'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True)
 
     
@@ -618,8 +618,7 @@ rule plot_change_conch2oaer:
         "../notebooks/plot_change_notebook.py.ipynb"
 
 
-
-rule generate_table:
+rule generate_text_table:
     input:
         clt_exp=rules.plot_change_clt.input.path_exp,
         clt_ctrl=rules.plot_change_clt.input.path_ctrl,
@@ -673,10 +672,21 @@ rule generate_table:
     log:
         "logs/generate_table.log"
     output:
-        outpath=outdir+'aerChemMIP_2xdust_table.csv',
+        outpath=outdir+'aerChemMIP_2xdust_table.csv'
+    
+    notebook:
+        "../notebooks/generate_text_table.py.ipynb"
+
+
+rule generate_table:
+    input:
+        rules.generate_text_table.output
+    log:
+        "logs/generate_table.log"
+    output:
+        #outpath=outdir+'aerChemMIP_2xdust_table.csv',
         forcing_table=outdir+'forcing_table.png',
         diagnostics_table_path=outdir+'diagnostics_table.png',
-        feedback_table = outdir+'feedback_table.png',
         optics_diag_table = outdir+'optics_diag_table.png',
     
     notebook:
@@ -684,7 +694,7 @@ rule generate_table:
 
 rule boot_strap_sampling_dust_forcing:
     input:  
-        rules.generate_table.output.outpath
+        rules.generate_text_table.output
     output:
         outpath = outdir +'boot_strapped_forcing_estimates.csv',
         outplot = outdir + 'boot_strapped_forcing_boxplot.png'
