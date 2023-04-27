@@ -4,7 +4,7 @@ root_lustre: '/lustre/storeB/users/oveh/.synda/data/CMIP6'
 root_noresm: '/home/oveh/mnt/NIRD_noresm/CMIP6'
 root_noresmdev: '/home/oveh/mnt/NIRD_data/NorESM2_AerChemMIP_rerun_bugfix/CMIP6'
 
-seperate_Noresm : False
+lustre: True
 # Set CMIP version
 cmip_version: 'CMIP6'
 
