@@ -641,6 +641,7 @@ rule generate_text_table:
         diff=outdir+'diagnostics_piClim_2xdust/{model}/diff_{model}.csv',
         exp=outdir+'diagnostics_piClim_2xdust/{model}/exp_{model}.csv',
         ctrl=outdir+'diagnostics_piClim_2xdust/{model}/ctrl_{model}.csv',
+        info_yaml=outdir+'diagnostics_piClim_2xdust/{model}/analysis_info_{model}.yaml',
     
     notebook:
         "../notebooks/generate_text_table.py.ipynb"
