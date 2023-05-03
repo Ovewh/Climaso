@@ -12,8 +12,7 @@ rule make_local_catalogue:
         from ecgtools import Builder
         from ecgtools.parsers.cmip import parse_cmip6_using_directories
         lustre = config.get('seperate_Noresm', True)
-
-        if params.root_path.split('/')[-2] == 'NIRD_noresm':
+        if wildcards.source == 'noresm':
             exclude_patterns=['*/files/*', '*/latest','.cmorout/*', '*/NorCPM1/*', '*/NorESM1-F/*']
         elif lustre == False:
             exclude_patterns=['*/files/*']
@@ -30,15 +29,14 @@ rule make_local_catalogue:
         builder.clean_dataframe()
         df = builder.df
         df.to_csv(output.outpath, compression='gzip', index=False)
-    # shell:
-        # "python workflow/scripts/builders/cmip.py --root-path {params.root_path} --csv-filepath {output.outpath} -d {params.depth} -v 6 --pick-latest-version"
-
+    
 rule build_catalogues:
     input:
         expand('catalogues/{activity}_{source}_CMIP6.csv.gz', 
                 activity = config['activities'], 
-                source = ['lustre']),
-        # 'catalogues/AerChemMIP_noresmdev_CMIP6.csv.gz',
+                source = config['sources']),
+        'catalogues/AerChemMIP_noresm_CMIP6.csv.gz',
+        'catalogues/RFMIP_noresm_CMIP6.csv.gz',
         # 'catalogues/CMIP_nirdCMIPtemp_CMIP6.csv.gz'
     output:
         table='catalogues/merge_CMIP6.csv',
