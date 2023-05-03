@@ -368,7 +368,12 @@ def calculate_pooled_variance(da_ctrl, da_exp):
     return pooled_var 
 
 
-def calculate_CI(da_ctrl, da_exp, alpha=0.05, global_mean=False):
+def calculate_CI(da_ctrl:xr.DataArray or np.ndarray, 
+                 da_exp:xr.DataArray or np.ndarray, 
+                 alpha:float=0.05, 
+                 global_mean:bool=False, 
+                 mask:xr.DataArray=None, 
+                 weights:xr.DataArray=None):
     """
     Calculate the confidence interval of the difference between two samples.
     
@@ -378,6 +383,12 @@ def calculate_CI(da_ctrl, da_exp, alpha=0.05, global_mean=False):
         da_exp : xr.DataArray or np.ndarray
         alpha : float, optional
             Significance level, by default 0.05
+        global_mean : bool, optional
+            If True, calculate the global mean of the two samples, by default False
+        mask : xr.DataArray, optional
+            Mask to apply to the two samples, by default None
+        weights : xr.DataArray, optional
+            Weights to apply to the two samples, by default None
 
     Returns
     -------
@@ -388,23 +399,34 @@ def calculate_CI(da_ctrl, da_exp, alpha=0.05, global_mean=False):
     """
     from scipy.stats import t
     if global_mean:
-        ctrlM = da_ctrl.mean(dim=['lat','lon'])
-        expM = da_exp.mean(dim=['lat','lon'])
-        diff = expM.mean()-ctrlM.mean()
-    else:
         ctrlM = global_avg(da_ctrl)
         expM = global_avg(da_exp) 
         diff = np.mean(da_exp) - np.mean(da_ctrl)
+    elif mask is not None or weights is not None:
+        ctrlM = masked_average(da_ctrl, mask=mask, weights=weights, dim=['lat','lon']) 
+        expM = masked_average(da_exp, mask=mask, weights=weights, dim=['lat','lon'])
+        diff = expM.mean() - ctrlM.mean()
+
+    else:
+        ctrlM = da_ctrl.mean(dim=['lat','lon'])
+        expM = da_exp.mean(dim=['lat','lon'])
+        diff = expM.mean()-ctrlM.mean()
+
 
     pooled_var = calculate_pooled_variance(ctrlM, expM)
     std_err = np.sqrt(pooled_var) * np.sqrt(1/len(ctrlM) + 1/len(expM))
     t_value = t.ppf(1-alpha/2, len(ctrlM)+len(expM)-2)
     CI = (diff - t_value*std_err, diff + t_value*std_err)
-    return CI, diff
+    return CI[0], CI[1], diff
 
 
 
-def t_test_diff_sample_means(da_ctrl, da_exp, alpha=0.05, global_mean=False):
+def t_test_diff_sample_means(da_ctrl:xr.DataArray, 
+                             da_exp:xr.DataArray,  
+                             global_mean:bool=False,
+                             mask:xr.DataArray=None,
+                             weights:xr.DataArray=None,
+                             ):
     """
     Perform a t-test for the difference between two samples.
     
@@ -412,8 +434,12 @@ def t_test_diff_sample_means(da_ctrl, da_exp, alpha=0.05, global_mean=False):
     ----------
         da_ctrl : xr.DataArray or np.ndarray
         da_exp : xr.DataArray or np.ndarray
-        alpha : float, optional
-            Significance level, by default 0.05
+        global_mean : bool, optional
+            If True, calculate the global mean, by default False
+        mask : xr.DataArray, optional
+            Mask to apply to the data, by default None
+        weights : xr.DataArray, optional
+            Weights to apply to the data, by default None
 
     Returns
     -------
@@ -428,17 +454,27 @@ def t_test_diff_sample_means(da_ctrl, da_exp, alpha=0.05, global_mean=False):
 
     
     if global_mean:
-        ctrlM = da_ctrl.mean(dim=['lat','lon'])
-        expM = da_exp.mean(dim=['lat','lon'])
-        diff = expM.mean()-ctrlM.mean()
-    else:
         ctrlM = global_avg(da_ctrl)
         expM = global_avg(da_exp) 
         diff = np.mean(da_exp) - np.mean(da_ctrl)
-    t_value, p_value = ttest_ind(expM, ctrlM, equal_var=False)
+    elif mask is not None or weights is not None:
+        ctrlM = masked_average(da_ctrl, mask=mask, weights=weights, dim=['lat','lon']) 
+        expM = masked_average(da_exp, mask=mask, weights=weights, dim=['lat','lon'])
+        diff = expM.mean() - ctrlM.mean() 
+
+    else:
+        ctrlM = da_ctrl.mean(dim=['lat','lon'])
+        expM = da_exp.mean(dim=['lat','lon'])
+        diff = expM.mean()-ctrlM.mean()
+
+    t_value, p_value = ttest_ind(expM, ctrlM, equal_var=True)
     return t_value, p_value, diff
 
-def diff_means_greater_than_varability(da_ctrl, da_exp, global_mean=False):
+def diff_means_greater_than_varability(da_ctrl:xr.DataArray, 
+                             da_exp:xr.DataArray,  
+                             global_mean:bool=False,
+                             mask:xr.DataArray=None,
+                             weights:xr.DataArray=None):
     """
     Check if the difference between two samples is greater than the variability of the samples.
     
@@ -446,19 +482,64 @@ def diff_means_greater_than_varability(da_ctrl, da_exp, global_mean=False):
     ----------
         da_ctrl : xr.DataArray or np.ndarray
         da_exp : xr.DataArray or np.ndarray
+        global_mean : bool, optional
+            If True, calculate the global mean of the samples, by default False
+        mask : xr.DataArray, optional
+            Mask to apply to the samples, by default None
+        weights : xr.DataArray, optional
+            Weights to apply to the samples, by default None
 
     Returns
     -------
         bool
     """
     if global_mean:
-        ctrlM = da_ctrl.mean(dim=['lat','lon'])
-        expM = da_exp.mean(dim=['lat','lon'])
-        diff = expM.mean()-ctrlM.mean()
-    else:
         ctrlM = global_avg(da_ctrl)
         expM = global_avg(da_exp) 
         diff = np.mean(da_exp) - np.mean(da_ctrl)
+    elif mask is not None or weights is not None:
+        ctrlM = masked_average(da_ctrl, mask=mask, weights=weights, dim=['lat','lon']) 
+        expM = masked_average(da_exp, mask=mask, weights=weights, dim=['lat','lon'])
+        diff = expM.mean() - ctrlM.mean() 
+
+    else:
+        ctrlM = da_ctrl.mean(dim=['lat','lon'])
+        expM = da_exp.mean(dim=['lat','lon'])
+        diff = expM.mean()-ctrlM.mean()
 
     pooled_var = calculate_pooled_variance(da_ctrl, da_exp)
     return np.abs(diff) > np.sqrt(pooled_var)
+
+
+def masked_average(da: xr.DataArray, 
+                   mask:xr.DataArray=None, 
+                   weights:xr.DataArray=None,
+                   dim=None):
+    """
+    Calculate the average of a DataArray over a mask.
+    
+    Parameters
+    ----------
+        da : xr.DataArray
+        mask : xr.DataArray
+        weights : xr.DataArray
+        dim : str, optional
+
+    Returns
+    -------
+        avg : float
+    """
+    da_copy = da.copy()
+    if mask is not None:
+        if mask.dtype == 'bool':
+            da_copy = da_copy.where(mask)
+        else:
+            da_copy = da_copy.where(mask.isnull()==False)
+        if weights is not None:
+            weights = weights.where(mask)
+    if weights is not None:
+        avg = da_copy.weighted(weights).mean(dim=dim)
+    else:
+        avg = da_copy.mean(dim=dim)
+    
+    return avg
