@@ -32,6 +32,14 @@ ALL_ALLOWED = EXPERIMENTS + CONTROL_EXPS
 
 output_format = {}
 
+if config.get('model_configfile'):
+    for model, model_conf in config['model_configfile'].items():
+        with open(model_conf) as f:
+            model_config = yaml.load(f, Loader=yaml.FullLoader)
+        config['diag_vars']['model'] = model_config.copy()
+
+
+
 # set root outdir path
 if config['out_dir']:
     outdir = config['out_dir']
