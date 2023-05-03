@@ -620,59 +620,27 @@ rule plot_change_conch2oaer:
 
 rule generate_text_table:
     input:
-        clt_exp=rules.plot_change_clt.input.path_exp,
-        clt_ctrl=rules.plot_change_clt.input.path_ctrl,
-        lwp_ctrl=rules.plot_change_clwvi.input.path_ctrl,
-        lwp_exp = rules.plot_change_clwvi.input.path_exp,
-        prs_exp = rules.plot_change_prs.input.path_exp,
-        prs_ctrl = rules.plot_change_prs.input.path_ctrl,
-        clivi_exp = rules.plot_change_clivi.input.path_exp,
-        clivi_ctrl = rules.plot_change_clivi.input.path_ctrl,
-        od550aer_ctrl = rules.plot_change_aod.input.path_ctrl,
-        od550aer_exp = rules.plot_change_aod.input.path_exp,
-        abs550aer_ctrl = rules.plot_change_aaod.input.path_ctrl,
-        abs550aer_exp = rules.plot_change_aaod.input.path_exp,
-        concdust_ctrl = expand(outdir + "piClim-control/derived_variables/concdust/concdust_{model}_piClim-control_Ayear.nc", 
-                    model = ['EC-Earth3-AerChem', 'GISS-E2-1-G', 'MIROC6',
-                    'MPI-ESM-1-2-HAM', 'UKESM1-0-LL', 'CNRM-ESM2-1',
-                        'NorESM2-LM', 'GFDL-ESM4']),
-        concdust_exp = expand(outdir + "piClim-2xdust/derived_variables/concdust/concdust_{model}_piClim-2xdust_Ayear.nc",
-                model=['EC-Earth3-AerChem','GISS-E2-1-G', 'MIROC6',
-                    'MPI-ESM-1-2-HAM', 'UKESM1-0-LL',
-                        'CNRM-ESM2-1','NorESM2-LM', 'GFDL-ESM4']),
-        areacello=rules.plot_depdust.input.areacello,
-        dulifetime=expand(outdir + "piClim-2xdust/dulifetime/lifetime_piClim-2xdust_dulifetime_{model}_Ayear.yaml",
-                model=['EC-Earth3-AerChem','GISS-E2-1-G', 'MIROC6',
-                    'MPI-ESM-1-2-HAM', 'IPSL-CM6A-LR-INCA',
-                        'CNRM-ESM2-1','NorESM2-LM', 'GFDL-ESM4']),
-        delta_MEEabs = expand(outdir + "piClim-2xdust/delta_dustMEEabs/dustMEEabs_piClim-2xdust_{model}_Ayear.yaml",
-                model=['EC-Earth3-AerChem','GISS-E2-1-G', 'MIROC6',
-                    'MPI-ESM-1-2-HAM', 'CNRM-ESM2-1'
-                       ,'NorESM2-LM', 'GFDL-ESM4']),
-            
-        delta_MEE = expand(outdir + "piClim-2xdust/delta_dustMEE/dustMEE_piClim-2xdust_{model}_Ayear.yaml",
-                model=['EC-Earth3-AerChem','GISS-E2-1-G', 'MIROC6',
-                    'MPI-ESM-1-2-HAM', 'CNRM-ESM2-1'
-                       ,'NorESM2-LM', 'GFDL-ESM4']),
+        experiments_diags = lambda w: expand('results/piClim-2xdust/{variable}/{variable}_piClim-2xdust_{model_name}_Ayear.nc',
+                        variable=config['diag_vars'].get(w.model,config['diag_vars']['default'])['vars'], model_name=w.model, allow_missing=True),
+        control_diags = lambda w: expand(f'results/piClim-control/{{variable}}/{{variable}}_piClim-control_{w.model}_Ayear.nc',
+                        variable=config['diag_vars'].get(w.model,config['diag_vars']['default'])['vars'], allow_missing=True),
 
+        exp_derived_diag = lambda w: expand(f'results/piClim-2xdust/derived_variables/{{variable}}/{{variable}}_{w.model}_piClim-2xdust_Ayear.nc',
+                        variable=config['diag_vars'].get(w.model,config['diag_vars']['default'])['derived_vars'], allow_missing=True),
         
-        emidust_ctrl = expand(rules.plot_emidust.input.paths,zip, 
-                    experiment=['piClim-control']),
-        emidust_exp = expand(rules.plot_emidust.input.paths,zip, 
-                    experiment=['piClim-2xdust']),
-        ERFaci = expand(rules.plot_direct_and_cloud_effect.input.paths, zip, 
-                    vName=['CloudEff','DirectEff','SWCloudEff', 'LWCloudEff','LWDirectEff','SWDirectEff']),
-        ERFt = expand(rules.plot_ERFs.input.paths, zip,
-                     vName=['ERFt','ERFtsw','ERFtlw']),
-        atmabs = expand(rules.plot_atm_abs.input.paths, zip, 
-                    vName=['atmabs','atmabsSW']),
-        albedo = expand(rules.plot_albedo_radiative_effect.input.paths, zip, 
-                    vName=['ERFtswcsaf','ERFtcsaf','ERFtlwcsaf']),
+        control_derived_diag = lambda w: expand(f'results/piClim-control/derived_variables/{{variable}}/{{variable}}_{w.model}_piClim-control_Ayear.nc',
+                                variable= config['diag_vars'].get(w.model,config['diag_vars']['default'])['derived_vars'], allow_missing=True),
+        erfs = lambda w:  expand(f'results/piClim-2xdust/ERFs/{{variable}}/{{variable}}_piClim-2xdust_{w.model}_Ayear.nc',
+                        variable=config['diag_vars'].get(w.model,config['diag_vars']['default'])['ERFs'], allow_missing=True),
+        areacello='workflow/input_data/common_grid.nc'
 
     log:
-        "logs/generate_table.log"
+        "logs/generate_text_table/aerChemMIP_piClim_2xdust_table_{model}.log"
     output:
-        outpath=outdir+'aerChemMIP_2xdust_table.csv'
+        metadata=outdir+'diagnostics_piClim_2xdust/{model}/metadata_table_{model}.csv',
+        diff=outdir+'diagnostics_piClim_2xdust/{model}/diff_{model}.csv',
+        exp=outdir+'diagnostics_piClim_2xdust/{model}/exp_{model}.csv',
+        ctrl=outdir+'diagnostics_piClim_2xdust/{model}/ctrl_{model}.csv',
     
     notebook:
         "../notebooks/generate_text_table.py.ipynb"
