@@ -104,7 +104,7 @@ rule column_integrate_cdnc:
     output:
         outpath = outdir + '{experiment}/derived_variables/cdncvi/cdncvi_{model}_{experiment}_{freq}.nc'
     conda:
-        "../envs/comp_http://localhost:8890/login?next=%2Ftree%3Fcat.yaml"
+        "../envs/comp_cat.yaml"
     
     notebook:
         "../notebooks/derive_column_integrated_cdnc.py.ipynb"

@@ -5,6 +5,12 @@ root_noresm: '/home/oveh/mnt/NIRD_noresm/CMIP6'
 root_noresmdev: '/home/oveh/mnt/NIRD_data/NorESM2_AerChemMIP_rerun_bugfix/CMIP6'
 
 lustre: True
+
+sources:
+  - lustre
+  - noresm
+
+seperate_Noresm: True
 # Set CMIP version
 cmip_version: 'CMIP6'
 
@@ -146,6 +152,12 @@ variables:
   atmabs: ['ERFt','ERFsurf']
   atmabsLW: ['ERFtlw','ERFsurflw']
 
+diag_vars:
+  default:
+    vars: ['pr', 'emidust', 'depdust','od550aer','abs550aer','clt','clivi','rsdscs','rsds', 'od440aer','od550csaer',
+          'o3', 'od870aer', 'clwvi','sfcWind', 'evspsbl','prc']
+    ERFs: ['ERFtsw','ERFtlw','ERFt','ERFsurf','atmabs', 'atmabsSW','SWDirectEff', 'LWDirectEff','CloudEff','DirectEff']
+    derived_vars: ['concdust', 'concso4','conch2oaer','concoa', 'cdncvi']
 # These variables will be accumulated when resampled e.g. from Amon to Ayear
 accumalative_vars:
   - emidust
