@@ -1,5 +1,3 @@
-
-
 rule make_local_catalogue:
     output:
         outpath = 'catalogues/{activity}_{source}_CMIP6.csv.gz'
@@ -29,7 +27,18 @@ rule make_local_catalogue:
         builder.clean_dataframe()
         df = builder.df
         df.to_csv(output.outpath, compression='gzip', index=False)
+
+rule make_available_data_tracker:
+    input:
+        reference = 'config/reference_data_request.yaml',
     
+    output:
+        outpath = 'config/.data_trackers/{experiment}_{source}_CMIP6.yaml'
+
+    notebook:
+        '../notebooks/make_available_data_tracker.py.ipynb'
+
+
 rule build_catalogues:
     input:
         expand('catalogues/{activity}_{source}_CMIP6.csv.gz', 
@@ -46,7 +55,8 @@ rule build_catalogues:
 
 rule get_data_intake:
     input:
-        catalog = rules.build_catalogues.output.json
+        catalog = ancient(rules.build_catalogues.output.json),
+        data_tracker = ancient('config/.data_trackers/{experiment}_{model}_CMIP6.yaml')
     output:
         outpath = output_format['single_variable']
     params:
@@ -57,43 +67,9 @@ rule get_data_intake:
     notebook:
         "../notebooks/get_data_intake.py.ipynb"
 
-def trans_mmr_to_load(mmr:str):
-    trans_dict = {'concdust':'mmrdust',
-                'concpm1':'mmrpm1',
-                'concpm10':'mmrpm10',
-                'concpm2p5':'mmrpm2p5',
-                'concso4':'mmrso4',
-                'concss':'mmrss',
-                'concsoa':'mmrsoa',
-                'concoa':'mmroa',
-                'conch2oaer':'mmraerh2o'}
-    return trans_dict[mmr]
 
-rule derive_column_integrated_load_airmass:
-    input:
-        mmr = lambda w: expand(output_format['single_variable'], model=w.model, experiment=w.experiment,
-                freq=w.freq, variable=trans_mmr_to_load(w.variable)),
-        airmass = lambda w: expand(output_format['single_variable'], model=w.model, experiment=w.experiment,
-                freq=w.freq, variable='airmass'),
-    output:
-        outpath = outdir + '{experiment}/derived_variables/{variable}/{variable}_{model}_{experiment}_{freq}.nc'
-    wildcard_constraints:
-        model='UKESM1-0-LL',
-        variables = 'concdust|concpm1|concpm10|concpm2p5|concso4|concss|concsoa|concoa|conch2oaer'
-    notebook:
-        "../notebooks/derive_column_integrated_load.py.ipynb"
 
-rule derive_column_integrated_load:
-    input:
-        mmr = lambda w: expand(output_format['single_variable'], model=w.model, experiment=w.experiment,
-                freq=w.freq, variable=trans_mmr_to_load(w.variable)),
-    output:
-        outpath = outdir + '{experiment}/derived_variables/{variable}/{variable}_{model}_{experiment}_{freq}.nc'
-    wildcard_constraints:
-        variables = 'concdust|concpm1|concpm10|concpm2p5|concso4|concss|concsoa|concoa|conch2oaer',
-        model="(?!UKESM1-0-LL).*"
-    notebook:
-        "../notebooks/derive_column_integrated_load.py.ipynb"
+
 
 rule column_integrate_cdnc:
     input:
@@ -105,9 +81,60 @@ rule column_integrate_cdnc:
         outpath = outdir + '{experiment}/derived_variables/cdncvi/cdncvi_{model}_{experiment}_{freq}.nc'
     conda:
         "../envs/comp_cat.yaml"
+
+    wildcard_constraints:
+        model="(?!UKESM1-0-LL).*"
     
     notebook:
         "../notebooks/derive_column_integrated_cdnc.py.ipynb"
+
+
+rule column_integrate_cdnc_UKESM:
+    input:
+        cdnc = lambda w: expand(output_format['single_variable'], model='UKESM1-0-LL', experiment=w.experiment,
+                freq=w.freq, variable='cdnc'),
+        ta = lambda w: expand(output_format['single_variable'], model='UKESM1-0-LL', experiment=w.experiment,
+                freq=w.freq, variable='ta'),
+        pfull = lambda w: expand(output_format['single_variable'], model='UKESM1-0-LL', experiment=w.experiment,
+                freq=w.freq, variable='pfull'),
+    output:
+        outpath = outdir + '{experiment}/derived_variables/cdncvi/cdncvi_UKESM1-0-LL_{experiment}_{freq}.nc'
+    conda:
+        "../envs/comp_cat.yaml"
+    
+    notebook:
+        "../notebooks/derive_column_integrated_cdnc.py.ipynb"
+
+
+
+
+rule derive_column_integrated_load_airmass:
+    input:
+        mmr = lambda w: expand(output_format['single_variable'], model=w.model, experiment=w.experiment,
+                freq=w.freq, variable=config['burdens_dict'].get(w.variable)),
+        airmass = lambda w: expand(output_format['single_variable'], model=w.model, experiment=w.experiment,
+                freq=w.freq, variable='airmass'),
+    output:
+        outpath = outdir + '{experiment}/derived_variables/{variable}/{variable}_{model}_{experiment}_{freq}.nc'
+    wildcard_constraints:
+        model='UKESM1-0-LL',
+        variable = 'concdust|concpm1|concpm10|concpm2p5|concso4|concss|concsoa|concoa|conch2oaer'
+    notebook:
+        "../notebooks/derive_column_integrated_load.py.ipynb"
+
+rule derive_column_integrated_load:
+    input:
+        mmr = lambda w: expand(output_format['single_variable'], model=w.model, experiment=w.experiment,
+                freq=w.freq, variable=config['burdens_dict'].get(w.variable)),
+    output:
+        outpath = outdir + '{experiment}/derived_variables/{variable}/{variable}_{model}_{experiment}_{freq}.nc'
+    wildcard_constraints:
+        variable = 'concdust|concpm1|concpm10|concpm2p5|concso4|concss|concsoa|concoa|conch2oaer',
+        model="(?!UKESM1-0-LL).*"
+    notebook:
+        "../notebooks/derive_column_integrated_load.py.ipynb"
+
+
 
 rule derived_windspeed:
     input:
