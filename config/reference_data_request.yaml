@@ -1,0 +1,4 @@
+vars: ['pr', 'emidust', 'depdust','od550aer','abs550aer','clt','clivi','rsdscs','rsds', 'od440aer',
+      'od870aer', 'clwvi','sfcWind', 'evspsbl','prc']
+ERFs: ['ERFtsw','ERFtlw','ERFt','ERFsurf','atmabs', 'atmabsSW','SWDirectEff', 'LWDirectEff','CloudEff','DirectEff']
+derived_vars: ['concdust', 'concso4','conch2oaer','concoa', 'cdncvi']
