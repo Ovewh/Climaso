@@ -12,5 +12,5 @@ dependencies:
   - numba
   - pip
   - pip:
-    - git+ssh://git@github.com/Ovewh/pyclim-NorESM.git@calc_aerosol_feedback --install-option="--no-deps"
+    - git+ssh://git@github.com/Ovewh/pyclim-NorESM.git@calc_aerosol_feedback
 
