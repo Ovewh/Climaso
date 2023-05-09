@@ -85,10 +85,13 @@ rule column_integrate_cdnc:
     wildcard_constraints:
         model="(?!UKESM1-0-LL).*"
     
+    params:
+        p1=10000
+
     notebook:
         "../notebooks/derive_column_integrated_cdnc.py.ipynb"
 
-
+    
 rule column_integrate_cdnc_UKESM:
     input:
         cdnc = lambda w: expand(output_format['single_variable'], model='UKESM1-0-LL', experiment=w.experiment,
@@ -101,7 +104,9 @@ rule column_integrate_cdnc_UKESM:
         outpath = outdir + '{experiment}/derived_variables/cdncvi/cdncvi_UKESM1-0-LL_{experiment}_{freq}.nc'
     conda:
         "../envs/comp_cat.yaml"
-    
+    params:
+        p1=10000
+
     notebook:
         "../notebooks/derive_column_integrated_cdnc.py.ipynb"
 

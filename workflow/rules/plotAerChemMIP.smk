@@ -83,11 +83,11 @@ rule plot_change_cdncvi:
         path_exp=expand(outdir+'piClim-2xdust/derived_variables/cdncvi/cdncvi_{model}_piClim-2xdust_Ayear.nc',
                 model=['EC-Earth3-AerChem',  'GISS-E2-1-G', 
                         'MIROC6','GFDL-ESM4', 'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True),
+                        'CNRM-ESM2-1','NorESM2-LM', 'UKESM1-0-LL'], allow_missing=True),
         path_ctrl=expand(outdir+'piClim-control/derived_variables/cdncvi/cdncvi_{model}_piClim-control_Ayear.nc',
                 model=['EC-Earth3-AerChem',  'GISS-E2-1-G', 
                         'MIROC6','GFDL-ESM4',  'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1','NorESM2-LM'], allow_missing=True)
+                        'CNRM-ESM2-1','NorESM2-LM','UKESM1-0-LL'], allow_missing=True)
     params:
         units= '# cm-2',
         label='CDNC',
@@ -128,13 +128,13 @@ rule plot_change_lwp:
 rule plot_change_clwvi:
     input:
         path_exp = expand(outdir+'piClim-2xdust/clwvi/clwvi_piClim-2xdust_{model}_Ayear.nc',
-                model=['GISS-E2-1-G','EC-Earth3-AerChem',#'IPSL-CM6A-LR-INCA', 
+                model=['GISS-E2-1-G','EC-Earth3-AerChem','MIROC6', 
                          'GFDL-ESM4', 'UKESM1-0-LL',  'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1','NorESM2-LM']),
+                        'CNRM-ESM2-1','NorESM2-LM', 'IPSL-CM6A-LR-INCA']),
         path_ctrl=expand(outdir+'piClim-control/clwvi/clwvi_piClim-control_{model}_Ayear.nc',
-                model=[ 'GISS-E2-1-G','EC-Earth3-AerChem',#'IPSL-CM6A-LR-INCA', 
+                model=[ 'GISS-E2-1-G','EC-Earth3-AerChem','MIROC6', 
                         'GFDL-ESM4', 'UKESM1-0-LL',  'MPI-ESM-1-2-HAM',
-                        'CNRM-ESM2-1','NorESM2-LM'])
+                        'CNRM-ESM2-1','NorESM2-LM', 'IPSL-CM6A-LR-INCA'])
     output:
         outpath=outdir+'figs/AerChemMIP/delta_2xdust/clwvi_piClim-2xdust_AerChemMIP_{kind}.png'
     wildcard_constraints:
@@ -617,56 +617,3 @@ rule plot_change_conch2oaer:
     notebook:
         "../notebooks/plot_change_notebook.py.ipynb"
 
-
-rule generate_text_table:
-    input:
-        experiments_diags = lambda w: expand('results/piClim-2xdust/{variable}/{variable}_piClim-2xdust_{model_name}_Ayear.nc',
-                        variable=config['diag_vars'].get(w.model,config['diag_vars']['default'])['vars'], model_name=w.model, allow_missing=True),
-        control_diags = lambda w: expand(f'results/piClim-control/{{variable}}/{{variable}}_piClim-control_{w.model}_Ayear.nc',
-                        variable=config['diag_vars'].get(w.model,config['diag_vars']['default'])['vars'], allow_missing=True),
-
-        exp_derived_diag = lambda w: expand(f'results/piClim-2xdust/derived_variables/{{variable}}/{{variable}}_{w.model}_piClim-2xdust_Ayear.nc',
-                        variable=config['diag_vars'].get(w.model,config['diag_vars']['default'])['derived_vars'], allow_missing=True),
-        
-        control_derived_diag = lambda w: expand(f'results/piClim-control/derived_variables/{{variable}}/{{variable}}_{w.model}_piClim-control_Ayear.nc',
-                                variable= config['diag_vars'].get(w.model,config['diag_vars']['default'])['derived_vars'], allow_missing=True),
-        erfs = lambda w:  expand(f'results/piClim-2xdust/ERFs/{{variable}}/{{variable}}_piClim-2xdust_{w.model}_Ayear.nc',
-                        variable=config['diag_vars'].get(w.model,config['diag_vars']['default'])['ERFs'], allow_missing=True),
-        areacello='workflow/input_data/common_grid.nc'
-
-    log:
-        "logs/generate_text_table/aerChemMIP_piClim_2xdust_table_{model}.log"
-    output:
-        metadata=outdir+'diagnostics_piClim_2xdust/{model}/metadata_table_{model}.csv',
-        diff=outdir+'diagnostics_piClim_2xdust/{model}/diff_{model}.csv',
-        exp=outdir+'diagnostics_piClim_2xdust/{model}/exp_{model}.csv',
-        ctrl=outdir+'diagnostics_piClim_2xdust/{model}/ctrl_{model}.csv',
-        info_yaml=outdir+'diagnostics_piClim_2xdust/{model}/analysis_info_{model}.yaml',
-    
-    notebook:
-        "../notebooks/generate_text_table.py.ipynb"
-
-
-rule generate_table:
-    input:
-        rules.generate_text_table.output
-    log:
-        "logs/generate_table.log"
-    output:
-        #outpath=outdir+'aerChemMIP_2xdust_table.csv',
-        forcing_table=outdir+'forcing_table.png',
-        diagnostics_table_path=outdir+'diagnostics_table.png',
-        optics_diag_table = outdir+'optics_diag_table.png',
-    
-    notebook:
-        "../notebooks/generate_table.py.ipynb"
-
-rule boot_strap_sampling_dust_forcing:
-    input:  
-        rules.generate_text_table.output
-    output:
-        outpath = outdir +'boot_strapped_forcing_estimates.csv',
-        outplot = outdir + 'boot_strapped_forcing_boxplot.png'
-
-    notebook:
-        "../notebooks/boot_strap_table.py.ipynb"
