@@ -65,6 +65,7 @@ include: 'rules/utils.smk'
 include: 'rules/diagnose_cloud_changes.smk'
 include: 'rules/plotAerChemMIP.smk'
 include: 'rules/dust_analysis.smk'
+include: 'rules/make_table.smk'
 
 
 rule all:
