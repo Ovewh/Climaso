@@ -58,8 +58,8 @@ rule calculate_ERF_TOA:
     wildcard_constraints:
         vName = 'ERFt|ERFtcs|ERFtaf|ERFtcsaf'
     
-    script:
-        "../scripts/compute_ERF_TOA.py"
+    notebook:
+        "../notebooks/forcing_calculations/compute_ERF_TOA.py.ipynb"
 
 
 
