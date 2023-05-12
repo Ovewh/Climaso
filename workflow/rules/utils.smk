@@ -67,7 +67,17 @@ rule get_data_intake:
     notebook:
         "../notebooks/get_data_intake.py.ipynb"
 
-
+rule calc_global_regional_erf_table:
+    input:
+        catalog = ancient(rules.build_catalogues.output.json),
+        data_tracker = ancient('config/.data_trackers/{experiment}_{model}_CMIP6.yaml')
+    output:
+        outpath = outdir + '{experiment}/ERFs/ERF_tables/{experiment}_{model}.csv'
+    
+    log:
+        "logs/erf_tables/{model}_{experiment}.log"
+    notebook:
+        "../notebooks/forcing_calculations/calc_global_regional_erf.py.ipynb"
 
 
 
