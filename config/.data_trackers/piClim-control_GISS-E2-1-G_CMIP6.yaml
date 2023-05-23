@@ -1,0 +1,27 @@
+ERFs:
+- ERFtlw
+- atmabs
+- ERFt
+- ERFtsw
+- ERFsurf
+- atmabsSW
+derived_vars:
+- concdust
+- cdncvi
+- concoa
+- concso4
+vars:
+- depdust
+- emidust
+- od550aer
+- clt
+- prc
+- abs550aer
+- evspsbl
+- clivi
+- rsds
+- rsdscs
+- sfcWind
+- clwvi
+- pr
+- od870aer
