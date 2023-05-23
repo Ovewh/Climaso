@@ -37,6 +37,7 @@ dependencies:
   - intake-esm=2022.9.*
   - intake=0.6.*
   - gcsfs=2022.10.*
+  - pint=0.21.*
   - pip:
     - https://github.com/Ovewh/pyclim-NorESM/archive/master.zip
     - graphviz==0.20.*
