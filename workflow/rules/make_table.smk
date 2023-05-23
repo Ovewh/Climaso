@@ -35,6 +35,9 @@ rule generate_text_table:
 
     log:
         "logs/generate_text_table/aerChemMIP_piClim_2xdust_table_{model}.log"
+    params:
+        time_slice = slice(3,None)
+
     output:
         metadata=outdir+'diagnostics_piClim_2xdust/{model}/metadata_table_{model}.csv',
         diff=outdir+'diagnostics_piClim_2xdust/{model}/diff_{model}.csv',
@@ -62,9 +65,13 @@ rule generate_table:
 
 rule boot_strap_sampling_dust_forcing:
     input:  
-        expand(outdir+"diagnostics_piClim_2xdust/{model}/diff_{model}.csv", 
-                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 
+        diff_paths = expand(outdir+"diagnostics_piClim_2xdust/{model}/diff_{model}.csv", 
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
                         'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4']),
+        meta_data = expand(outdir+"diagnostics_piClim_2xdust/{model}/metadata_table_{model}.csv",
+                        model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4'])
+
     output:
         outpath = outdir +'boot_strapped_forcing_estimates.csv',
         outplot = outdir + 'boot_strapped_forcing_boxplot.png'
