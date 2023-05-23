@@ -150,6 +150,14 @@ rule derive_column_integrated_load:
         "../notebooks/derive_column_integrated_load.py.ipynb"
 
 
+rule mask_dust_regions:
+    input:
+        catalog = ancient(rules.build_catalogues.output.json),
+    output:
+        outpath = outdir + 'masks/dust_regions.nc'
+    notebook:
+        "../notebooks/mask_dust_regions.py.ipynb"
+
 
 rule derived_windspeed:
     input:
