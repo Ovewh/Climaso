@@ -1,13 +1,14 @@
 
 # Root path to the CMIP archive
+root_nird : '/nird/datalake/NS9560K/ESGF/CMIP6'
 root_lustre: '/lustre/storeB/users/oveh/.synda/data/CMIP6'
-root_noresm: '/home/oveh/mnt/NIRD_noresm/CMIP6'
+root_noresm: '/projects/NS9034K/CMIP6'
 root_noresmdev: '/home/oveh/mnt/NIRD_data/NorESM2_AerChemMIP_rerun_bugfix/CMIP6'
 
-lustre: True
+lustre: False
 
 sources:
-  - lustre
+  - nird
   - noresm
 
 seperate_Noresm: True
