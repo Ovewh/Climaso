@@ -103,6 +103,21 @@ rule dust_absorption_precip_change:
         "../notebooks/dust_analysis/dust_absorption_precip_change.py.ipynb"
 
 
+rule calc_dust_regional_erf_table:
+    input:
+        catalog = ancient(rules.build_catalogues.output.json),
+        data_tracker = ancient('config/.data_trackers/piClim-2xdust_{model}_CMIP6.yaml'),
+        mask = outdir + 'masks/dust_regions.nc'
+    output:
+        outpath_masked = outdir + 'piClim-2xdust/ERFs/ERF_tables/dusty/piClim-2xdust_{model}.csv',
+        outpath_unmasked = outdir + 'piClim-2xdust/ERFs/ERF_tables/nodusty/piClim-2xdust_{model}.csv'
+    
+    log:
+        "logs/erf_tables/{model}_piClim-2xdust_regional.log"
+    notebook:
+        "../notebooks/forcing_calculations/calc_global_regional_erf.py.ipynb"
+
+
 rule what_does_2xdust_mean:
     input:
         oddust550_ctrl = expand(outdir + 'piClim-control/od550dust/od550dust_piClim-control_{model}_Ayear.nc', 

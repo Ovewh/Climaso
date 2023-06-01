@@ -13,13 +13,13 @@ from pathlib import Path
 configfile: 'config/config.yaml'
 
 hostname = socket.gethostname()
-print(hostname)
-if 'betzy' in hostname:
-    ROOT_PATH = '/cluster/shared/ESGF'
-elif config['lustre']:
+if config['lustre']:
     ROOT_PATH = config['root_lustre']
+elif config.get('root_nird'):
+    ROOT_PATH = config['root_nird']
+
 else:
-    ROOT_PATH = config['root_betzy']
+    ROOT_PATH = config['root_path']
 ROOT_PATH_NORESM = config['root_noresm']
 CMIP_VER = config['cmip_version']
 VARS=config['variables']
