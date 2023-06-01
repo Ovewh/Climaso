@@ -79,10 +79,15 @@ experiments:
 # Default table_id
 table_id_default: 'Amon' 
 
-# Variables that not in default table_id: (default is Amon)
+
 use_derived_vars:
   loaddust: True
+  rlutaf: 
+    IPSL-CM6A-LR-INCA: True
+    all: False
 
+
+# Variables that not in default table_id: (default is Amon)
 table_ids:
   rlutaf: 'AERmon'
   rsutcsaf: 'AERmon'

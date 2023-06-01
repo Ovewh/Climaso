@@ -38,6 +38,7 @@ dependencies:
   - intake=0.6.*
   - gcsfs=2022.10.*
   - pint=0.21.*
+  - statsmodels=0.14.*
   - pip:
     - https://github.com/Ovewh/pyclim-NorESM/archive/master.zip
     - graphviz==0.20.*
