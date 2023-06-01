@@ -141,3 +141,17 @@ def _get_layouts(nplots: int):
         cax_loc=[0.94,0.2,0.02,0.62]
 
     return layout, figsize, cax_loc
+
+
+def get_model_colordict():
+    cdict = {
+        'NorESM2-LM': '#9765ac',
+        'MPI-ESM-1-2-HAM': '#ede76a', 
+        'EC-Earth3-AerChem': '#4393cb', 
+        'GISS-E2-1-G': '#c8884c',
+        'UKESM1-0-LL': '#ad7e77', 
+        'MIROC6': '#888b86',
+        'IPSL-CM6A-LR-INCA': '#4c8657',
+        'GFDL-ESM4': '#e0b892' 
+    }
+    return cdict
