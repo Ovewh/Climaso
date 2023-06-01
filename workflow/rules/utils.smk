@@ -17,8 +17,6 @@ rule make_local_catalogue:
         
         else:
             exclude_patterns=['*/files/*', '*/latest','.cmorout/*', '*/NorCPM1/*', '*/NorESM1-F/*','*/NorESM2-LM/*','*/NorESM2-MM/*']    
-            
-        print(exclude_patterns)
         builder = Builder(paths=[params.root_path], depth=params.depth,
                         joblib_parallel_kwargs={'n_jobs': threads, 'verbose':13},
                         exclude_patterns=exclude_patterns)
@@ -70,7 +68,7 @@ rule get_data_intake:
 rule calc_global_regional_erf_table:
     input:
         catalog = ancient(rules.build_catalogues.output.json),
-        data_tracker = ancient('config/.data_trackers/{experiment}_{model}_CMIP6.yaml')
+        data_tracker = ancient('config/.data_trackers/{experiment}_{model}_CMIP6.yaml')    
     output:
         outpath = outdir + '{experiment}/ERFs/ERF_tables/{experiment}_{model}.csv'
     
