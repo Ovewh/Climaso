@@ -51,7 +51,8 @@ rule generate_text_table:
 
 rule generate_table:
     input:
-        rules.generate_text_table.output
+        expand(rules.generate_text_table.output, model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4'])
     log:
         "logs/generate_table.log"
     output:
@@ -63,18 +64,13 @@ rule generate_table:
     notebook:
         "../notebooks/generate_table.py.ipynb"
 
-rule boot_strap_sampling_dust_forcing:
-    input:  
-        diff_paths = expand(outdir+"diagnostics_piClim_2xdust/{model}/diff_{model}.csv", 
-                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
-                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4']),
-        meta_data = expand(outdir+"diagnostics_piClim_2xdust/{model}/metadata_table_{model}.csv",
-                        model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+rule plot_forcing_decomposition:
+    input:
+        expand(outdir + 'piClim-2xdust/ERFs/ERF_tables/piClim-2xdust_{model}.csv',
+        model = ['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
                         'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4'])
 
     output:
-        outpath = outdir +'boot_strapped_forcing_estimates.csv',
-        outplot = outdir + 'boot_strapped_forcing_boxplot.png'
-
+        directory(outdir+'figs/AerChemMIP/ERFfigures/')
     notebook:
-        "../notebooks/boot_strap_table.py.ipynb"
+        "../notebooks/dust_analysis/forcing_plot.py.ipynb"
