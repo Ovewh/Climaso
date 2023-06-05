@@ -81,7 +81,8 @@ table_id_default: 'Amon'
 
 
 use_derived_vars:
-  loaddust: True
+  loaddust: 
+    all: True
   rlutaf: 
     IPSL-CM6A-LR-INCA: True
     all: False
