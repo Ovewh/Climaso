@@ -96,7 +96,7 @@ def regrid_global(
     --------
         ds: Dataarray containting data field that should be regriddedd
     """
-    if not ds_out:
+    if ds_out is None:
         ds_out = xe.util.grid_global(lon, lat, cf=True)
     regridder = xe.Regridder(ds, ds_out, method=method, **regridder_kwargs)
     ds = regridder(ds, keep_attrs=True)
