@@ -77,6 +77,38 @@ def compute_annual_emission_budget(ds: xr.Dataset, grid_area: xr.Dataset):
     mean_yearly_budget = yearly_budget.mean(dim="time")
     return mean_yearly_budget, std_yearly_budget
 
+def calculate_zonal_mean(ds: xr.DataArray, 
+                         hist_range = (-np.pi /2, np.pi/ 2),
+                         **hist_kwargs):
+    """
+    computes zonal mean of dataset
+    
+    Parameters
+    ----------
+    ds: xr.DataArray
+        Input data array
+    hist_range: range
+        Range of values to use for histogram
+    **hist_kwargs: dict
+        Additional keyword arguments to pass to np.histogram
+
+    Returns
+    -------
+    zonal_mean: xr.DataArray
+        Zonal mean of input data array
+    lat_bins: xr.DataArray
+        Lat bins used for histogram
+    """
+    # number of cells per bin
+    cells_per_bin, lat_bins = np.histogram(ds.lat,range=hist_range,**hist_kwargs)
+    return cells_per_bin, lat_bins
+    # sum of values per bin, weighted by number of cells
+    varsum_per_bin, weights = np.histogram(ds.lat,weights=ds, range=hist_range,**hist_kwargs)
+
+    # zonal mean
+    zonal_mean = varsum_per_bin / cells_per_bin
+
+    return zonal_mean, lat_bins
 
 
 
@@ -104,14 +136,18 @@ def regrid_global(
 
 
 def calc_error_gridded(da: xr.DataArray, time_dim: str = "year", kind="std"):
+    # If the input is a dataset, select the first variable
     if isinstance(da, xr.Dataset):
         da = da[da.variable_id]
+    # Calculate the standard deviation
     with xr.set_options(keep_attrs=True):
         std = da.std(dim=time_dim)
+        # Calculate the standard error of the mean if requested
         if kind == "sem" or kind == "SEM":
             st_error = std / np.sqrt(len(da[time_dim]))
         else:
             st_error = std
+        # Set the long name of the output
         try:
             st_error.attrs["long_name"] = "{} of {}".format(
                 kind, st_error.attrs["long_name"]
@@ -480,7 +516,9 @@ def t_test_diff_sample_means(
     Parameters
     ----------
         da_ctrl : xr.DataArray or np.ndarray
+            Control data
         da_exp : xr.DataArray or np.ndarray
+            Experimental data
         global_mean : bool, optional
             If True, calculate the global mean, by default False
         mask : xr.DataArray, optional
@@ -499,20 +537,23 @@ def t_test_diff_sample_means(
     """
     from scipy.stats import ttest_ind
 
+    # Calculate the global mean if requested
     if global_mean:
         ctrlM = global_avg(da_ctrl)
         expM = global_avg(da_exp)
         diff = np.mean(da_exp) - np.mean(da_ctrl)
+    # Otherwise, apply a mask and weights if requested
     elif mask is not None or weights is not None:
         ctrlM = masked_average(da_ctrl, mask=mask, weights=weights, dim=["lat", "lon"])
         expM = masked_average(da_exp, mask=mask, weights=weights, dim=["lat", "lon"])
         diff = expM.mean() - ctrlM.mean()
-
+    # Otherwise, just take the mean over all lat/lon
     else:
         ctrlM = da_ctrl.mean(dim=["lat", "lon"])
         expM = da_exp.mean(dim=["lat", "lon"])
         diff = expM.mean() - ctrlM.mean()
 
+    # Perform the t-test
     t_value, p_value = ttest_ind(expM, ctrlM, equal_var=True)
     return t_value, p_value, diff
 
