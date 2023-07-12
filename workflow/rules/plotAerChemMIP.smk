@@ -494,13 +494,13 @@ rule plot_pr_aerchemmip:
 rule plot_level_changes:
     input:
         expand(rules.plot_level_cloud_changes.output, variable=['cli', 'cl'], plevel=['low','middle','high'],
-            model=['GISS-E2-1-G','EC-Earth3-AerChem', 'MIROC6','CNRM-ESM2-1','NorESM2-LM','MPI-ESM-1-2-HAM', 'UKESM1-0-LL'])
+            model=['GISS-E2-1-G','EC-Earth3-AerChem','GFDL-ESM4', 'MIROC6','CNRM-ESM2-1','NorESM2-LM','MPI-ESM-1-2-HAM'])
 
 rule plot_changes_dust_loading:
     input:
         expand(rules.plot_single_model_cloud_canges.output, 
                 model=['EC-Earth3-AerChem', 
-                    'MIROC6' ,
+                    'MIROC6' , 'GISS-E2-1-G','GFDL-ESM4',
                     'MPI-ESM-1-2-HAM', 'UKESM1-0-LL',
                         'CNRM-ESM2-1','NorESM2-LM'], variable='loaddust', plevel=['low','middle','high'])
 
