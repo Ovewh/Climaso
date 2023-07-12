@@ -598,7 +598,10 @@ def diff_means_greater_than_varability(
         diff = expM.mean() - ctrlM.mean()
 
     pooled_var = calculate_pooled_variance(da_ctrl, da_exp)
-    return np.abs(diff) > np.sqrt(pooled_var)
+
+    std_error =  np.sqrt((pooled_var)/len(ctrlM)+(pooled_var)/len(expM))
+    t_val = diff/std_error
+    return np.abs(diff) > np.sqrt(pooled_var), t_val
 
 
 def masked_average(

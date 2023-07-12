@@ -19,7 +19,9 @@ rule refractive_index_and_absorption:
                     model=['GFDL-ESM4', 'NorESM2-LM', 'GISS-E2-1-G', 'GISS-E2-1-G','IPSL-CM6A-LR-INCA',
                     'CNRM-ESM2-1','MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem','UKESM1-0-LL']),
 
-        diag_table = outdir+'aerChemMIP_2xdust_table.csv'
+        diag_table = expand(outdir+'piClim-2xdust/ERFs/ERF_tables/piClim-2xdust_{model}.csv',
+                    model=['GFDL-ESM4', 'NorESM2-LM', 'GISS-E2-1-G', 'GISS-E2-1-G','IPSL-CM6A-LR-INCA',
+                    'CNRM-ESM2-1','MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem','UKESM1-0-LL'])
     
     output: 
         absortion_plot = outdir+'figs/AerChemMIP/SWDirectEff_AAOD_refractive_index.png'
@@ -30,13 +32,13 @@ rule refractive_index_and_absorption:
 
 rule vertical_profiles:
     input:
-        paths = expand(outdir + "{experiment}/loaddust/loaddust_{experiment}_{model}_Ayear.nc",
+        paths = expand(outdir + "piClim-control/loaddust/loaddust_piClim-control_{model}_Ayear.nc",
                 model=['EC-Earth3-AerChem', 
-                    'MPI-ESM-1-2-HAM','MIROC6','UKESM1-0-LL',
+                    'MPI-ESM-1-2-HAM','MIROC6',
                         'NorESM2-LM','GFDL-ESM4','CNRM-ESM2-1' ], allow_missing=True),
 
     output:
-        path = outdir + "figs/AerChemMIP/vertical_profiles_{experiment}.png",
+        path = outdir + "figs/AerChemMIP/dust_vertical_profiles.png",
 
     conda:
         "../envs/comp_cat.yaml"
@@ -68,6 +70,25 @@ rule calculate_lifetime:
 
     notebook:
         "../notebooks/dust_analysis/lifetime.py.ipynb"
+
+rule aerosol_species_lifetime_changes:
+    input:
+        du = expand(outdir+"piClim-2xdust/dulifetime/lifetime_piClim-2xdust_dulifetime_{model}_Ayear.yaml", 
+                model=['EC-Earth3-AerChem','MPI-ESM-1-2-HAM','MIROC6', 'GISS-E2-1-G',
+                        'NorESM2-LM','GFDL-ESM4','CNRM-ESM2-1', 'IPSL-CM6A-LR-INCA']),
+        du_ctrl = expand(outdir+"piClim-control/dulifetime/lifetime_piClim-control_dulifetime_{model}_Ayear.yaml", 
+                model=['EC-Earth3-AerChem','MPI-ESM-1-2-HAM','MIROC6', 'GISS-E2-1-G',
+                        'NorESM2-LM','GFDL-ESM4','CNRM-ESM2-1', 'IPSL-CM6A-LR-INCA']),
+        so = expand(outdir+"piClim-2xdust/so4lifetime/lifetime_piClim-2xdust_so4lifetime_{model}_Ayear.yaml", 
+                model=['EC-Earth3-AerChem','MPI-ESM-1-2-HAM','MIROC6', 'GISS-E2-1-G',
+                        'NorESM2-LM','GFDL-ESM4','CNRM-ESM2-1', 'IPSL-CM6A-LR-INCA']),
+        so_ctrl = expand(outdir+"piClim-control/so4lifetime/lifetime_piClim-control_so4lifetime_{model}_Ayear.yaml", 
+                model=['EC-Earth3-AerChem','MPI-ESM-1-2-HAM','MIROC6', 'GISS-E2-1-G',
+                        'NorESM2-LM','GFDL-ESM4','CNRM-ESM2-1', 'IPSL-CM6A-LR-INCA']),
+    output: 
+        outpath = outdir + "figs/AerChemMIP/lifetimechanges_piClim-2xdust.png"
+    notebook:
+        "../notebooks/dust_analysis/lifetime_changes.py.ipynb"
 
 def variable_translator_MEE(w):
     variable = w.variable
@@ -110,13 +131,56 @@ rule calc_dust_regional_erf_table:
         mask = outdir + 'masks/dust_regions.nc'
     output:
         outpath_masked = outdir + 'piClim-2xdust/ERFs/ERF_tables/dusty/piClim-2xdust_{model}.csv',
-        outpath_unmasked = outdir + 'piClim-2xdust/ERFs/ERF_tables/nodusty/piClim-2xdust_{model}.csv'
+        outpath_unmasked = outdir + 'piClim-2xdust/ERFs/ERF_tables/nodusty/piClim-2xdust_{model}.csv',
+        outpath_all = outdir + 'piClim-2xdust/ERFs/ERF_tables/all/piClim-2xdust_{model}.csv'
     
     log:
         "logs/erf_tables/{model}_piClim-2xdust_regional.log"
     notebook:
         "../notebooks/forcing_calculations/calc_global_regional_erf.py.ipynb"
 
+
+rule plot_forcing_decomposition_nodust:
+    input:
+        expand(outdir + 'piClim-2xdust/ERFs/ERF_tables/nodusty/piClim-2xdust_{model}.csv',
+        model = ['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4'])
+
+    output:
+        directory(outdir+'figs/AerChemMIP/ERFfigures/nodust/')
+    notebook:
+        "../notebooks/dust_analysis/forcing_plot.py.ipynb"
+
+
+
+rule plot_forcing_decomposition_dusty:
+    input:
+        expand(outdir + 'piClim-2xdust/ERFs/ERF_tables/dusty/piClim-2xdust_{model}.csv',
+        model = ['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4'])
+
+    output:
+        directory(outdir+'figs/AerChemMIP/ERFfigures/dust/')
+    notebook:
+        "../notebooks/dust_analysis/forcing_plot.py.ipynb"
+
+
+rule plot_dusty_vs_no_dusty_changes:
+    input:
+        dusty_region=expand(outdir + 'piClim-2xdust/ERFs/ERF_tables/dusty/piClim-2xdust_{model}.csv',
+                model = ['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4', 'CNRM-ESM2-1' ]),
+        nodusty_region=expand(outdir + 'piClim-2xdust/ERFs/ERF_tables/nodusty/piClim-2xdust_{model}.csv',
+                model = ['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4','CNRM-ESM2-1']),
+        all_region = expand(outdir + 'piClim-2xdust/ERFs/ERF_tables/nodusty/piClim-2xdust_{model}.csv',
+                model = ['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4', 'CNRM-ESM2-1' ]),
+    output:
+        outpath = outdir+'figs/AerChemMIP/dusty_vs_non_dusty.png'
+    
+    notebook:
+        "../notebooks/dust_analysis/dusty_vs_non_dusty.py.ipynb"
 
 rule what_does_2xdust_mean:
     input:
