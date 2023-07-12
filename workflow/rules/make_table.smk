@@ -49,25 +49,26 @@ rule generate_text_table:
         "../notebooks/generate_text_table.py.ipynb"
 
 
-rule generate_table:
+rule plot_diagnostics_table:
     input:
-        expand(rules.generate_text_table.output, model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
-                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4'])
+        diff=expand(outdir+'diagnostics_piClim_2xdust/{model}/diff_{model}.csv', model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA','CNRM-ESM2-1', 'GFDL-ESM4']),
+        exp=expand(outdir+'diagnostics_piClim_2xdust/{model}/metadata_table_{model}.csv',
+                 model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA','CNRM-ESM2-1', 'GFDL-ESM4']),
     log:
         "logs/generate_table.log"
     output:
         #outpath=outdir+'aerChemMIP_2xdust_table.csv',
-        forcing_table=outdir+'forcing_table.png',
-        diagnostics_table_path=outdir+'diagnostics_table.png',
-        optics_diag_table = outdir+'optics_diag_table.png',
-    
+        diagnostics_table_path=outdir+'cloud_diagnostics.pdf',
+        optics_diag_table = outdir+'optics_diag.pdf',
     notebook:
         "../notebooks/generate_table.py.ipynb"
 
 rule plot_forcing_decomposition:
     input:
         expand(outdir + 'piClim-2xdust/ERFs/ERF_tables/piClim-2xdust_{model}.csv',
-        model = ['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+        model = ['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'CNRM-ESM2-1','EC-Earth3-AerChem', 'GISS-E2-1-G',
                         'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4'])
 
     output:
