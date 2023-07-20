@@ -83,6 +83,8 @@ table_id_default: 'Amon'
 use_derived_vars:
   loaddust: 
     all: True
+    NorESM2-LM: False
+    GFDL-ESM4: False
   rlutaf: 
     IPSL-CM6A-LR-INCA: True
     all: False
