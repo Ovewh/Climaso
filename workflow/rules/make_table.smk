@@ -65,7 +65,18 @@ rule plot_diagnostics_table:
     notebook:
         "../notebooks/generate_table.py.ipynb"
 
-rule plot_forcing_decomposition:
+rule plot_forcing_decomposition_paper:
+    input:
+        expand(outdir + 'piClim-2xdust/ERFs/ERF_tables/piClim-2xdust_{model}.csv',
+        model = ['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'CNRM-ESM2-1','EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4'])
+
+    output:
+        outdir+'figs/AerChemMIP/dust_radiative_effects.pdf'
+    notebook:
+        "../notebooks/dust_analysis/forcing_plot_paper.py.ipynb"    
+
+rule plot_forcing_decomposition_cacti:
     input:
         expand(outdir + 'piClim-2xdust/ERFs/ERF_tables/piClim-2xdust_{model}.csv',
         model = ['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'CNRM-ESM2-1','EC-Earth3-AerChem', 'GISS-E2-1-G',
