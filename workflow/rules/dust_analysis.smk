@@ -111,18 +111,25 @@ rule calculate_MEE_change:
     output:
         outpath = outdir + "{experiment}/delta_{variable}/{variable}_{experiment}_{model}_Ayear.yaml"
     wildcard_constraints:
-        variables = "dustMME|ssMME|bcMME|so4MME|dustMMEabs|bcMMEabs"
+        variables = "dustMEE|ssMEE|bcMEE|so4MEE|dustMEEabs|bcMEEabs"
     notebook:
         "../notebooks/dust_analysis/MME.py.ipynb"
 
-rule dust_absorption_precip_change:
+rule make_dust_diag_file:
     input:
-        diag_table = outdir+'aerChemMIP_2xdust_table.csv',
+        catalog = ancient(rules.build_catalogues.output.json),
+        mask = outdir + 'masks/dust_regions.nc',
+        burden_exp = outdir + '{experiment}/derived_variables/concdust/concdust_{model}_{experiment}_Ayear.nc',
+        universial_area_mask = 'workflow/input_data/common_grid.nc', 
+        model_area_mask = 'workflow/input_data/gridarea_{model}.nc'
     output:
-        outpath = outdir + "figs/AerChemMIP/piClim-2xdust_absorption_precip_change.png"
+        dust_diag_exp = outdir + 'dust_diag_files/dust_diag_{model}_{experiment}.nc',
+    
+    wildcard_constraints:
+        experiment = 'piClim-2xdust|piClim-control'
+    
     notebook:
-        "../notebooks/dust_analysis/dust_absorption_precip_change.py.ipynb"
-
+        "../notebooks/dust_analysis/make_dust_diag_file.py.ipynb"
 
 rule calc_dust_regional_erf_table:
     input:
@@ -139,6 +146,20 @@ rule calc_dust_regional_erf_table:
     notebook:
         "../notebooks/forcing_calculations/calc_global_regional_erf.py.ipynb"
 
+rule plot_diagnostic_table:
+    input:
+        ctrl_data = expand(outdir + 'dust_diag_files/dust_diag_{model}_piClim-control.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4']),
+        exp_data = expand(outdir + 'dust_diag_files/dust_diag_{model}_piClim-2xdust.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4']),
+        mask = outdir + 'masks/dust_regions.nc',
+    output:    
+        outpath = outdir + 'figs/AerChemMIP/dust_diagnostic_table.pdf'
+
+    notebook:
+        "../notebooks/dust_analysis/dust_diagnostic_table.py.ipynb"
 
 rule plot_forcing_decomposition_nodust:
     input:
@@ -182,6 +203,21 @@ rule plot_dusty_vs_no_dusty_changes:
     notebook:
         "../notebooks/dust_analysis/dusty_vs_non_dusty.py.ipynb"
 
+rule create_diagnotics_table:
+    input:
+        catalog = ancient(rules.build_catalogues.output.json),
+        data_tracker = ancient('config/.data_trackers/piClim-2xdust_{model}_CMIP6.yaml'),
+        mask = outdir + 'masks/dust_regions.nc',
+        burden = expand(outdir+"piClim-2xdust/derived_variables/concdust/concdust_{model}_piClim-2xdust_Ayear.nc", 
+                                        model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'CNRM-ESM2-1','EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4']),
+        burden_ctrl = expand( outdir + "piClim-control/derived_variables/concdust/concdust_{model}_piClim-control_Ayear.nc",
+                            model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'CNRM-ESM2-1','EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4']),
+        
+    
+
+
 rule what_does_2xdust_mean:
     input:
         oddust550_ctrl = expand(outdir + 'piClim-control/od550dust/od550dust_piClim-control_{model}_Ayear.nc', 
@@ -196,4 +232,31 @@ rule what_does_2xdust_mean:
     
     notebook:
         "../notebooks/dust_analysis/what_does_2xdust_mean.py.ipynb"    
+
+
+rule plot_dust_radiation_interactions:
+    input:
+        catalog = ancient(rules.build_catalogues.output.json),
+        mask = outdir + 'masks/dust_regions.nc',
+        burden = expand(outdir+"piClim-2xdust/derived_variables/concdust/concdust_{model}_piClim-2xdust_Ayear.nc", 
+                                        model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'CNRM-ESM2-1','EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4']),
+        od550aer = expand(outdir + "piClim-2xdust/od550aer/od550aer_piClim-2xdust_{model}_Ayear.nc", 
+                        model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'CNRM-ESM2-1','EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4']),
         
+        burden_ctrl = expand( outdir + "piClim-control/derived_variables/concdust/concdust_{model}_piClim-control_Ayear.nc",
+                            model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'CNRM-ESM2-1','EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4']),
+        od550aer_ctrl = expand(outdir + "piClim-control/od550aer/od550aer_piClim-control_{model}_Ayear.nc", 
+                          model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'CNRM-ESM2-1','EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4'])
+
+    output:
+        outdir+'figs/AerChemMIP/dust_radiation_interactions.pdf'
+
+    params:
+        models = ['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'CNRM-ESM2-1','EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4']
+    notebook:
+        "../notebooks/dust_analysis/dust_radiation_interactions.py.ipynb"    
