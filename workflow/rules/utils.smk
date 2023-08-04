@@ -58,7 +58,8 @@ rule get_data_intake:
     output:
         outpath = output_format['single_variable']
     params:
-        accumalative_vars = config['accumalative_vars']
+        accumalative_vars = config['accumalative_vars'],
+        regrid = False
     
     log:
         "logs/calc_clim/{variable}_{model}_{experiment}_{freq}.log"
