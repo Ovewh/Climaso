@@ -125,11 +125,11 @@ rule column_integrate_cdnc_UKESM:
 rule derive_column_integrated_load_airmass:
     input:
         mmr = lambda w: expand(output_format['single_variable'], model=w.model, experiment=w.experiment,
-                freq=w.freq, variable=config['burdens_dict'].get(w.variable)),
+                freq='Amon', variable=config['burdens_dict'].get(w.variable)),
         airmass = lambda w: expand(output_format['single_variable'], model=w.model, experiment=w.experiment,
-                freq=w.freq, variable='airmass'),
+                freq='Amon', variable='airmass'),
     output:
-        outpath = outdir + '{experiment}/derived_variables/{variable}/{variable}_{model}_{experiment}_{freq}.nc'
+        outpath = outdir + '{experiment}/derived_variables/{variable}/{variable}_{model}_{experiment}_Ayear.nc'
     wildcard_constraints:
         model='UKESM1-0-LL',
         variable = 'concdust|concpm1|concpm10|concpm2p5|concso4|concss|concsoa|concoa|conch2oaer'
@@ -139,9 +139,9 @@ rule derive_column_integrated_load_airmass:
 rule derive_column_integrated_load:
     input:
         mmr = lambda w: expand(output_format['single_variable'], model=w.model, experiment=w.experiment,
-                freq=w.freq, variable=config['burdens_dict'].get(w.variable)),
+                 variable=config['burdens_dict'].get(w.variable), freq='Amon'),
     output:
-        outpath = outdir + '{experiment}/derived_variables/{variable}/{variable}_{model}_{experiment}_{freq}.nc'
+        outpath = outdir + '{experiment}/derived_variables/{variable}/{variable}_{model}_{experiment}_Ayear.nc'
     wildcard_constraints:
         variable = 'concdust|concpm1|concpm10|concpm2p5|concso4|concss|concsoa|concoa|conch2oaer',
         model="(?!UKESM1-0-LL).*"
