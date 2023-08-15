@@ -1,0 +1,23 @@
+name: plotting_env
+prefix: /nird/scratch/ovewh/conda_envs/plotting_env
+
+channels:
+  - conda-forge
+  - defaults
+
+dependencies:
+  - cartopy=0.21.1
+  - numpy=1.24.*
+  - pandas
+  - matplotlib=3.7.*
+  - jupyter=1.0
+  - jupyterlab_code_formatter =2.2.1
+  - pip
+  - git
+  - seaborn
+  - xarray=2023.07
+  - numba
+  - xesmf
+  - dask
+  - pip:
+    - "--editable=git+https://github.com/Ovewh/pyclim-NorESM.git@main#egg=pyclim-NorESM"

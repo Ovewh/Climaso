@@ -8,9 +8,8 @@ dependencies:
   - pandas
   - xarray
   - jupyter
-  - netcdf4
+  - netcdf4=1.5.*
   - numba
   - pip
-  - pip:
-    - git+ssh://git@github.com/Ovewh/pyclim-NorESM.git@calc_aerosol_feedback
+
 
