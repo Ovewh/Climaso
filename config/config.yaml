@@ -34,6 +34,11 @@ output_format: 'default'
 out_dir : null
 no_intermediate_files: False
 
+time_slice:
+  start: 2
+  end: null
+
+out_dir: '/projects/NS2345K/ovewh/DustForcingData/results/'
 
 # Default model variant used nothing else is specified
 variant_default: 'r1i1p1f1'
@@ -205,3 +210,58 @@ variable_scalings:
   mmrdust:
     c : 1000
     units : 'g g-1' 
+
+
+# Define dust source regions:
+
+dust_source_regions:
+  Western north Africa:
+    latmin: 18
+    latmax: 37.5
+    lonmin: -20
+    lonmax: 7.5
+  Eastern north Africa:
+    latmin: 18
+    latmax: 37.5
+    lonmin: 7.5
+    lonmax: 35
+  Sahel:
+    latmin: 0
+    latmax: 18
+    lonmin: -20
+    lonmax: 35
+  Middle east:
+    latmin: 0
+    latmax: 35
+    lonmin: 35
+    lonmax: 75
+  Central Asia:
+    latmin: 35
+    latmax: 50
+    lonmin: 35
+    lonmax: 70
+  Southern Africa:
+    latmin: -40
+    latmax: 0
+    lonmin: 0
+    lonmax: 40
+  East Asia:
+    latmin: 35
+    latmax: 50
+    lonmin: 70
+    lonmax: 120
+  North America:
+    latmin: 20
+    latmax: 45
+    lonmin: -130
+    lonmax: -80
+  Australia:
+    latmin: -40
+    latmax: -10
+    lonmin: 110
+    lonmax: 160
+  South America:
+    latmin: -60
+    latmax: 0
+    lonmin: -80
+    lonmax: -20
