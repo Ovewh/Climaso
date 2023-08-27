@@ -51,14 +51,16 @@ if config['output_format']=='aerocom_column':
     print(output_format)
     valid_frequencies = 'daily|annual|2010|monthly'
 else:
-    output_format['single_variable'] = outdir+'{experiment}/{variable}/{variable}_{experiment}_{model}_{freq}.nc'
+    output_format['single_variable'] = outdir+'{experiment}/{variable}/{variable}_{experiment}_{model}_{freq}.{ext}'
     valid_frequencies = 'Aday|Amon|clim|Ayear'
+    valid_file_ext = 'zarr|nc'
 
 if config['no_intermediate_files']:
     output_format = {key:temp(item) for key, item in output_format.items()}
 
 wildcard_constraints:
-    freq=valid_frequencies
+    freq=valid_frequencies,
+    ext = valid_file_ext
 
 include: 'rules/compute_ERF.smk'
 include: 'rules/utils.smk'
@@ -66,18 +68,5 @@ include: 'rules/diagnose_cloud_changes.smk'
 include: 'rules/plotAerChemMIP.smk'
 include: 'rules/dust_analysis.smk'
 include: 'rules/make_table.smk'
-
-
-rule all:
-    input:
-        expand(outdir+'figs/AerChemMIP/ERFs/{vName}_piClim-2xdust_AerChemMIP.png',
-                        vName=['ERFtsw','ERFtlw','ERFtcs','ERFt']),
-        expand(outdir+'figs/AerChemMIP/ERFs/{vName}_piClim-2xdust_globalaverage_AerChemMIP.png',
-                        vName=['ERFtsw','ERFtlw','ERFtcs','ERFt']),
-        expand(outdir+'figs/AerChemMIP/ERFs/{vName}_piClim-2xdust_AerChemMIP.png',
-                        vName=['SWDirectEff','LWDirectEff', 'SWCloudEff','LWCloudEff','LWDirectEff_cs','SWDirectEff_cs','CloudEff','DirectEff']),
-        # outdir+'figs/AerChemMIP/delta_2xdust/cdnc_piClim-2xdust_AerChemMIP.png'
-
-
 
 
