@@ -66,11 +66,14 @@ def compute_annual_emission_budget(ds: xr.Dataset, grid_area: xr.Dataset):
         yearly_budget: annual emission budget
 
     """
-    if ds[ds.variable_id].units == "kg m-2 s-1":
-        yearly_budget = ds[ds.variable_id] * 365 * 24 * 60 * 60
+    if isinstance(ds,xr.Dataset):
+        ds = ds[ds.variable_id]
+
+    if ds.units == "kg m-2 s-1":
+        yearly_budget = ds * 365 * 24 * 60 * 60
     else:
-        yearly_budget = ds[ds.variable_id]
-    yearly_budget = yearly_budget * grid_area["cell_area"].load()
+        yearly_budget = ds
+    yearly_budget = yearly_budget * grid_area.load()
     yearly_budget = yearly_budget.sum(dim=["lon", "lat"]) * 1e-9
     yearly_budget.attrs["units"] = "Tg year-1"
     std_yearly_budget = yearly_budget.std(dim="time")
@@ -309,7 +312,10 @@ def _calc_change(
     return diff
 
 
-def model_levels_to_pressure_levels(ds: xr.Dataset | xr.DataArray):
+def model_levels_to_pressure_levels(ds: xr.Dataset | xr.DataArray, 
+                                    plevels=np.array([100000.,  92500.,  85000.,  70000.,  60000.,  50000.,  40000.,  30000.,
+        25000.,  20000.,  15000.,  10000.,   7000.,   5000.,   3000.,   2000.,
+         1000.,    500.,    100.])):
     """
     Convert model levels to pressure levels.
     """
@@ -334,16 +340,39 @@ def model_levels_to_pressure_levels(ds: xr.Dataset | xr.DataArray):
     else:
         da = ds.copy()
     if ds.cf["Z"].formula == "p = a*p0 + b*ps":
+        if "a" in da.coords:
+            da = da.drop("a")
+        if "b" in da.coords:
+            da = da.drop("b")
+        if "ps" in da.coords:
+            da = da.drop("ps")
         da = geocomp.interpolation.interp_hybrid_to_pressure(
             data=da,
             ps=ds["ps"],
             hyam=ds["a"],
             hybm=ds["b"],
             p0=ds.get("p0", 100000.0),
+            new_levels=plevels
         )
     elif ds.cf["Z"].formula in ["p = ap + b*ps", "p(n,k,j,i) = ap(k) + b(k)*ps(n,j,i)"]:
+        formula_terms = da.cf.formula_terms
+        if "ap" in formula_terms or "ap" in ds.coords:
+            hyam = ds["ap"]
+            a = "ap"
+        else:
+            hyam = ds["a"]
+            a = "a"
+
+        if a in da.coords:
+            da = da.drop(a)
+        if "b" in da.coords:
+            da = da.drop("b")
+        if "ps" in da.coords:
+            da = da.drop("ps")
+
         da = geocomp.interpolation.interp_hybrid_to_pressure(
-            data=da, ps=ds["ps"], hyam=ds["a"], hybm=ds["b"], p0=ds.get("p0", 1)
+            data=da, ps=ds["ps"], hyam=hyam, hybm=ds["b"], p0=ds.get("p0", 1),
+            new_levels=plevels, lev_dim="lev"
         )
 
     else:
@@ -353,7 +382,7 @@ def model_levels_to_pressure_levels(ds: xr.Dataset | xr.DataArray):
     outds.attrs = ds.attrs
 
     outds.attrs["history"] = (
-        outds.attrs["history"]
+        outds.attrs.get("history", "")
         + f"@{time.ctime()} converted to standard pressure levels {pl.Path.cwd().parts[-1]}"
     )
     return outds
@@ -425,6 +454,37 @@ def read_list_input_paths(path_list: list, models_pos: int = -2):
         out_dict[model] = ds.copy()
     vname = ds.variable_id
     return out_dict, vname
+
+def resample_time(data):
+    """
+    Resample data to annual average
+    
+    """
+
+    vname = data.variable_id
+    ds = data.copy()
+    attrs = data[vname].attrs.copy()
+
+    
+    with xr.set_options(keep_attrs=True):
+        
+        if data[vname].units == 'kg m-2 s-1': # annual emission / deposition 
+            data=data.assign({vname : data[vname]*365*24*60*60}) # convert to kg m-2 yr-1
+            data = data.resample(time='Y').mean()
+            data[vname].attrs['units'] = '{} year-1'.format(' '.join(ds[vname].attrs['units'].split(' ')[:-1]))
+            data[vname].attrs['history'] = data.attrs.get('history', '') + f', annual average converted to kg m-2 yr-1'
+        else:
+            data=data.resample(time='Y').mean()
+            # data[vname].attrs = attrs
+            data.attrs['history'] = data.attrs.get('history','') + f', annual average'    
+    if ds.cf.bounds.get('lon'):
+        data = data.assign({ds.cf.bounds['lon'][0]:ds[ds.cf.bounds['lon'][0]]})
+        data = data.assign({ds.cf.bounds['lat'][0]:ds[ds.cf.bounds['lat'][0]]})
+    if ds.source_id == 'CNRM-ESM2-1' or not ds.cf.bounds.get('lon'):
+        pass
+    else:
+        data = data.drop([ds.cf.bounds['lon'][0],ds.cf.bounds['lat'][0]])
+    return data
 
 
 def calculate_pooled_variance(da_ctrl, da_exp):
@@ -509,6 +569,7 @@ def t_test_diff_sample_means(
     global_mean: bool = False,
     mask: xr.DataArray = None,
     weights: xr.DataArray = None,
+    **test_kwargs
 ):
     """
     Perform a t-test for the difference between two samples.
@@ -554,7 +615,7 @@ def t_test_diff_sample_means(
         diff = expM.mean() - ctrlM.mean()
 
     # Perform the t-test
-    t_value, p_value = ttest_ind(expM, ctrlM, equal_var=True)
+    t_value, p_value = ttest_ind(expM, ctrlM, **test_kwargs)
     return t_value, p_value, diff
 
 
@@ -655,3 +716,24 @@ def make_equal_dimmension(da: xr.DataArray, refrence_da: xr.DataArray, dim: str 
         da = da.expand_dims(dim=dim)
     da = da.reindex_like(refrence_da)
     return da
+
+def exponent(num):
+    """Get exponent of input number
+
+    Parameters
+    ----------
+    num : :obj:`float` or iterable
+        input number
+
+    Returns
+    -------
+    :obj:`int` or :obj:`ndarray` containing ints
+        exponent of input number(s)
+
+    Example
+    -------
+    >>> from pyaerocom.mathutils import exponent
+    >>> exponent(2340)
+    3
+    """
+    return np.floor(np.log10(abs(np.asarray(num)))).astype(int)
