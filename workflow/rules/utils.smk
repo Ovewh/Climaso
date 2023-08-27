@@ -56,13 +56,29 @@ rule get_data_intake:
         catalog = ancient(rules.build_catalogues.output.json),
         data_tracker = ancient('config/.data_trackers/{experiment}_{model}_CMIP6.yaml')
     output:
-        outpath = output_format['single_variable']
+        outpath = expand(output_format['single_variable'], ext='nc', allow_missing=True)
     params:
         accumalative_vars = config['accumalative_vars'],
         regrid = False
     
     log:
-        "logs/calc_clim/{variable}_{model}_{experiment}_{freq}.log"
+        "logs/calc_clim/{variable}_{model}_{experiment}_{freq}_nc.log"
+    notebook:
+        "../notebooks/get_data_intake.py.ipynb"
+
+
+rule get_data_intake_zarr:
+    input:
+        catalog = ancient(rules.build_catalogues.output.json),
+        data_tracker = ancient('config/.data_trackers/{experiment}_{model}_CMIP6.yaml')
+    output:
+        outpath = directory(expand(output_format['single_variable'], ext='zarr', allow_missing=True))
+    params:
+        accumalative_vars = config['accumalative_vars'],
+        regrid = False
+    
+    log:
+        "logs/calc_clim/{variable}_{model}_{experiment}_{freq}_zar.log"
     notebook:
         "../notebooks/get_data_intake.py.ipynb"
 
@@ -79,20 +95,37 @@ rule calc_global_regional_erf_table:
         "../notebooks/forcing_calculations/calc_global_regional_erf.py.ipynb"
 
 
+rule column_integrate_cdnc_zarr:
+    input:
+        cdnc = lambda w: expand(output_format['single_variable'], model='EC-Earth3-AerChem', experiment=w.experiment,
+                freq='Amon', variable='cdnc',ext='zarr'),
+        ta = lambda w: expand(output_format['single_variable'], model='EC-Earth3-AerChem', experiment=w.experiment,
+                freq='Amon', variable='ta', ext='zarr'),
+    output:
+        outpath = outdir + '{experiment}/derived_variables/cdncvi/cdncvi_EC-Earth3-AerChem_{experiment}_Ayear.nc'
+    conda:
+        "../envs/comp_cat.yaml"
+    
+    params:
+        p1=10000
+
+    notebook:
+        "../notebooks/derive_column_integrated_cdnc.py.ipynb"
+
 
 rule column_integrate_cdnc:
     input:
         cdnc = lambda w: expand(output_format['single_variable'], model=w.model, experiment=w.experiment,
-                freq=w.freq, variable='cdnc'),
+                freq='Amon', variable='cdnc',ext='nc'),
         ta = lambda w: expand(output_format['single_variable'], model=w.model, experiment=w.experiment,
-                freq=w.freq, variable='ta'),
+                freq='Amon', variable='ta', ext='nc'),
     output:
-        outpath = outdir + '{experiment}/derived_variables/cdncvi/cdncvi_{model}_{experiment}_{freq}.nc'
+        outpath = outdir + '{experiment}/derived_variables/cdncvi/cdncvi_{model}_{experiment}_Ayear.nc'
     conda:
         "../envs/comp_cat.yaml"
 
     wildcard_constraints:
-        model="(?!UKESM1-0-LL).*"
+        model="(?!UKESM1-0-LL|EC-Earth3-AerChem).*"
     
     params:
         p1=10000
@@ -104,13 +137,13 @@ rule column_integrate_cdnc:
 rule column_integrate_cdnc_UKESM:
     input:
         cdnc = lambda w: expand(output_format['single_variable'], model='UKESM1-0-LL', experiment=w.experiment,
-                freq=w.freq, variable='cdnc'),
+                freq='Amon', variable='cdnc', ext='nc'),
         ta = lambda w: expand(output_format['single_variable'], model='UKESM1-0-LL', experiment=w.experiment,
-                freq=w.freq, variable='ta'),
+                freq='Amon', variable='ta', ext='nc'),
         pfull = lambda w: expand(output_format['single_variable'], model='UKESM1-0-LL', experiment=w.experiment,
-                freq=w.freq, variable='pfull'),
+                freq='Amon', variable='pfull', ext='nc'),
     output:
-        outpath = outdir + '{experiment}/derived_variables/cdncvi/cdncvi_UKESM1-0-LL_{experiment}_{freq}.nc'
+        outpath = outdir + '{experiment}/derived_variables/cdncvi/cdncvi_UKESM1-0-LL_{experiment}_Ayear.nc'
     conda:
         "../envs/comp_cat.yaml"
     params:
