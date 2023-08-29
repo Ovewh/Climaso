@@ -30,6 +30,7 @@ rule refractive_index_and_absorption:
         "../notebooks/dust_analysis/optical_properties_absorption.py.ipynb"
 
 
+
 rule vertical_profiles:
     input:
         paths = expand(outdir + "piClim-control/loaddust/loaddust_piClim-control_{model}_Ayear.nc",
@@ -212,6 +213,26 @@ rule plot_cloud_diagnostic_table:
 
     notebook:
         "../notebooks/dust_analysis/dust_cloud_diagnostic_table.py.ipynb"
+
+
+rule dust_interest_region_diagnostics:
+    input:
+        ctrl_clddiag = expand(outdir + 'dust_diag_files/dust_cloud_diag_{model}_piClim-control.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4', 'CNRM-ESM2-1']),
+        exp_clddiag = expand(outdir + 'dust_diag_files/dust_cloud_diag_{model}_piClim-2xdust.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4', 'CNRM-ESM2-1']),
+        ctrl_ddiag = expand(outdir + 'dust_diag_files/dust_diag_{model}_piClim-control.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4','CNRM-ESM2-1']),
+        exp_ddiag = expand(outdir + 'dust_diag_files/dust_diag_{model}_piClim-2xdust.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4', 'CNRM-ESM2-1']),
+    output:
+        outpath = outdir + 'figs/AerChemMIP/dust_interest_region_diagnostics.png'
+    notebook:
+        "../notebooks/dust_analysis/dust_interest_region_diagnostics.py.ipynb"
 
 
 rule plot_forcing_decomposition_nodust:
