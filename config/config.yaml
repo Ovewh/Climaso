@@ -18,6 +18,7 @@ cmip_version: 'CMIP6'
 activities:
   - 'AerChemMIP'
   - 'RFMIP'
+  - 'CMIP'
 #Regrid all models to common grid
 regrid_params:
   dxdy:
@@ -263,3 +264,38 @@ dust_source_regions:
     latmax: 0
     lonmin: -80
     lonmax: -20
+
+
+# Dust interest regions
+
+dust_interest_regions:
+  North Atlantic:
+    latmin: -6
+    latmax: 34
+    lonmin: -66
+    lonmax: -16
+  North Africa:
+    latmin: 1
+    latmax: 36
+    lonmin: -16
+    lonmax: 37
+  Middle East and Central Asia:
+    latmin: 19
+    latmax: 44
+    lonmin: 37
+    lonmax: 79
+  Arabian Sea:
+    latmin: -6
+    latmax: 19
+    lonmin: 42
+    lonmax: 82
+  East Asia:
+    latmin: 23
+    latmax: 61
+    lonmin: 79
+    lonmax: 117
+  North Pacific:
+    latmin: 15
+    latmax: 48
+    lonmin: 117
+    lonmax: 147
