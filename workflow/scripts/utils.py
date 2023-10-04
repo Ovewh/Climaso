@@ -388,31 +388,6 @@ def model_levels_to_pressure_levels(ds: xr.Dataset | xr.DataArray,
     return outds
 
 
-def pressure_to_height(pressure, p0=100000, t0=288.15):
-    """
-    Convert atmospheric pressure to altitude using the hypsometric equation.
-
-    Parameters:
-        pressure (float): Atmospheric pressure in Pascals.
-
-    Returns:
-        float: Altitude in meters.
-
-    """
-    # Define constants
-    R = 287.058  # gas constant for dry air (J/(kg*K))
-    g = 9.81  # acceleration due to gravity (m/s^2)
-    L = 0.0065  # temperature lapse rate (°C/m)
-
-
-    # Calculate temperature and height
-    temperature = t0 - L * pressure / p0
-    height = ((R / g * L) * np.log(p0 / pressure)
-              + (t0 / L) * (1 - (pressure / p0)**(R * g / (L * R))))
-
-    return height
-
-
 def transelate_aerocom_helper(wildcards):
     if wildcards.freq == "2010":
         freq = "clim"
@@ -602,20 +577,25 @@ def t_test_diff_sample_means(
     if global_mean:
         ctrlM = global_avg(da_ctrl)
         expM = global_avg(da_exp)
-        diff = np.mean(da_exp) - np.mean(da_ctrl)
+        diff = global_avg(da_exp.mean(dim='time') - da_ctrl.mean(dim='time'))
     # Otherwise, apply a mask and weights if requested
     elif mask is not None or weights is not None:
         ctrlM = masked_average(da_ctrl, mask=mask, weights=weights, dim=["lat", "lon"])
         expM = masked_average(da_exp, mask=mask, weights=weights, dim=["lat", "lon"])
         diff = expM.mean() - ctrlM.mean()
     # Otherwise, just take the mean over all lat/lon
+    elif "lon" not in da_ctrl.dims:
+        ctrlM = da_ctrl
+        expM = da_exp
+        diff = da_exp.mean() - da_ctrl.mean()
+
     else:
         ctrlM = da_ctrl.mean(dim=["lat", "lon"])
         expM = da_exp.mean(dim=["lat", "lon"])
         diff = expM.mean() - ctrlM.mean()
 
     # Perform the t-test
-    t_value, p_value = ttest_ind(expM, ctrlM, **test_kwargs)
+    t_value, p_value = ttest_ind(expM, ctrlM, nan_policy='omit', **test_kwargs)
     return t_value, p_value, diff
 
 
@@ -652,7 +632,11 @@ def diff_means_greater_than_varability(
         ctrlM = masked_average(da_ctrl, mask=mask, weights=weights, dim=["lat", "lon"])
         expM = masked_average(da_exp, mask=mask, weights=weights, dim=["lat", "lon"])
         diff = expM.mean() - ctrlM.mean()
-
+    elif "lon" not in da_ctrl.dims:
+        ctrlM = da_ctrl
+        expM = da_exp
+        diff = da_exp.mean() - da_ctrl.mean()
+    
     else:
         ctrlM = da_ctrl.mean(dim=["lat", "lon"])
         expM = da_exp.mean(dim=["lat", "lon"])
@@ -660,7 +644,7 @@ def diff_means_greater_than_varability(
 
     pooled_var = calculate_pooled_variance(da_ctrl, da_exp)
 
-    std_error =  np.sqrt((pooled_var)/len(ctrlM)+(pooled_var)/len(expM))
+    std_error =  np.sqrt(pooled_var)*np.sqrt((1/len(ctrlM)+1/len(expM)))
     t_val = diff/std_error
     return np.abs(diff) > np.sqrt(pooled_var), t_val
 
