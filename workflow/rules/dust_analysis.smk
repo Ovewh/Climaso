@@ -1,27 +1,15 @@
 
 rule refractive_index_and_absorption:
     input:
-        atmabs = expand(rules.plot_atm_abs.input.paths, zip, 
-                    vName=['atmabs']),
-        abs550_ctrl = expand(outdir + 'piClim-control/abs550aer/abs550aer_piClim-control_{model}_Ayear.nc', 
-                    model=['GFDL-ESM4', 'NorESM2-LM', 'MIROC6','GISS-E2-1-G','IPSL-CM6A-LR-INCA',
-                     'CNRM-ESM2-1','MPI-ESM-1-2-HAM','EC-Earth3-AerChem','UKESM1-0-LL']),
-        
-        abs550_exp = expand(outdir + 'piClim-2xdust/abs550aer/abs550aer_piClim-2xdust_{model}_Ayear.nc', 
-                    model=['GFDL-ESM4', 'NorESM2-LM', 'MIROC6','GISS-E2-1-G','IPSL-CM6A-LR-INCA',
-                    'CNRM-ESM2-1','MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem','UKESM1-0-LL']),
-
-        oddust550_ctrl = expand(outdir + 'piClim-control/od550dust/od550dust_piClim-control_{model}_Ayear.nc', 
-                    model=['GFDL-ESM4', 'NorESM2-LM', 'GISS-E2-1-G','IPSL-CM6A-LR-INCA',
-                     'CNRM-ESM2-1','MPI-ESM-1-2-HAM','EC-Earth3-AerChem','UKESM1-0-LL']),
-        
-        oddust550_exp = expand(outdir + 'piClim-2xdust/od550dust/od550dust_piClim-2xdust_{model}_Ayear.nc', 
-                    model=['GFDL-ESM4', 'NorESM2-LM', 'GISS-E2-1-G','IPSL-CM6A-LR-INCA',
-                    'CNRM-ESM2-1','MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem','UKESM1-0-LL']),
-
-        diag_table = expand(outdir+'piClim-2xdust/ERFs/ERF_tables/piClim-2xdust_{model}.csv',
-                    model=['GFDL-ESM4', 'NorESM2-LM', 'GISS-E2-1-G','IPSL-CM6A-LR-INCA',
-                    'CNRM-ESM2-1','MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem','UKESM1-0-LL'])
+        ctrl_data = expand(outdir + 'dust_diag_files/dust_diag_{model}_piClim-control.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4','CNRM-ESM2-1']),
+        exp_data = expand(outdir + 'dust_diag_files/dust_diag_{model}_piClim-2xdust.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4', 'CNRM-ESM2-1']),
+        erfs = expand(outdir + 'piClim-2xdust/ERFs/ERF_tables/piClim-2xdust_{model}.csv',
+        model = ['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'CNRM-ESM2-1','EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4'])
     
     output: 
         absortion_plot = outdir+'figs/AerChemMIP/SWDirectEff_AAOD_refractive_index.png'
@@ -33,13 +21,17 @@ rule refractive_index_and_absorption:
 
 rule vertical_profiles:
     input:
-        paths = expand(outdir + "piClim-control/loaddust/loaddust_piClim-control_{model}_Ayear.nc",
+        mmrdust = expand(outdir + "piClim-control/mmrdust/mmrdust_piClim-control_{model}_Amon.nc",
                 model=['EC-Earth3-AerChem', 'GISS-E2-1-G',
-                    'MPI-ESM-1-2-HAM','MIROC6',
-                        'NorESM2-LM','GFDL-ESM4','CNRM-ESM2-1' ]),
-
+                    'MPI-ESM-1-2-HAM','MIROC6','IPSL-CM6A-LR-INCA',
+                        'NorESM2-LM','GFDL-ESM4','CNRM-ESM2-1']),
+        # airmass = expand(outdir + "piClim-control/airmass/airmass_piClim-control_{model}_Amon.nc",
+        #         model=['EC-Earth3-AerChem', 'GISS-E2-1-G',
+        #             'MPI-ESM-1-2-HAM','MIROC6',
+        #                 'NorESM2-LM','GFDL-ESM4','CNRM-ESM2-1']),
+         catalog = ancient(rules.build_catalogues.output.json)
     output:
-        path = outdir + "figs/AerChemMIP/dust_vertical_profiles.png",
+        path = outdir + "figs/AerChemMIP/dust_vertical_profiles.pdf",
 
     conda:
         "../envs/comp_cat.yaml"
@@ -215,6 +207,27 @@ rule plot_cloud_diagnostic_table:
         "../notebooks/dust_analysis/dust_cloud_diagnostic_table.py.ipynb"
 
 
+rule arc_precip_scatter_plot:
+    input:
+        cld_ctrl_data = expand(outdir + 'dust_diag_files/dust_cloud_diag_{model}_piClim-control.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4', 'CNRM-ESM2-1']),
+        cld_exp_data = expand(outdir + 'dust_diag_files/dust_cloud_diag_{model}_piClim-2xdust.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4', 'CNRM-ESM2-1']),
+
+        diag_ctrl_data = expand(outdir + 'dust_diag_files/dust_diag_{model}_piClim-control.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4','CNRM-ESM2-1']),
+        diag_exp_data = expand(outdir + 'dust_diag_files/dust_diag_{model}_piClim-2xdust.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4', 'CNRM-ESM2-1']),
+
+    output:
+        outpath = outdir + 'figs/AerChemMIP/arc_precip_scatter_plot.pdf'
+    notebook:
+        "../notebooks/dust_analysis/arc_precip_scatter_plot.py.ipynb"
+
 rule dust_interest_region_diagnostics:
     input:
         ctrl_clddiag = expand(outdir + 'dust_diag_files/dust_cloud_diag_{model}_piClim-control.nc',
@@ -230,7 +243,7 @@ rule dust_interest_region_diagnostics:
                 model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
                         'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4', 'CNRM-ESM2-1']),
     output:
-        outpath = outdir + 'figs/AerChemMIP/dust_interest_region_diagnostics.png'
+        outpath = outdir + 'figs/AerChemMIP/dust_interest_region_diagnostics.pdf'
     notebook:
         "../notebooks/dust_analysis/dust_interest_region_diagnostics.py.ipynb"
 
