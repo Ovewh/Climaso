@@ -430,36 +430,43 @@ def read_list_input_paths(path_list: list, models_pos: int = -2):
     vname = ds.variable_id
     return out_dict, vname
 
-def resample_time(data):
+def resample_time(data, variable_id=None):
     """
     Resample data to annual average
     
     """
-
-    vname = data.variable_id
-    ds = data.copy()
-    attrs = data[vname].attrs.copy()
-
-    
-    with xr.set_options(keep_attrs=True):
-        
-        if data[vname].units == 'kg m-2 s-1': # annual emission / deposition 
-            data=data.assign({vname : data[vname]*365*24*60*60}) # convert to kg m-2 yr-1
-            data = data.resample(time='Y').mean()
-            data[vname].attrs['units'] = '{} year-1'.format(' '.join(ds[vname].attrs['units'].split(' ')[:-1]))
-            data[vname].attrs['history'] = data.attrs.get('history', '') + f', annual average converted to kg m-2 yr-1'
-        else:
-            data=data.resample(time='Y').mean()
-            # data[vname].attrs = attrs
-            data.attrs['history'] = data.attrs.get('history','') + f', annual average'    
-    if ds.cf.bounds.get('lon'):
-        data = data.assign({ds.cf.bounds['lon'][0]:ds[ds.cf.bounds['lon'][0]]})
-        data = data.assign({ds.cf.bounds['lat'][0]:ds[ds.cf.bounds['lat'][0]]})
-    if ds.source_id == 'CNRM-ESM2-1' or not ds.cf.bounds.get('lon'):
-        pass
+    if variable_id is None:
+        vname = data.variable_id
     else:
-        data = data.drop([ds.cf.bounds['lon'][0],ds.cf.bounds['lat'][0]])
-    return data
+        vname = variable_id
+    da = data[vname].copy()
+    variable_attrs = data[vname].attrs.copy()
+    data_attrs = data.attrs.copy()
+    
+    coords_ds = data.copy()
+    coords_ds = coords_ds.drop(['ps', vname, 'time','time_bnds','time_bounds'], errors='ignore')
+    
+    if da.units == 'kg m-2 s-1': # annual emission / deposition 
+        da = da*365*24*60*60 # convert to kg m-2 yr-1
+        da = da.resample(time='Y').mean()
+        da.attrs = {**da.attrs, **variable_attrs}
+        da.attrs['units'] = '{} year-1'.format(' '.join(data[vname].attrs['units'].split(' ')[:-1]))
+        da.attrs['history'] = data.attrs.get('history', '') + f', annual average converted to kg m-2 yr-1'
+    else:
+        da=da.resample(time='Y').mean()
+        da.attrs = {**da.attrs, **variable_attrs}
+        # data[vname].attrs = attrs
+        da.attrs['history'] = da.attrs.get('history','') + f', annual average'    
+
+
+    out_ds = coords_ds.assign({vname: da})
+    if 'ps' in data.data_vars or 'ps' in data.coords:
+        with xr.set_options(keep_attrs=True):
+            out_ds = out_ds.assign({'ps': data['ps'].resample(time='Y').mean()})
+
+    out_ds.attrs = data_attrs
+
+    return out_ds
 
 
 def calculate_pooled_variance(da_ctrl, da_exp):
