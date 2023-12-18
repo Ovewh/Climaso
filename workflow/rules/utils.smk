@@ -165,7 +165,7 @@ rule derive_column_integrated_load_airmass:
         outpath = outdir + '{experiment}/derived_variables/{variable}/{variable}_{model}_{experiment}_Ayear.nc'
     wildcard_constraints:
         model='UKESM1-0-LL',
-        variable = 'concdust|concpm1|concpm10|concpm2p5|concso4|concss|concsoa|concoa|conch2oaer'
+        variable = 'concdust|concpm1|concpm10|concpm2p5|concso4|concss|concsoa|concoa|conch2oaer|concbc|concnh4|concno3'
     notebook:
         "../notebooks/derive_column_integrated_load.py.ipynb"
 
@@ -176,7 +176,7 @@ rule derive_column_integrated_load:
     output:
         outpath = outdir + '{experiment}/derived_variables/{variable}/{variable}_{model}_{experiment}_Ayear.nc'
     wildcard_constraints:
-        variable = 'concdust|concpm1|concpm10|concpm2p5|concso4|concss|concsoa|concoa|conch2oaer',
+        variable = 'concdust|concpm1|concpm10|concpm2p5|concso4|concss|concsoa|concoa|conch2oaer|concbc|conco3|concnh4|concno3',
         model="(?!UKESM1-0-LL).*"
     notebook:
         "../notebooks/derive_column_integrated_load.py.ipynb"
