@@ -191,6 +191,25 @@ rule plot_dust_diagnostic_table:
         "../notebooks/dust_analysis/dust_diagnostic_table.py.ipynb"
 
 
+rule plot_dust_emissions_and_burden_change:
+    input:
+        ctrl_data = expand(outdir + 'dust_diag_files/dust_diag_{model}_piClim-control.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4','CNRM-ESM2-1']),
+        exp_data = expand(outdir + 'dust_diag_files/dust_diag_{model}_piClim-2xdust.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4', 'CNRM-ESM2-1']),
+
+        universial_area_mask = 'workflow/input_data/common_grid.nc', 
+        model_area_mask = expand('workflow/input_data/gridarea_{model}.nc', 
+                            model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 
+                                    'GISS-E2-1-G', 'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA',
+                                    'GFDL-ESM4', 'CNRM-ESM2-1']),
+    output:
+        outpath = outdir +'figs/ACP_paper/fig1_dust_emissions_and_burden_change.png'
+    notebook:
+        "../notebooks/dust_analysis/dust_emissions_and_burden_change.py.ipynb"
+
 rule plot_cloud_diagnostic_table:
     input:
         ctrl_data = expand(outdir + 'dust_diag_files/dust_cloud_diag_{model}_piClim-control.nc',
