@@ -39,7 +39,7 @@ time_slice:
   start: 2
   end: null
 
-out_dir: '/projects/NS2345K/ovewh/DustForcingData/results/'
+out_dir: '/datalake/NS2345K/ovewh/results/'
 
 # Default model variant used nothing else is specified
 variant_default: 'r1i1p1f1'
@@ -96,6 +96,7 @@ use_derived_vars:
 
 # Variables that not in default table_id: (default is Amon)
 table_ids:
+  ta: ['CFmon','Amon']
   rlutaf: 'AERmon'
   rsutcsaf: 'AERmon'
   rsutaf: 'AERmon'
@@ -118,8 +119,10 @@ table_ids:
   loaddust: 'AERmon'
   concdust: 'AERmon'
   ccn: 'AERmon'
+  o3: 'AERmon'
   abs550aer: 'AERmon'
-
+  mmrnh4: 'AERmon'
+  mmrno3: 'AERmon'
 
 variables: 
   ERFt: ['rsut', 'rsdt','rlut']
@@ -153,6 +156,7 @@ variables:
 
 
 burdens_dict:
+  concbc: 'mmrbc'
   concdust: 'mmrdust'
   concpm1: 'mmrpm1'
   concpm10: 'mmrpm10'
@@ -162,6 +166,9 @@ burdens_dict:
   concsoa: 'mmrsoa'
   concoa: 'mmroa'
   conch2oaer: 'mmraerh2o'
+  concnh4 : mmrnh4
+  conco3: 'o3'
+  concno3: mmrno3
 
 # These variables will be accumulated when resampled e.g. from Amon to Ayear
 accumalative_vars:
