@@ -290,3 +290,55 @@ rule plot_dusty_vs_no_dusty_changes:
     notebook:
         "../notebooks/dust_analysis/dusty_vs_non_dusty.py.ipynb"
 
+
+rule dust_chemistry_interactions:
+    input:
+        ctrl_clddiag = expand(outdir + 'dust_diag_files/dust_cloud_diag_{model}_piClim-control.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4', 'CNRM-ESM2-1']),
+        exp_clddiag = expand(outdir + 'dust_diag_files/dust_cloud_diag_{model}_piClim-2xdust.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4', 'CNRM-ESM2-1']),
+        exp_so4 = expand(outdir + 'piClim-2xdust/derived_variables/concso4/concso4_{model}_piClim-2xdust_Ayear.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'GISS-E2-1-G','EC-Earth3-AerChem',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA','GFDL-ESM4', 'CNRM-ESM2-1']),
+        ctrl_so4 = expand(outdir + 'piClim-control/derived_variables/concso4/concso4_{model}_piClim-control_Ayear.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'GISS-E2-1-G','EC-Earth3-AerChem',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA','GFDL-ESM4','CNRM-ESM2-1']),
+
+        ctrl_oa = expand(outdir + 'piClim-control/derived_variables/concoa/concoa_{model}_piClim-control_Ayear.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem',
+                        'UKESM1-0-LL']),
+        exp_oa = expand(outdir + 'piClim-2xdust/derived_variables/concoa/concoa_{model}_piClim-2xdust_Ayear.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem',
+                        'UKESM1-0-LL']),
+        ctrl_soa = expand(outdir + 'piClim-control/derived_variables/concsoa/concsoa_{model}_piClim-control_Ayear.nc',
+                model=['NorESM2-LM', 'EC-Earth3-AerChem']),
+        exp_soa = expand(outdir + 'piClim-2xdust/derived_variables/concsoa/concsoa_{model}_piClim-2xdust_Ayear.nc',
+                model=['NorESM2-LM', 'EC-Earth3-AerChem']),
+        ctrl_bc = expand(outdir + 'piClim-control/derived_variables/concbc/concbc_{model}_piClim-control_Ayear.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA','GFDL-ESM4','CNRM-ESM2-1']),
+        exp_bc = expand(outdir + 'piClim-2xdust/derived_variables/concbc/concbc_{model}_piClim-2xdust_Ayear.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM','EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA','GFDL-ESM4','CNRM-ESM2-1']),
+        exp_nh4 = expand(outdir + 'piClim-2xdust/derived_variables/concnh4/concnh4_{model}_piClim-2xdust_Ayear.nc',
+                model=['EC-Earth3-AerChem', 'GISS-E2-1-G']),
+        ctrl_nh4 = expand(outdir + 'piClim-control/derived_variables/concnh4/concnh4_{model}_piClim-control_Ayear.nc',
+                model=['EC-Earth3-AerChem', 'GISS-E2-1-G']),
+        exp_no3 = expand(outdir + 'piClim-2xdust/derived_variables/concno3/concno3_{model}_piClim-2xdust_Ayear.nc',
+                model=['EC-Earth3-AerChem', 'GISS-E2-1-G']),
+        ctrl_no3 = expand(outdir + 'piClim-control/derived_variables/concno3/concno3_{model}_piClim-control_Ayear.nc',
+                model=['EC-Earth3-AerChem', 'GISS-E2-1-G']),
+        
+        ctrl_dstdiag = expand(outdir + 'dust_diag_files/dust_diag_{model}_piClim-control.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G', 'UKESM1-0-LL',
+                         'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4','CNRM-ESM2-1']),
+        exp_dstdiag = expand(outdir + 'dust_diag_files/dust_diag_{model}_piClim-2xdust.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G', 'UKESM1-0-LL',
+                         'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4', 'CNRM-ESM2-1']),
+    output:
+        outpath = outdir + 'figs/AerChemMIP/dust_chemistry_interactions.pdf'
+
+    notebook:
+        "../notebooks/dust_analysis/dust_chemistry_interactions.py.ipynb"
