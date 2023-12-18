@@ -16,20 +16,20 @@ rule generate_text_table:
     input:
         'config/.data_trackers/piClim-2xdust_{model}_CMIP6.yaml',
         'config/.data_trackers/piClim-control_{model}_CMIP6.yaml',
-        experiments_diags = lambda w: expand(f"results/piClim-2xdust/{{variable}}/{{variable}}_piClim-2xdust_{w.model}_Ayear.nc",
+        experiments_diags = lambda w: expand(outdir+f"piClim-2xdust/{{variable}}/{{variable}}_piClim-2xdust_{w.model}_Ayear.nc",
                         variable=get_variables(f"config/.data_trackers/piClim-2xdust_{w.model}_CMIP6.yaml")['vars'], 
                                 allow_missing=True),
-        control_diags = lambda w: expand(f'results/piClim-control/{{variable}}/{{variable}}_piClim-control_{w.model}_Ayear.nc',
+        control_diags = lambda w: expand(outdir+f'piClim-control/{{variable}}/{{variable}}_piClim-control_{w.model}_Ayear.nc',
                         variable=get_variables(f"config/.data_trackers/piClim-control_{w.model}_CMIP6.yaml")['vars'], 
                         allow_missing=True),
 
-        exp_derived_diag = lambda w: expand(f'results/piClim-2xdust/derived_variables/{{variable}}/{{variable}}_{w.model}_piClim-2xdust_Ayear.nc',
+        exp_derived_diag = lambda w: expand(outdir+f'piClim-2xdust/derived_variables/{{variable}}/{{variable}}_{w.model}_piClim-2xdust_Ayear.nc',
                         variable=get_variables(f"config/.data_trackers/piClim-2xdust_{w.model}_CMIP6.yaml")['derived_vars'],
                          allow_missing=True),
         
-        control_derived_diag = lambda w: expand(f'results/piClim-control/derived_variables/{{variable}}/{{variable}}_{w.model}_piClim-control_Ayear.nc',
+        control_derived_diag = lambda w: expand(outdir+f'piClim-control/derived_variables/{{variable}}/{{variable}}_{w.model}_piClim-control_Ayear.nc',
                                 variable= get_variables(f"config/.data_trackers/piClim-control_{w.model}_CMIP6.yaml")['derived_vars'], allow_missing=True),
-        erfs = lambda w:  expand(f'results/piClim-2xdust/ERFs/{{variable}}/{{variable}}_piClim-2xdust_{w.model}_Ayear.nc',
+        erfs = lambda w:  expand(outdir+f'piClim-2xdust/ERFs/{{variable}}/{{variable}}_piClim-2xdust_{w.model}_Ayear.nc',
                         variable=get_variables(f"config/.data_trackers/piClim-2xdust_{w.model}_CMIP6.yaml")['ERFs'], allow_missing=True),
         areacello='workflow/input_data/common_grid.nc',
 
