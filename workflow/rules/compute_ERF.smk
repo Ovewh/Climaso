@@ -30,8 +30,8 @@ rule calc_ERF_surf:
     log:
         "logs/calc_ERF_surf/{vName}_{model}_{experiment}_{freq}.log"
     
-    script:
-        "../scripts/compute_ERF_surf.py"
+    notebook:
+        "../notebooks/forcing_calculations/compute_ERF_surf.py.ipynb"
 
 
 rule calculate_ERF_TOA:
