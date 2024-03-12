@@ -261,6 +261,9 @@ rule dust_interest_region_diagnostics:
         exp_ddiag = expand(outdir + 'dust_diag_files/dust_diag_{model}_piClim-2xdust.nc',
                 model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
                         'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4', 'CNRM-ESM2-1']),
+        forcing_tables = expand(outdir + 'piClim-2xdust/ERFs/ERF_regional_tables/piClim-2xdust_{model}_regional.csv',
+        model = ['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'CNRM-ESM2-1','EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4'])
     output:
         outpath = outdir + 'figs/AerChemMIP/dust_interest_region_diagnostics.pdf'
     notebook:
