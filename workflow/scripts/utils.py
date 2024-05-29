@@ -193,6 +193,36 @@ def calc_error(da: xr.DataArray, time_dim: str = "year", kind="std"):
 
     return st_error
 
+def calc_implausibility_obs(mod, 
+                            obs,
+                            var_obs,
+                            var_mod_internal,
+                            var_mod_struct,
+                            var_rep,
+                            thresh=3,
+                            ):
+    """
+    For a given model prediction and observed target value the implausibility measure the distance between
+    model output and target. 
+
+    The uncertainties for model and observations must be specified as variances.
+
+    Params:
+    -------
+        mod: model prediction
+        obs: observed target value
+        var_obs: variance of observed target value
+        var_mod_internal: variance of model prediction
+        var_mod_struct: variance of model structural error
+        var_rep: variance of representativity error
+        thresh: threshold for implausibility (default)
+    Returns:
+    --------
+        implausibility: implausibility measure
+    """
+    implausibility = np.abs(mod - obs) / np.sqrt(var_obs + var_mod_internal + var_mod_struct + var_rep)
+    return implausibility
+
 
 def calc_relative_change(
     ds_ctrl: xr.Dataset,
