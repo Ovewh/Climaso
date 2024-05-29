@@ -3,46 +3,41 @@ channels:
   - bioconda
   - conda-forge
 dependencies:
-  - python=3.10.*
-  - cartopy=0.21.*
-  - cf_xarray=0.8.*
+  - cartopy >= 0.21
+  - cf_xarray
   - cftime
   - click
-  - dask=2022.10.*
-  - dask-core=2022.10.*
+  - dask
+  - dask-core
   - dask-labextension
-  - distributed=2022.10.*
-  - esmf=8.2.*
-  - esmpy=8.2.*
-  - geos=3.11.*
-  - jupyterlab=3.5.*
-  - jupyter_core=4.11*
+  - distributed
+  - esmf >= 8.2.1
+  - esmpy
+  - geos
+  - jupyterlab
+  - jupyter_core
   - mamba
-  - nbconvert=7.2.*
-  - ncurses=6.2
-  - netcdf4=1.6.*
-  - pandas=1.5.*
+  - nbconvert
+  - netcdf4
+  - pandas
   - pip
-  - proj=8.*
-  - pyproj=3.*
-  - s3transfer=0.5.0
-  - scipy=1.9.*
+  - proj
+  - pyproj
+  - s3transfer
+  - scipy >=1.10.0
   - snakefmt=0.1.3
-  - snakemake=7.25.*
-  - snakemake-minimal=7.25.*
+  - snakemake >= 7.25.1
+  - snakemake-minimal >= 7.25.1
   - tqdm
-  - xarray=2022.11.*
-  - xesmf=0.6.2
-  - zarr=2.13.*
-  - intake-esm=2022.9.*
-  - intake=0.6.*
-  - gcsfs=2022.10.*
-  - pint=0.21.*
-  - statsmodels=0.14.*
+  - xarray
+  - xesmf
+  - zarr
+  - intake-esm
+  - intake
+  - gcsfs
+  - pint
+  - statsmodels
   - pip:
-    - https://github.com/Ovewh/pyclim-NorESM/archive/master.zip
-    - graphviz==0.20.*
-    - dataframe_image
-    - git+https://github.com/ncar-xdev/ecgtools.git@8777d88
+    - ecgtools
 
 
