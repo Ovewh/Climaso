@@ -1,6 +1,6 @@
 results/**
 resources/**
-.snakemake
+config/.data_trackers/**
 .snakemake/**
 logs/**
 *.pyc
