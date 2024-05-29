@@ -607,9 +607,6 @@ rule plot_change_conch2oaer:
     wildcard_constraints:
         kind='abs'
     params:
-        # label= '$\Delta$ AAOD 550mn',
-        # units='AOD',
-        # draw_error_mask=False,
         add_global_avg=True,
         abs_minmax=[-1,1],
         log_norm=True,
