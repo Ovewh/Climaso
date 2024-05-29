@@ -95,6 +95,18 @@ rule calc_global_regional_erf_table:
         "../notebooks/forcing_calculations/calc_global_regional_erf.py.ipynb"
 
 
+rule calc_regional_erf_table:
+    input:
+        catalog = ancient(rules.build_catalogues.output.json),
+        data_tracker = ancient('config/.data_trackers/{experiment}_{model}_CMIP6.yaml'),
+    output:
+        outpath = outdir + '{experiment}/ERFs/ERF_regional_tables/{experiment}_{model}_regional.csv'
+    
+    log:
+        "logs/erf_tables/{model}_{experiment}_regional.log"
+    notebook:
+        "../notebooks/forcing_calculations/calc_global_regional_erf.py.ipynb"
+
 rule column_integrate_cdnc_zarr:
     input:
         cdnc = lambda w: expand(output_format['single_variable'], model='EC-Earth3-AerChem', experiment=w.experiment,
