@@ -316,14 +316,45 @@ rule plot_change_prs:
     params:
         label='$\Delta$ Precipitation',
         rel_minmax=[-60,60],
+        abs_minmax=[-250, 250],
         scaling_factor=1,
         units = "[mm year-1]",
         cmap='BrBG',
-        draw_error_mask=True
-
+        draw_error_mask=True,
+        projection='EckertIV'
 
     notebook:
         "../notebooks/plot_change_notebook.py.ipynb"
+
+rule plot_change_mrsos:
+    input:
+        path_exp = expand(outdir+'piClim-2xdust/mrsos/mrsos_piClim-2xdust_{model}_Ayear.nc',
+                 model=['GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
+                        'MIROC6','UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
+                        'CNRM-ESM2-1','NorESM2-LM']),
+        path_ctrl=expand(outdir+'piClim-control/mrsos/mrsos_piClim-control_{model}_Ayear.nc',
+                model=['GISS-E2-1-G', 'IPSL-CM6A-LR-INCA', 
+                        'MIROC6','UKESM1-0-LL', 'GFDL-ESM4', 'MPI-ESM-1-2-HAM',
+                        'CNRM-ESM2-1','NorESM2-LM'])
+
+    
+    output:
+        outpath=outdir+'figs/AerChemMIP/delta_2xdust/mrsos_piClim-2xdust_AerChemMIP_{kind}.png'
+    wildcard_constraints:
+        kind='abs|rel'
+
+    params:
+        label='$\Delta$ Soilmoistrue',
+        rel_minmax=[-60,60],
+        scaling_factor=1,
+        units = "[mm year-1]",
+        cmap='BrBG',
+        draw_error_mask=True,
+        projection='EckertIV'
+
+    notebook:
+        "../notebooks/plot_change_notebook.py.ipynb"
+
 
 
 rule plot_emidust:
@@ -440,7 +471,7 @@ rule plot_cli_aerchemmip:
         plevel='low|middle|high'
 
     conda:
-        "../envs/comp_cat.yaml"
+        "geocat"
     notebook:
         "../notebooks/plot_absolute_fields_cloudlevels.py.ipynb"
 
@@ -467,7 +498,7 @@ rule plot_cl_aerchemmip:
         plevel='low|middle|high'
 
     conda:
-        "../envs/comp_cat.yaml"
+        "geocat"
     notebook:
         "../notebooks/plot_absolute_fields_cloudlevels.py.ipynb"
 
@@ -541,7 +572,7 @@ rule plot_change_concso4:
         path_ctrl = expand(outdir + "piClim-control/derived_variables/concso4/concso4_{model}_piClim-control_Ayear.nc", 
                     model = ['GISS-E2-1-G', 'MIROC6', 'MPI-ESM-1-2-HAM','EC-Earth3-AerChem',
                      'CNRM-ESM2-1', 'GFDL-ESM4','IPSL-CM6A-LR-INCA','UKESM1-0-LL',
-                        'NorESM2-LM']),
+                       'NorESM2-LM']),
         areacello = 'workflow/input_data/common_grid.nc'
 
     output:

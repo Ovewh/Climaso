@@ -31,10 +31,10 @@ rule vertical_profiles:
         #                 'NorESM2-LM','GFDL-ESM4','CNRM-ESM2-1']),
          catalog = ancient(rules.build_catalogues.output.json)
     output:
-        path = outdir + "figs/AerChemMIP/dust_vertical_profiles.pdf",
+        path = outdir + "figs/AerChemMIP/dust_vertical_profiles.pdf"
 
     conda:
-        "../envs/comp_cat.yaml"
+        "geocat"
     
     notebook:
         "../notebooks/dust_analysis/vertical_profiles.py.ipynb"
@@ -136,7 +136,7 @@ rule make_dust_cloud_diag_file_IPSL:
         experiment = 'piClim-2xdust|piClim-control'
 
     conda:
-        "../envs/comp_cat.yaml"
+        "geocat"
 
     notebook:
         "../notebooks/dust_analysis/make_dust_cloud_diag_file.py.ipynb"
@@ -155,7 +155,7 @@ rule make_dust_cloud_diag_file:
         experiment = 'piClim-2xdust|piClim-control',
         model="(?!IPSL-CM6A-LR-INCA).*"
     conda:
-        "../envs/comp_cat.yaml"
+        "geocat"
 
     notebook:
         "../notebooks/dust_analysis/make_dust_cloud_diag_file.py.ipynb"
@@ -311,6 +311,25 @@ rule plot_dusty_vs_no_dusty_changes:
     
     notebook:
         "../notebooks/dust_analysis/dusty_vs_non_dusty.py.ipynb"
+rule plot_ustar_change:
+    input:
+        ctrl_ustar = expand(outdir + 'piClim-control/derived_variables/ustar/ustar_{model}_piClim-control_Ayear.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem','CNRM-ESM2-1',
+                        'UKESM1-0-LL','GISS-E2-1-G','GFDL-ESM4', 'IPSL-CM6A-LR-INCA','MIROC6']),
+        exp_ustar = expand(outdir + 'piClim-2xdust/derived_variables/ustar/ustar_{model}_piClim-2xdust_Ayear.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem','CNRM-ESM2-1',
+                        'UKESM1-0-LL','GISS-E2-1-G','GFDL-ESM4','IPSL-CM6A-LR-INCA','MIROC6'])
+
+    output:
+        outpath = outdir+'figs/AerChemMIP/change_friction_velocity.png'
+    
+    conda:
+        "dustysnake"
+
+
+    notebook:
+        "../notebooks/dust_analysis/change_in_friction_velocity.py.ipynb"
+    
 
 
 rule dust_chemistry_interactions:
