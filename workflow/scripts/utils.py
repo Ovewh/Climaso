@@ -15,7 +15,22 @@ def make_consistent(dsets):
         ds = ds.assign(
             {"lon_bnds": template_ds.lon_bnds, "lat_bnds": template_ds.lat_bnds}
         )
+        if ds.indexes['time'].dtype == 'O':
+            if np.max(ds.time.dt.year) < 1000:
+                if len(ds.time) > 100:
+                    freq='ME'
+                else:
+                    freq='YE'
+                new_t = xr.date_range(start='1750',periods=len(ds.time), freq=freq)
+                ds = ds.assign_coords(time=new_t)
+            else:
+                ds = ds.assign_coords(time=ds.indexes['time'].to_datetimeindex())
+            ds = ds.drop('time_bnds',errors='ignore')
+
         fixed_dsets.append(ds)
+        
+    
+
     return fixed_dsets
 
 
@@ -469,7 +484,7 @@ def resample_time(data, variable_id=None):
         vname = data.variable_id
     else:
         vname = variable_id
-    da = data[vname].copy()
+    da = data[vname]
     variable_attrs = data[vname].attrs.copy()
     data_attrs = data.attrs.copy()
     
