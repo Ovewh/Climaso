@@ -17,10 +17,15 @@ if config['lustre']:
     ROOT_PATH = config['root_lustre']
 elif config.get('root_nird'):
     ROOT_PATH = config['root_nird']
-
+    ROOT_PATH_NORESM = config['root_noresm']
 else:
     ROOT_PATH = config['root_path']
-ROOT_PATH_NORESM = config['root_noresm']
+
+if config.get('toolkit',False):
+    ROOT_PATH = config['root_nirdtoolkit']
+    ROOT_PATH_NORESM = config['root_noresmnirdtoolkit']
+
+
 CMIP_VER = config['cmip_version']
 VARS=config['variables']
 EXPERIMENTS=config['experiments']['experiments']
