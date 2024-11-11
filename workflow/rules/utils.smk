@@ -10,7 +10,7 @@ rule make_local_catalogue:
         from ecgtools import Builder
         from ecgtools.parsers.cmip import parse_cmip6_using_directories
         lustre = config.get('seperate_Noresm', True)
-        if wildcards.source == 'noresm':
+        if wildcards.source == 'noresm' or wildcards.source == 'noresmnirdtoolkit':
             exclude_patterns=['*/files/*', '*/latest','.cmorout/*', '*/NorCPM1/*', '*/NorESM1-F/*']
         elif lustre == False:
             exclude_patterns=['*/files/*']
@@ -42,8 +42,8 @@ rule build_catalogues:
         expand('catalogues/{activity}_{source}_CMIP6.csv.gz', 
                 activity = config['activities'], 
                 source = config['sources']),
-        'catalogues/AerChemMIP_noresm_CMIP6.csv.gz',
-        'catalogues/RFMIP_noresm_CMIP6.csv.gz',
+        # 'catalogues/AerChemMIP_noresm_CMIP6.csv.gz',
+        # 'catalogues/RFMIP_noresm_CMIP6.csv.gz')
         # 'catalogues/CMIP_nirdCMIPtemp_CMIP6.csv.gz'
     output:
         table='catalogues/merge_CMIP6.csv',
@@ -60,7 +60,9 @@ rule get_data_intake:
     params:
         accumalative_vars = config['accumalative_vars'],
         regrid = False
-    
+    conda:
+        "geocat"
+
     log:
         "logs/calc_clim/{variable}_{model}_{experiment}_{freq}_nc.log"
     notebook:
@@ -116,7 +118,7 @@ rule column_integrate_cdnc_zarr:
     output:
         outpath = outdir + '{experiment}/derived_variables/cdncvi/cdncvi_EC-Earth3-AerChem_{experiment}_Ayear.nc'
     conda:
-        "../envs/comp_cat.yaml"
+        "geocat"
     
     params:
         p1=10000
@@ -134,7 +136,7 @@ rule column_integrate_cdnc:
     output:
         outpath = outdir + '{experiment}/derived_variables/cdncvi/cdncvi_{model}_{experiment}_Ayear.nc'
     conda:
-        "../envs/comp_cat.yaml"
+        "geocat"
 
     wildcard_constraints:
         model="(?!UKESM1-0-LL|EC-Earth3-AerChem).*"
@@ -157,7 +159,7 @@ rule column_integrate_cdnc_UKESM:
     output:
         outpath = outdir + '{experiment}/derived_variables/cdncvi/cdncvi_UKESM1-0-LL_{experiment}_Ayear.nc'
     conda:
-        "../envs/comp_cat.yaml"
+        "geocat"
     params:
         p1=10000
 
@@ -222,4 +224,24 @@ rule cmip6_to_aerocom_fmt:
     
     notebook:
         "../convert_to_aerocom_fmt.py.ipynb"
+
+rule calc_friction_velocity:
+    input:
+        tauu = lambda w: expand(output_format['single_variable'], model=w.model, experiment=w.experiment,
+                    freq='Amon', variable='tauu',ext='nc'),
+        tauv = lambda w: expand(output_format['single_variable'], model=w.model, experiment=w.experiment,
+                    freq='Amon', variable='tauv',ext='nc'),
+        pa = lambda w: expand(output_format['single_variable'], model=w.model, experiment=w.experiment,
+                    freq='Amon', variable='ps',ext='nc'),
+        
+        tas = lambda w: expand(output_format['single_variable'], model=w.model, experiment=w.experiment,
+                freq='Amon', variable='tas', ext='nc'),
+        mask = outdir + 'masks/dust_regions.nc',
+        universial_area_mask = 'workflow/input_data/common_grid.nc', 
+        model_area_mask = 'workflow/input_data/gridarea_{model}.nc'
+    output:
+        outpath = outdir + '{experiment}/derived_variables/ustar/ustar_{model}_{experiment}_Ayear.nc'
+
+    notebook:
+        "../notebooks/calc_friction_velocity.py.ipynb"
 

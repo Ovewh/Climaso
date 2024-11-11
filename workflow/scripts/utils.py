@@ -5,6 +5,15 @@ from pyclim_noresm.general_util_funcs import global_avg
 import numpy as np
 
 
+
+def convert_lon_to_180(ds):
+    """
+    This function converts the longitude coordinates from 0/360 to -180/180
+    """
+    ds['lon'] =(ds['lon']+ 180) % 360 - 180
+    ds = ds.sortby('lon')
+    return ds
+
 def make_consistent(dsets):
     template_ds = dsets[0]
     fixed_dsets = []

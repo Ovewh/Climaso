@@ -346,8 +346,9 @@ rule plot_change_mrsos:
     params:
         label='$\Delta$ Soilmoistrue',
         rel_minmax=[-60,60],
+        abs_minmax=[-4,4],
         scaling_factor=1,
-        units = "[mm year-1]",
+        units = "[kg m-2]",
         cmap='BrBG',
         draw_error_mask=True,
         projection='EckertIV'

@@ -210,6 +210,9 @@ rule plot_dust_emissions_and_burden_change:
     notebook:
         "../notebooks/dust_analysis/dust_emissions_and_burden_change.py.ipynb"
 
+
+
+
 rule plot_cloud_diagnostic_table:
     input:
         ctrl_data = expand(outdir + 'dust_diag_files/dust_cloud_diag_{model}_piClim-control.nc',
@@ -331,6 +334,11 @@ rule plot_ustar_change:
         "../notebooks/dust_analysis/change_in_friction_velocity.py.ipynb"
     
 
+rule plot_soil_moisture_change:
+    input:
+        catalog = ancient(rules.build_catalogues.output.json),
+        data_tracker = ancient('config/.data_trackers/piClim-2xdust_{model}_CMIP6.yaml'),
+        mask = outdir + 'masks/dust_regions.nc'
 
 rule dust_chemistry_interactions:
     input:
