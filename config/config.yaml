@@ -4,12 +4,18 @@ root_nird : '/nird/datalake/NS9560K/ESGF/CMIP6'
 root_lustre: '/lustre/storeB/users/oveh/.synda/data/CMIP6'
 root_noresm: '/projects/NS9034K/CMIP6'
 root_noresmdev: '/home/oveh/mnt/NIRD_data/NorESM2_AerChemMIP_rerun_bugfix/CMIP6'
+root_nirdtoolkit: '/mnt/volume-for-ns9560k-esgf/CMIP6/'
+root_noresmnirdtoolkit: '/mnt/keyclim-ns9252k-volume-for-ns9034k/CMIP6/'
 
 lustre: False
+toolkit: True
 
 sources:
-  - nird
-  - noresm
+  - nirdtoolkit
+  - noresmnirdtoolkit
+# sources:
+  # - nird
+  # - noresm
 
 seperate_Noresm: True
 # Set CMIP version
@@ -18,7 +24,6 @@ cmip_version: 'CMIP6'
 activities:
   - 'AerChemMIP'
   - 'RFMIP'
-  - 'CMIP'
 #Regrid all models to common grid
 regrid_params:
   dxdy:
@@ -39,7 +44,7 @@ time_slice:
   start: 2
   end: null
 
-out_dir: '/datalake/NS2345K/ovewh/results/'
+out_dir: null
 
 # Default model variant used nothing else is specified
 variant_default: 'r1i1p1f1'
@@ -123,6 +128,7 @@ table_ids:
   abs550aer: 'AERmon'
   mmrnh4: 'AERmon'
   mmrno3: 'AERmon'
+  mrsos: 'Lmon'
 
 variables: 
   ERFt: ['rsut', 'rsdt','rlut']
@@ -166,9 +172,9 @@ burdens_dict:
   concsoa: 'mmrsoa'
   concoa: 'mmroa'
   conch2oaer: 'mmraerh2o'
-  concnh4 : mmrnh4
+  concnh4 : 'mmrnh4'
   conco3: 'o3'
-  concno3: mmrno3
+  concno3: 'mmrno3'
 
 # These variables will be accumulated when resampled e.g. from Amon to Ayear
 accumalative_vars:
