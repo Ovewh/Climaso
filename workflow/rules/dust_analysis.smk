@@ -190,7 +190,6 @@ rule plot_dust_diagnostic_table:
     notebook:
         "../notebooks/dust_analysis/dust_diagnostic_table.py.ipynb"
 
-
 rule plot_dust_emissions_and_burden_change:
     input:
         ctrl_data = expand(outdir + 'dust_diag_files/dust_diag_{model}_piClim-control.nc',
@@ -334,11 +333,22 @@ rule plot_ustar_change:
         "../notebooks/dust_analysis/change_in_friction_velocity.py.ipynb"
     
 
-rule plot_soil_moisture_change:
+rule plot_total_dust_ERF_figure:
     input:
-        catalog = ancient(rules.build_catalogues.output.json),
-        data_tracker = ancient('config/.data_trackers/piClim-2xdust_{model}_CMIP6.yaml'),
-        mask = outdir + 'masks/dust_regions.nc'
+        gridded_ERF = expand(outdir + 'piClim-2xdust/ERFs/ERFt/ERFt_piClim-2xdust_{model}_Ayear.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4', 'CNRM-ESM2-1']),
+        dust_forcing_table = expand(outdir + 'piClim-2xdust/ERFs/ERF_tables/piClim-2xdust_{model}.csv',
+                model = ['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'CNRM-ESM2-1','EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4']), 
+        dust_diag_table = outdir +'tables/AerChemMIP/dust_abs_diagnostic_table.csv',
+        dust_diag_table_rel = outdir +'tables/AerChemMIP/dust_rel_diagnostic_table.csv',
+        common_grid = 'workflow/input_data/common_grid.nc'
+    output:
+        outpath = outdir + 'figs/AerChemMIP/total_dust_ERF_figure.png'
+    notebook:
+        "../notebooks/dust_analysis/total_dust_ERF_figure.py.ipynb"
+    
 
 rule dust_chemistry_interactions:
     input:

@@ -41,6 +41,36 @@ rule plot_forcing_effciency:
     notebook:
         "../notebooks/dust_analysis/forcing_efficiency_plot.py.ipynb"
 
+rule plot_direct_forcing_and_diagnostics_combined:
+    input:
+        mask = outdir + 'masks/dust_regions.nc',
+        forcing_tables = expand(outdir + 'piClim-2xdust/ERFs/ERF_tables/piClim-2xdust_{model}.csv',
+        model = ['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'CNRM-ESM2-1','EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4']),
+        diag_tables = rules.text_diagnostic_table.output,
+    output:    
+        outpath = outdir + 'figs/AerChemMIP/merged_directEffect_and_diagnostics.png'
+    notebook: 
+        "../notebooks/dust_analysis/combined_efficiency_and_diagnostics.py.ipynb"
+
+
+rule plot_cloud_forcing_and_diagnostics_combined:
+    input:
+        mask = outdir + 'masks/dust_regions.nc',
+        forcing_tables = expand(outdir + 'piClim-2xdust/ERFs/ERF_tables/piClim-2xdust_{model}.csv',
+        model = ['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'CNRM-ESM2-1','EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4']),
+        ctrl_data = expand(outdir + 'dust_diag_files/dust_cloud_diag_{model}_piClim-control.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4', 'CNRM-ESM2-1']),
+        exp_data = expand(outdir + 'dust_diag_files/dust_cloud_diag_{model}_piClim-2xdust.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4', 'CNRM-ESM2-1']),
+    output:    
+        outpath = outdir + 'figs/AerChemMIP/merged_cloudEffect_and_diagnostics.png'
+    notebook:
+        "../notebooks/dust_analysis/combined_cloudRadiativeEffects_and_diagnostics.py.ipynb"
+
 rule plot_forcing_decomposition_cacti:
     input:
         expand(outdir + 'piClim-2xdust/ERFs/ERF_tables/piClim-2xdust_{model}.csv',

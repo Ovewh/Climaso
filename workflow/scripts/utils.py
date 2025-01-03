@@ -3,7 +3,18 @@ import xesmf as xe
 from pyclim_noresm.aerosol_forcing import merge_exp_ctrl
 from pyclim_noresm.general_util_funcs import global_avg
 import numpy as np
+import pandas as pd
 
+def get_forcing(forcing_var: str,dataframes: dict):
+    k = next(iter(dataframes))
+    outdf = pd.DataFrame(index=dataframes.keys(), columns=dataframes[k].columns)
+    for k,df in dataframes.items():
+        try:
+            outdf.loc[k,:] = df.loc[forcing_var]
+        except KeyError:
+            pass
+            
+    return outdf
 
 
 def convert_lon_to_180(ds):
