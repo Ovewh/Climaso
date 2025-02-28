@@ -54,6 +54,8 @@ rule calculate_ERF_TOA:
     
     log:
         "logs/calc_ERF_toa/{vName}_{model}_{experiment}_{freq}.log"
+    conda:
+        "dustysnake"
 
     wildcard_constraints:
         vName = 'ERFt|ERFtcs|ERFtaf|ERFtcsaf'
@@ -81,8 +83,8 @@ rule calculate_SW_ERF:
         vName='ERFtsw|ERFtswcs|ERFsurfsw|ERFsurfswcs|ERFtswcsaf|ERFtswaf'
     log:
         "logs/calc_ERF_SW/{vName}_{model}_{experiment}_{freq}.log"  
-    script:
-        "../scripts/compute_ERF_SW.py"
+    notebook:
+        "../notebooks/forcing_calculations/compute_ERF_SW.py.ipynb"
 
 rule calculate_ERF_TOA_LW:
     input:
@@ -96,6 +98,9 @@ rule calculate_ERF_TOA_LW:
         "logs/calc_ERF_LW/{vName}_{model}_{experiment}_{freq}.log"  
     wildcard_constraints:
         vName='ERFtlw|ERFtlwaf|ERFtlwcs|ERFtlwcsaf|ERFsurflw'
+    conda:
+        "dustysnake"
+
 
     script:
         "../scripts/compute_ERF_LW_TOA.py"
@@ -124,10 +129,12 @@ rule calc_direct_radiative_effect:
 
     log:
         "logs/rad/{vName}_{model}_{experiment}_{freq}.log"
+    conda: 
+        "dustysnake"
     wildcard_constraints:
         vName='SWDirectEff|SWDirectEff_cs|LWDirectEff|LWDirectEff_cs|DirectEff'
-    script:
-        "../scripts/compute_direct_radiative_effect.py"
+    notebook:
+        "../notebooks/forcing_calculations/compute_direct_radiative_effect.py.ipynb"
 
 rule calc_forcing_efficiency_per_aod:
     input:

@@ -1,30 +1,16 @@
 rule make_local_catalogue:
     output:
         outpath = 'catalogues/{activity}_{source}_CMIP6.csv.gz'
+    
     params:
         root_path = lambda w: config[f"root_{w.source}"] + f'/{w.activity}/',
         depth = 9,
+    conda:
+        "dustysnake"
     threads: 4
-    run:
-        import ecgtools
-        from ecgtools import Builder
-        from ecgtools.parsers.cmip import parse_cmip6_using_directories
-        lustre = config.get('seperate_Noresm', True)
-        if wildcards.source == 'noresm' or wildcards.source == 'noresmnirdtoolkit':
-            exclude_patterns=['*/files/*', '*/latest','.cmorout/*', '*/NorCPM1/*', '*/NorESM1-F/*']
-        elif lustre == False:
-            exclude_patterns=['*/files/*']
-        
-        else:
-            exclude_patterns=['*/files/*', '*/latest','.cmorout/*', '*/NorCPM1/*', '*/NorESM1-F/*','*/NorESM2-LM/*','*/NorESM2-MM/*']    
-        builder = Builder(paths=[params.root_path], depth=params.depth,
-                        joblib_parallel_kwargs={'n_jobs': threads, 'verbose':13},
-                        exclude_patterns=exclude_patterns)
-        builder.build(parsing_func=parse_cmip6_using_directories)
 
-        builder.clean_dataframe()
-        df = builder.df
-        df.to_csv(output.outpath, compression='gzip', index=False)
+    script:
+        '../scripts/make_catalogue.py'
 
 rule make_available_data_tracker:
     input:
@@ -48,6 +34,8 @@ rule build_catalogues:
     output:
         table='catalogues/merge_CMIP6.csv',
         json='catalogues/merge_CMIP6.json'
+    conda:
+        "dustysnake"
     notebook:
         '../notebooks/merge_catalogues.py.ipynb'        
 
@@ -90,7 +78,8 @@ rule calc_global_regional_erf_table:
         data_tracker = ancient('config/.data_trackers/{experiment}_{model}_CMIP6.yaml')    
     output:
         outpath = outdir + '{experiment}/ERFs/ERF_tables/{experiment}_{model}.csv'
-    
+    threads: 4
+
     log:
         "logs/erf_tables/{model}_{experiment}.log"
     notebook:
@@ -103,7 +92,7 @@ rule calc_regional_erf_table:
         data_tracker = ancient('config/.data_trackers/{experiment}_{model}_CMIP6.yaml'),
     output:
         outpath = outdir + '{experiment}/ERFs/ERF_regional_tables/{experiment}_{model}_regional.csv'
-    
+    threads: 4
     log:
         "logs/erf_tables/{model}_{experiment}_regional.log"
     notebook:
@@ -180,6 +169,9 @@ rule derive_column_integrated_load_airmass:
     wildcard_constraints:
         model='UKESM1-0-LL',
         variable = 'concdust|concpm1|concpm10|concpm2p5|concso4|concss|concsoa|concoa|conch2oaer|concbc|concnh4|concno3'
+    conda: 
+        "geocat"
+
     notebook:
         "../notebooks/derive_column_integrated_load.py.ipynb"
 
@@ -192,6 +184,9 @@ rule derive_column_integrated_load:
     wildcard_constraints:
         variable = 'concdust|concpm1|concpm10|concpm2p5|concso4|concss|concsoa|concoa|conch2oaer|concbc|conco3|concnh4|concno3',
         model="(?!UKESM1-0-LL).*"
+    conda: 
+        "geocat"
+
     notebook:
         "../notebooks/derive_column_integrated_load.py.ipynb"
 
@@ -245,3 +240,4 @@ rule calc_friction_velocity:
     notebook:
         "../notebooks/calc_friction_velocity.py.ipynb"
 
+    

@@ -65,7 +65,7 @@ rule plot_albedo_radiative_effect:
 rule plot_direct_and_cloud_effect:
     input:
         paths=expand(outdir+'piClim-2xdust/ERFs/{vName}/{vName}_piClim-2xdust_{model}_Ayear.nc',
-            model=['MPI-ESM-1-2-HAM','EC-Earth3-AerChem','CNRM-ESM2-1','NorESM2-LM','UKESM1-0-LL', 'GFDL-ESM4','IPSL-CM6A-LR-INCA',
+            model=['MPI-ESM-1-2-HAM','EC-Earth3-AerChem','CNRM-ESM2-1','NorESM2-LM','UKESM1-0-LL','GFDL-ESM4','IPSL-CM6A-LR-INCA',
             ],
             allow_missing=True)
     output:

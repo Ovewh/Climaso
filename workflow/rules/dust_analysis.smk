@@ -169,7 +169,8 @@ rule calc_dust_regional_erf_table:
         outpath_masked = outdir + 'piClim-2xdust/ERFs/ERF_tables/dusty/piClim-2xdust_{model}.csv',
         outpath_unmasked = outdir + 'piClim-2xdust/ERFs/ERF_tables/nodusty/piClim-2xdust_{model}.csv',
         outpath_all = outdir + 'piClim-2xdust/ERFs/ERF_tables/all/piClim-2xdust_{model}.csv'
-    
+    threads: 2
+
     log:
         "logs/erf_tables/{model}_piClim-2xdust_regional.log"
     notebook:
@@ -401,3 +402,75 @@ rule dust_chemistry_interactions:
 
     notebook:
         "../notebooks/dust_analysis/dust_chemistry_interactions.py.ipynb"
+
+rule cloud_ice_response_to_dust_perturbation:
+    input:
+        ctrl_data = expand(outdir + 'piClim-control/cli/cli_piClim-control_{model}_Ayear.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4','CNRM-ESM2-1']),
+        exp_data = expand(outdir + 'piClim-2xdust/cli/cli_piClim-2xdust_{model}_Ayear.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'MIROC6', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4', 'CNRM-ESM2-1'])
+    output:
+        outdir+'figs/AerChemMIP/cloud_ice_change.png'
+
+    notebook:
+        "../notebooks/dust_analysis/cloud_ice_change_analysis.py.ipynb"
+
+    
+rule plot_surface_toa_albedo:
+    input: 
+        rsdt = expand(outdir + '{exp}/rsdt/rsdt_{exp}_{model}_Ayear.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem',
+                        'UKESM1-0-LL', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4','CNRM-ESM2-1'],
+                     allow_missing=True),
+        rsutcsaf = expand(outdir + '{exp}/rsutcsaf/rsutcsaf_{exp}_{model}_Ayear.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem',
+                        'UKESM1-0-LL', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4','CNRM-ESM2-1'], 
+                         allow_missing=True),
+    output:
+        outdir+'figs/AerChemMIP/model_surface_toa_albedo_{exp}.png'
+    notebook:
+        "../notebooks/dust_analysis/model_albedo_intercomparison.py.ipynb"
+
+
+rule plot_surface_albedo:
+    input: 
+        rsds = expand(outdir + '{exp}/rsds/rsds_{exp}_{model}_Ayear.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G','MIROC6',
+                        'UKESM1-0-LL', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4','CNRM-ESM2-1'],
+                     allow_missing=True),
+        rsus = expand(outdir + '{exp}/rsus/rsus_{exp}_{model}_Ayear.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G','MIROC6',
+                        'UKESM1-0-LL', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4','CNRM-ESM2-1'], 
+                         allow_missing=True),
+    output:
+        outdir+'figs/AerChemMIP/model_surface_albedo_{exp}.png'
+    notebook:
+        "../notebooks/dust_analysis/model_albedo_intercomparison.py.ipynb"
+
+
+rule scatter_plot_albedo_forcing_efficiency:
+    input:
+        rsds = expand(outdir + 'piClim-2xdust/rsds/rsds_piClim-2xdust_{model}_Ayear.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem',
+                        'UKESM1-0-LL', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4','CNRM-ESM2-1']),
+        rsus = expand(outdir + 'piClim-2xdust/rsus/rsus_piClim-2xdust_{model}_Ayear.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 
+                        'UKESM1-0-LL', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4','CNRM-ESM2-1']),
+        ctrl_data = expand(outdir + 'dust_diag_files/dust_diag_{model}_piClim-control.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 
+                        'UKESM1-0-LL', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4','CNRM-ESM2-1']),
+        exp_data = expand(outdir + 'dust_diag_files/dust_diag_{model}_piClim-2xdust.nc',
+                model=['NorESM2-LM', 'MPI-ESM-1-2-HAM', 'EC-Earth3-AerChem', 'GISS-E2-1-G',
+                        'UKESM1-0-LL', 'IPSL-CM6A-LR-INCA', 'GFDL-ESM4', 'CNRM-ESM2-1']),
+
+        paths=expand(outdir+'piClim-2xdust/ERFs/{vName}/{vName}_piClim-2xdust_{model}_Ayear.nc',
+            model=['MPI-ESM-1-2-HAM','EC-Earth3-AerChem','CNRM-ESM2-1','NorESM2-LM','UKESM1-0-LL','GFDL-ESM4','IPSL-CM6A-LR-INCA',
+            ], allow_missing=True)
+    wildcard_constraints:
+            vName = 'SWDirectEff|LWDirectEff|DirectEff'
+    output:
+            outpath= outdir+'figs/AerChemMIP/{vName}_piClim-2xdust_AerChemMIP_albedo-forcing_relationship.png'
+    notebook:
+            "../notebooks/dust_analysis/albedo_direct_forcing_relationship.py.ipynb"
