@@ -147,7 +147,7 @@ variables:
   ERFsurfswcs: ['rsuscs', 'rsdscs']
   ERFtswcs: ['rsutcs', 'rsdt']
   ERFsurf: ['rsus', 'rsds', 'rlus', 'rlds']
-  ERFsurfcs: ['rsuscs','rsdscs', 'rsutcs','rlus']
+  ERFsurfcs: ['rsuscs','rsdscs', 'rldscs','rlus']
   DirectEff: ['ERFt', 'ERFtaf']
   SWDirectEff: ['ERFtsw','ERFtswaf']
   SWDirectEff_cs: ['ERFtswcs','ERFtswcsaf']
@@ -288,10 +288,10 @@ dust_interest_regions:
     lonmin: -66
     lonmax: -16
   North Africa:
-    latmin: 1
-    latmax: 36
-    lonmin: -16
-    lonmax: 37
+    latmin: 10
+    latmax: 31
+    lonmin: -14
+    lonmax: 36
   Middle East and Central Asia:
     latmin: 19
     latmax: 44
