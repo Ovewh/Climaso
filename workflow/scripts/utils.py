@@ -4,7 +4,7 @@ from pyclim_noresm.aerosol_forcing import merge_exp_ctrl
 from pyclim_noresm.general_util_funcs import global_avg
 import numpy as np
 import pandas as pd
-
+import cftime
 def get_forcing(forcing_var: str,dataframes: dict):
     k = next(iter(dataframes))
     outdf = pd.DataFrame(index=dataframes.keys(), columns=dataframes[k].columns)
@@ -69,7 +69,13 @@ def load_CMIP_data(path, **dataset_kwargs):
         return ds
     else:
         dataset_kwargs.pop("data_vars")
-        return xr.open_dataset(path[0], chunks={"time": 120}, **dataset_kwargs)
+        try:
+            ds = xr.open_dataset(path[0], chunks={"time": 120}, **dataset_kwargs)
+        except:
+            ds = xr.open_dataset(path[0], chunks={"time": 120}, decode_times=False,**dataset_kwargs)
+            ds = ds.assign(time=cftime.num2date(ds.time,units=ds.time.attrs['units']))
+            
+        return ds
 
 
 def copy_meta_data_CMIP(attrs):
